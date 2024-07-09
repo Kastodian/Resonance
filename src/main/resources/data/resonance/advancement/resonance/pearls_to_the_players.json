@@ -1,0 +1,27 @@
+{
+  "display": {
+    "icon": { "id": "resonance:pearl" },
+    "title": { "translate": "advancement.resonance.pearls_to_the_players" },
+    "description": { "translate": "advancement.resonance.pearls_to_the_players.desc" }
+  },
+  "parent": "resonance:resonance/from_the_dream",
+  "criteria": {
+    "get_pearl": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "resonance:pearl"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "rewards": {
+    "recipes": [
+      "resonance:crafting/pearl_hub"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "type": "resonance:reverberation",
+  "ingredient": {
+    "item": "minecraft:echo_shard"
+  },
+  "results": [],
+  "isMaterialConsumed": false,
+  "resonates": true
+}

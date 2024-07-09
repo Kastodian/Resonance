@@ -1,0 +1,19 @@
+{
+    "type": "resonance:other_orb_effects",
+    "ingredient": { "item": "minecraft:heavy_core" },
+    "result": {
+      "id": "minecraft:heavy_core",
+      "components": {
+        "minecraft:potion_contents": {
+          "custom_effects": [
+            {
+              "id": "resonance:crushing_weight",
+              "amplifier": 1,
+              "duration": 100
+            }
+          ]
+        }
+      }
+    },
+    "texture": "resonance:textures/block/heavy_core_pearl"
+  }

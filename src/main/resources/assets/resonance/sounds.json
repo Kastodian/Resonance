@@ -1,0 +1,36 @@
+{
+  "reverberation": {
+    "subtitle": "resonance.reverberation",
+    "sounds": [ "resonance:reverberation" ]
+  },
+  "sparks": {
+    "subtitle": "resonance.sparks",
+    "sounds": [ "resonance:sparks" ]
+  },
+  "double_jump": {
+    "subtitle": "resonance.double_jump",
+    "sounds": [ "resonance:swoop" ]
+  },
+  "pearl_hub_add": {
+    "subtitle": "resonance.pearl_hub.add",
+    "sounds": [
+      "minecraft:entity/itemframe/add_item1",
+      "minecraft:entity/itemframe/add_item2",
+      "minecraft:entity/itemframe/add_item3",
+      "minecraft:entity/itemframe/add_item4"
+    ]
+  },
+  "pearl_hub_remove": {
+    "subtitle": "resonance.pearl_hub.remove",
+    "sounds": [
+      "minecraft:entity/itemframe/remove_item1",
+      "minecraft:entity/itemframe/remove_item2",
+      "minecraft:entity/itemframe/remove_item3",
+      "minecraft:entity/itemframe/remove_item4"
+    ]
+  },
+  "pearl_hub_use": {
+    "subtitle": "resonance.pearl_hub.use",
+    "sounds": [ "resonance:reverberation" ]
+  }
+}

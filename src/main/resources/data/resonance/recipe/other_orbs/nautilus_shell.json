@@ -1,0 +1,19 @@
+{
+    "type": "resonance:other_orb_effects",
+    "ingredient": { "item": "minecraft:nautilus_shell" },
+    "result": {
+      "id": "minecraft:nautilus_shell",
+      "components": {
+        "minecraft:potion_contents": {
+          "custom_effects": [
+            {
+              "id": "minecraft:dolphins_grace",
+              "amplifier": 1,
+              "duration": 500
+            }
+          ]
+        }
+      }
+    },
+    "texture": "resonance:textures/block/nautilus_shell_pearl"
+  }

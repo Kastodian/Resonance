@@ -1,0 +1,23 @@
+{
+    "criteria": {
+      "requirement": {
+        "trigger": "minecraft:inventory_changed",
+        "conditions": {
+          "items": [
+            {
+              "items": [
+                "resonance:soul_bottle"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "rewards": {
+      "recipes": [
+        "resonance:crafting/experience_bottle",
+        "resonance:crafting/soul_sand",
+        "resonance:crafting/soul_soil"
+      ]
+    }
+}  

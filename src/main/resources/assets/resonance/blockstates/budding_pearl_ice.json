@@ -1,0 +1,14 @@
+{
+  "variants": {
+    "age=0": { "model": "minecraft:block/ice" },
+    "age=1": { "model": "resonance:block/budding_pearl_ice/age_1" },
+    "age=2": { "model": "resonance:block/budding_pearl_ice/age_2" },
+    "age=3": { "model": "resonance:block/budding_pearl_ice/age_3" },
+    "age=4": { "model": "resonance:block/budding_pearl_ice/age_4" },
+    "age=5": { "model": "resonance:block/budding_pearl_ice/age_5" },
+    "age=6,dusted=0": { "model": "resonance:block/budding_pearl_ice/age_6" },
+    "age=6,dusted=1": { "model": "resonance:block/budding_pearl_ice/dusted_1" },
+    "age=6,dusted=2": { "model": "resonance:block/budding_pearl_ice/dusted_2" },
+    "age=6,dusted=3": { "model": "resonance:block/budding_pearl_ice/dusted_3" }
+  }
+}

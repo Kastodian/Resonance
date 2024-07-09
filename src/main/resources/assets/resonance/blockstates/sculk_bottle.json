@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "hanging=false": { "model": "resonance:block/tinted_bottles/sculk_bottle" },
+    "hanging=true": { "model": "resonance:block/tinted_bottles/sculk_bottle_hanging" }
+  }
+}

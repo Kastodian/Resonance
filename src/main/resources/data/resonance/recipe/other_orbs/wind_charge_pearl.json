@@ -1,0 +1,18 @@
+{
+    "type": "resonance:other_orb_effects",
+    "ingredient": { "item": "minecraft:wind_charge" },
+    "result": {
+      "id": "minecraft:wind_charge",
+      "components": {
+        "minecraft:potion_contents": {
+          "custom_effects": [
+            {
+              "id": "minecraft:wind_charged",
+              "duration": 500
+            }
+          ]
+        }
+      }
+    },
+    "texture": "resonance:textures/block/wind_charge_pearl"
+  }

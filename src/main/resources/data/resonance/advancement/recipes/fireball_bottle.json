@@ -1,0 +1,24 @@
+{
+    "criteria": {
+      "requirement": {
+        "trigger": "minecraft:inventory_changed",
+        "conditions": {
+          "items": [
+            {
+              "items": [
+                "resonance:fireball_bottle",
+                "minecraft:fire_charge",
+                "resonance:tinted_bottle"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "rewards": {
+      "recipes": [
+        "resonance:crafting/fireball_bottle",
+        "resonance:crafting/fireball_bottle_alt"
+      ]
+    }
+}  

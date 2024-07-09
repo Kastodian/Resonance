@@ -1,0 +1,45 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"particle": "resonance:block/tinted_bottle",
+		"lantern": "resonance:block/tinted_bottle"
+	},
+	"elements": [
+		{
+			"from": [5, 0, 5],
+			"to": [11, 7, 11],
+			"faces": {
+				"north": {"uv": [0, 2, 6, 9], "texture": "#lantern"},
+				"east": {"uv": [0, 2, 6, 9], "texture": "#lantern"},
+				"south": {"uv": [0, 2, 6, 9], "texture": "#lantern"},
+				"west": {"uv": [0, 2, 6, 9], "texture": "#lantern"},
+				"up": {"uv": [0, 9, 6, 15], "texture": "#lantern"},
+				"down": {"uv": [0, 9, 6, 15], "texture": "#lantern", "cullface": "down"}
+			}
+		},
+		{
+			"from": [6, 7, 6],
+			"to": [10, 9, 10],
+			"faces": {
+				"north": {"uv": [1, 0, 5, 2], "texture": "#lantern"},
+				"east": {"uv": [1, 0, 5, 2], "texture": "#lantern"},
+				"south": {"uv": [1, 0, 5, 2], "texture": "#lantern"},
+				"west": {"uv": [1, 0, 5, 2], "texture": "#lantern"},
+				"up": {"uv": [6, 10, 10, 14], "texture": "#lantern"}
+			}
+		},
+		{
+			"from": [6.5, 8, 6.5],
+			"to": [9.5, 10, 9.5],
+			"rotation": {"angle": 0, "axis": "y", "origin": [0.5, 1, 0.5]},
+			"faces": {
+				"north": {"uv": [6, 0, 9, 2], "texture": "#lantern"},
+				"east": {"uv": [6, 0, 9, 2], "texture": "#lantern"},
+				"south": {"uv": [6, 0, 9, 2], "texture": "#lantern"},
+				"west": {"uv": [6, 0, 9, 2], "texture": "#lantern"},
+				"up": {"uv": [6, 2, 9, 5], "texture": "#lantern"}
+			}
+		}
+	]
+}

@@ -1,0 +1,13 @@
+{
+  "display": {
+    "icon": { "id": "minecraft:shield" },
+		"title": { "translate":"advancement.resonance.parry_this" },
+		"description": { "translate":"advancement.resonance.parry_this.desc" }
+  },
+  "parent": "minecraft:story/deflect_arrow",
+  "criteria": {
+    "parry": {
+      "trigger": "resonance:shield_parry"
+    }
+  }
+}

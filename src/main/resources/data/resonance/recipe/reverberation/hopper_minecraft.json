@@ -1,0 +1,10 @@
+{
+  "type": "resonance:reverberation",
+  "ingredient": {
+    "item": "minecraft:hopper_minecart"
+  },
+  "results": [
+    { "id": "minecraft:hopper" },
+    { "id": "minecraft:minecart" }
+  ]
+}

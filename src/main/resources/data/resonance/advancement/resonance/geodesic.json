@@ -1,0 +1,37 @@
+{
+  "display": {
+    "icon": { "id": "minecraft:amethyst_block" },
+    "title": { "translate": "advancement.resonance.geodesic" },
+    "description": { "translate": "advancement.resonance.geodesic.desc" }
+  },
+  "parent": "resonance:resonance/root",
+  "criteria": {
+    "location": {
+      "trigger": "minecraft:location",
+      "conditions": {
+        "player": {
+          "stepping_on": {
+            "position": {
+              "y": {
+                "max": 63
+              }
+            },
+            "block": {
+              "blocks": [
+                "minecraft:amethyst_block"
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+  "rewards": {
+    "recipes": [
+      "resonance:crafting/amethyst_shield",
+      "resonance:crafting/whistling_arrow",
+      "resonance:crafting/tinted_bottle_glass",
+      "resonance:crafting/tinted_bottle_shards"
+    ]
+  }
+}

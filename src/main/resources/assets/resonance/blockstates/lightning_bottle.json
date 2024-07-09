@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "hanging=false": { "model": "resonance:block/tinted_bottles/lightning_bottle" },
+    "hanging=true": { "model": "resonance:block/tinted_bottles/lightning_bottle_hanging" }
+  }
+}

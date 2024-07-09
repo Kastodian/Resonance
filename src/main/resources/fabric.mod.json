@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "id": "resonance",
+  "version": "${version}",
+
+  "name": "Resonance",
+  "description": "A core mod to add features common to all the Resonance Mods.",
+  "authors": [
+    "Moss"
+  ],
+  "contact": {
+    "homepage": "https://modrinth.com/mod/resonance-mod"
+  },
+
+  "license": "MIT License",
+  "icon": "assets/resonance/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "net.moss.resonance.Resonance"
+    ],
+    "client": [
+      "net.moss.resonance.ResonanceClient"
+    ],
+    "emi": [
+      "net.moss.resonance.compat.emi.EmiCompat"
+    ]
+  },
+  "mixins": [
+    "resonance.mixins.json"
+  ],
+  "accessWidener": "resonance.accesswidener",
+  "depends": {
+    "fabricloader": ">=0.15.11",
+    "fabric-api": "*",
+    "minecraft": ">=1.21",
+    "java": ">=17"
+  },
+  "suggests": {
+    "trinkets": "*",
+    "emi": "*"
+  }
+}

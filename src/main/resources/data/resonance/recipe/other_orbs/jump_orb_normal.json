@@ -1,0 +1,19 @@
+{
+    "type": "resonance:other_orb_effects",
+    "ingredient": { "item": "resonance:jump_orb_normal" },
+    "result": {
+      "id": "resonance:jump_orb_normal",
+      "components": {
+        "minecraft:potion_contents": {
+          "custom_effects": [
+            {
+              "id": "minecraft:jump_boost",
+              "amplifier": 1,
+              "duration": 300
+            }
+          ]
+        }
+      }
+    },
+    "texture": "resonance:textures/block/jump_orb_normal_pearl"
+  }

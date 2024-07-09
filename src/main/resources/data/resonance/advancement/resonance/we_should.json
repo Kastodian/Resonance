@@ -1,0 +1,24 @@
+{
+  "display": {
+    "icon": { "id": "resonance:pearl_hub" },
+    "title": { "translate": "advancement.resonance.we_should" },
+    "description": { "translate": "advancement.resonance.we_should.desc" }
+  },
+  "parent": "resonance:resonance/pearls_to_the_players",
+  "criteria": {
+    "use_hub": {
+      "trigger": "resonance:use_pearl_hub",
+      "conditions": {
+        "item": {
+          "items": "resonance:pearl"
+        }
+      }
+    }
+  },
+  "rewards": {
+    "experience": 25,
+    "recipes": [
+      "resonance:crafting/pearl_hub"
+    ]
+  }
+}

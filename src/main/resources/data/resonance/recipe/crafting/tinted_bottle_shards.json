@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "resonance:tinted_bottle",
+  "pattern": [
+    " s ",
+    "sas",
+    " s "
+  ],
+  "key": {
+    "s": {
+      "item": "minecraft:amethyst_shard"
+    },
+    "a": {
+      "item": "minecraft:glass_bottle"
+    }
+  },
+  "result": {
+    "id": "resonance:tinted_bottle"
+  }
+}

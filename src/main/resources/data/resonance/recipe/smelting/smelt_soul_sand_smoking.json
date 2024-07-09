@@ -1,0 +1,12 @@
+{
+	"type": "minecraft:smoking",
+        "category": "blocks",
+	"cookingtime": 100,
+	"experience": 1,
+	"ingredient": {
+		"item": "minecraft:soul_sand"
+	},
+	"result": {
+	  "id": "minecraft:red_sand"
+	}
+}

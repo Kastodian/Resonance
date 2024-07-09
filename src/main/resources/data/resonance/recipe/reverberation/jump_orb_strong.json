@@ -1,0 +1,13 @@
+{
+  "type": "resonance:reverberation",
+  "ingredient": {
+    "item": "resonance:jump_orb_strong"
+  },
+  "results": [
+    {
+      "id": "resonance:jump_orb_normal",
+      "count": 2
+    }
+  ],
+  "resonates": true
+}

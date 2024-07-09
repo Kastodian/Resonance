@@ -1,0 +1,13 @@
+{
+  "type": "resonance:reverberation",
+  "ingredient": {
+    "item": "minecraft:tnt"
+  },
+  "results": [
+    {
+      "id": "minecraft:gunpowder",
+      "count": 2
+    }
+  ],
+  "explosionPower": 1
+}

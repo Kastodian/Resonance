@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " c ",
+    "jwj",
+    " c "
+  ],
+  "key": {
+    "j": {
+      "item": "resonance:jump_orb_normal"
+    },
+    "w": {
+      "item": "minecraft:phantom_membrane"
+    },
+    "c": {
+      "item": "resonance:charged_amethyst_cluster"
+    }
+  },
+  "result": {
+    "id": "resonance:jump_orb_strong"
+  }
+}

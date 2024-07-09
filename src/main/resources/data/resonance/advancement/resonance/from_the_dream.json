@@ -1,0 +1,36 @@
+{
+  "display": {
+    "icon": { "id": "minecraft:ice" },
+    "title": { "translate": "advancement.resonance.from_the_dream" },
+    "description": { "translate": "advancement.resonance.from_the_dream.desc" }
+  },
+  "parent": "resonance:resonance/root",
+  "criteria": {
+    "plant_pearl": {
+      "trigger": "minecraft:item_used_on_block",
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": "resonance:budding_pearl_ice"
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": [
+                "minecraft:potion",
+                "minecraft:splash_potion",
+                "minecraft:lingering_potion",
+                "minecraft:ominous_bottle"
+              ]
+            }
+          }
+        ]
+      }
+    }
+  }
+}

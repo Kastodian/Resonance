@@ -1,0 +1,31 @@
+{
+  "display": {
+    "icon": { "id": "resonance:sculk_bottle" },
+    "title": { "translate": "advancement.resonance.strange_concoction" },
+    "description": { "translate": "advancement.resonance.strange_concoction.desc" }
+  },
+  "parent": "resonance:resonance/special_containment_procedures",
+  "criteria": {
+    "plant_pearl": {
+      "trigger": "minecraft:item_used_on_block",
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": "resonance:budding_pearl_ice"
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": "#resonance:full_tinted_bottles"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

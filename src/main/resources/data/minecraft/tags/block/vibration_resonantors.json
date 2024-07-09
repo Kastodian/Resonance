@@ -1,0 +1,8 @@
+{
+    "replace": false,
+    "values": [
+      "resonance:charged_amethyst_cluster",
+      "minecraft:budding_amethyst",
+      "#minecraft:crystal_sound_blocks"
+    ]
+  }

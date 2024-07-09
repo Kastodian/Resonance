@@ -1,0 +1,6 @@
+{
+    "parent": "minecraft:block/cube_all",
+    "textures": {
+      "all": "resonance:block/budding_pearl_ice_dusted_1"
+    }
+}

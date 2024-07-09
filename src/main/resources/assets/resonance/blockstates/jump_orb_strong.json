@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "expended=true": { "model": "resonance:block/jump_orbs/expended" },
+    "expended=false": { "model": "resonance:block/jump_orbs/strong" }
+  }
+}

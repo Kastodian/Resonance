@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    " a ",
+    "asa",
+    " a "
+  ],
+  "key": {
+    "a": [
+      {
+        "item": "resonance:charged_amethyst_shard"
+      },
+      {
+        "item": "minecraft:amethyst_shard"
+      }
+    ],
+    "s": {
+      "item": "minecraft:shield"
+    }
+  },
+  "result": {
+    "id": "resonance:amethyst_shield"
+  }
+}

@@ -1,0 +1,13 @@
+{
+    "replace": false,
+    "values": [
+      "resonance:budding_pearl_ice",
+      "resonance:pearl_ice",
+      "minecraft:bedrock",
+      "minecraft:sculk",
+      "minecraft:sculk_catalyst",
+      "minecraft:sculk_sensor",
+      "minecraft:sculk_shrieker",
+      "minecraft:calibrated_sculk_sensor"
+    ]
+  }

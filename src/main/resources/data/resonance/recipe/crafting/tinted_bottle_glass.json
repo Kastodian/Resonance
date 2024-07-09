@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "resonance:tinted_bottle",
+  "pattern": [
+    "g g",
+    " g "
+  ],
+  "key": {
+    "g": {
+      "item": "minecraft:tinted_glass"
+    }
+  },
+  "result": {
+    "id": "resonance:tinted_bottle",
+    "count": 2
+  }
+}

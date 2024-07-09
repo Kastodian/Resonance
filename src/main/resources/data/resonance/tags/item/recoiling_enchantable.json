@@ -1,0 +1,10 @@
+{
+  "values": [
+    "#minecraft:enchantable/weapon",
+    "#minecraft:enchantable/armor",
+    "#minecraft:enchantable/crossbow",
+    "#minecraft:enchantable/bow",
+    "#minecraft:enchantable/trident",
+    "#resonance:scarfs"
+  ]
+}

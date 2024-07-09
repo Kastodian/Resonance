@@ -1,0 +1,100 @@
+{
+  "variants": {
+    "north=true,east=true,south=true,west=true": [
+      { "model": "resonance:block/book_pile/book_pile_none_0" },
+      { "model": "resonance:block/book_pile/book_pile_none_0", "y": 90 },
+      { "model": "resonance:block/book_pile/book_pile_none_0", "y": 180 },
+      { "model": "resonance:block/book_pile/book_pile_none_0", "y": 270 },
+      { "model": "resonance:block/book_pile/book_pile_none_1" },
+      { "model": "resonance:block/book_pile/book_pile_none_1", "y": 90 },
+      { "model": "resonance:block/book_pile/book_pile_none_1", "y": 180 },
+      { "model": "resonance:block/book_pile/book_pile_none_1", "y": 270 },
+      { "model": "resonance:block/book_pile/book_pile_none_2" },
+      { "model": "resonance:block/book_pile/book_pile_none_2", "y": 90 },
+      { "model": "resonance:block/book_pile/book_pile_none_2", "y": 180 },
+      { "model": "resonance:block/book_pile/book_pile_none_2", "y": 270 },
+      { "model": "resonance:block/book_pile/book_pile_none_3" },
+      { "model": "resonance:block/book_pile/book_pile_none_3", "y": 90 },
+      { "model": "resonance:block/book_pile/book_pile_none_3", "y": 180 },
+      { "model": "resonance:block/book_pile/book_pile_none_3", "y": 270 }
+    ],
+    "north=false,east=false,south=false,west=false": [
+      { "model": "resonance:block/book_pile/book_pile_all_0" },
+      { "model": "resonance:block/book_pile/book_pile_all_0", "y": 90 },
+      { "model": "resonance:block/book_pile/book_pile_all_0", "y": 180 },
+      { "model": "resonance:block/book_pile/book_pile_all_0", "y": 270 },
+      { "model": "resonance:block/book_pile/book_pile_all_1" },
+      { "model": "resonance:block/book_pile/book_pile_all_1", "y": 90 },
+      { "model": "resonance:block/book_pile/book_pile_all_1", "y": 180 },
+      { "model": "resonance:block/book_pile/book_pile_all_1", "y": 270 }
+    ],
+    "north=true,east=true,south=false,west=true": [
+      { "model": "resonance:block/book_pile/book_pile_one_0" },
+      { "model": "resonance:block/book_pile/book_pile_one_1" },
+      { "model": "resonance:block/book_pile/book_pile_one_2" },
+      { "model": "resonance:block/book_pile/book_pile_one_3" }
+    ],
+    "north=false,east=true,south=true,west=true": [
+      { "model": "resonance:block/book_pile/book_pile_one_0", "y": 180 },
+      { "model": "resonance:block/book_pile/book_pile_one_1", "y": 180 },
+      { "model": "resonance:block/book_pile/book_pile_one_2", "y": 180 },
+      { "model": "resonance:block/book_pile/book_pile_one_3", "y": 180 }
+    ],
+    "north=true,east=true,south=true,west=false": [
+      { "model": "resonance:block/book_pile/book_pile_one_0", "y": 90 },
+      { "model": "resonance:block/book_pile/book_pile_one_1", "y": 90 },
+      { "model": "resonance:block/book_pile/book_pile_one_2", "y": 90 },
+      { "model": "resonance:block/book_pile/book_pile_one_3", "y": 90 }
+    ],
+    "north=true,east=false,south=true,west=true": [
+      { "model": "resonance:block/book_pile/book_pile_one_0", "y": 270 },
+      { "model": "resonance:block/book_pile/book_pile_one_1", "y": 270 },
+      { "model": "resonance:block/book_pile/book_pile_one_2", "y": 270 },
+      { "model": "resonance:block/book_pile/book_pile_one_3", "y": 270 }
+    ],
+    "north=false,east=false,south=true,west=false": [
+      { "model": "resonance:block/book_pile/book_pile_tee_0", "y": 90 },
+      { "model": "resonance:block/book_pile/book_pile_tee_1", "y": 90 }
+    ],
+    "north=true,east=false,south=false,west=false": [
+      { "model": "resonance:block/book_pile/book_pile_tee_0", "y": 270 },
+      { "model": "resonance:block/book_pile/book_pile_tee_1", "y": 270 }
+    ],
+    "north=false,east=false,south=false,west=true": [
+      { "model": "resonance:block/book_pile/book_pile_tee_0", "y": 180 },
+      { "model": "resonance:block/book_pile/book_pile_tee_1", "y": 180 }
+    ],
+    "north=false,east=true,south=false,west=false": [
+      { "model": "resonance:block/book_pile/book_pile_tee_0" },
+      { "model": "resonance:block/book_pile/book_pile_tee_1" }
+    ],
+    "north=true,east=false,south=true,west=false": [
+      { "model": "resonance:block/book_pile/book_pile_line_0", "y": 270 },
+      { "model": "resonance:block/book_pile/book_pile_line_0", "y": 90 },
+      { "model": "resonance:block/book_pile/book_pile_line_1", "y": 270 },
+      { "model": "resonance:block/book_pile/book_pile_line_1", "y": 90 }
+    ],
+    "north=false,east=true,south=false,west=true": [
+      { "model": "resonance:block/book_pile/book_pile_line_0", "y": 180 },
+      { "model": "resonance:block/book_pile/book_pile_line_0" },
+      { "model": "resonance:block/book_pile/book_pile_line_1", "y": 180 },
+      { "model": "resonance:block/book_pile/book_pile_line_1" }
+    ],
+    "north=false,east=false,south=true,west=true": [
+      { "model": "resonance:block/book_pile/book_pile_corner_0", "y": 180 },
+      { "model": "resonance:block/book_pile/book_pile_corner_1", "y": 180 }
+    ],
+    "north=true,east=true,south=false,west=false": [
+      { "model": "resonance:block/book_pile/book_pile_corner_0" },
+      { "model": "resonance:block/book_pile/book_pile_corner_1" }
+    ],
+    "north=false,east=true,south=true,west=false": [
+      { "model": "resonance:block/book_pile/book_pile_corner_0", "y": 90 },
+      { "model": "resonance:block/book_pile/book_pile_corner_1", "y": 90 }
+    ],
+    "north=true,east=false,south=false,west=true": [
+      { "model": "resonance:block/book_pile/book_pile_corner_0", "y": 270 },
+      { "model": "resonance:block/book_pile/book_pile_corner_1", "y": 270 }
+    ]
+  }
+}

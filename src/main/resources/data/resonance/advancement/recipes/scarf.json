@@ -1,0 +1,33 @@
+{
+  "criteria": {
+    "powder_snow": {
+      "trigger": "minecraft:enter_block",
+      "conditions": {
+        "block": "minecraft:powder_snow"
+      }
+    },
+    "wool": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:white_wool"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "powder_snow",
+      "wool"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "resonance:crafting/scarf"
+    ]
+  }
+}

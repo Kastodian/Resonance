@@ -1,0 +1,10 @@
+{
+  "type": "resonance:reverberation",
+  "ingredient": {
+    "item": "resonance:charged_amethyst_cluster"
+  },
+  "results": [
+    { "id": "minecraft:amethyst_cluster" }
+  ],
+  "resonates": true
+}

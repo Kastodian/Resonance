@@ -1,0 +1,128 @@
+{
+  "description": {
+    "translate": "enchantment.resonance.sparking"
+  },
+  "supported_items": "#resonance:sparking_enchantable",
+  "weight": 2,
+  "max_level": 1,
+  "min_cost": {
+    "base": 10,
+    "per_level_above_first": 0
+  },
+  "max_cost": {
+    "base": 50,
+    "per_level_above_first": 0
+  },
+  "anvil_cost": 1,
+  "slots": [
+    "any"
+  ],
+  "effects": {
+    "minecraft:post_attack": [
+      {
+        "enchanted": "attacker",
+        "affected": "victim",
+        "effect": {
+          "type": "minecraft:apply_mob_effect",
+          "to_apply": "resonance:sparking",
+          "min_duration": 10,
+          "max_duration": 20,
+          "min_amplifier": 1,
+          "max_amplifier": 1
+        },
+        "requirements": {
+          "condition": "minecraft:any_of",
+          "terms": [
+            {
+              "condition": "minecraft:random_chance",
+              "chance": {
+                "type": "minecraft:enchantment_level",
+                "amount": {
+                  "type": "minecraft:linear",
+                  "base": 0.333,
+                  "per_level_above_first": 0.111
+                }
+              }
+            },
+            {
+              "condition": "resonance:crit_count",
+              "entity": "attacker",
+              "crit_count": 3
+            }
+          ]
+        }
+      },
+      {
+        "enchanted": "victim",
+        "affected": "attacker",
+        "effect": {
+          "type": "minecraft:apply_mob_effect",
+          "to_apply": "resonance:sparking",
+          "min_duration": 10,
+          "max_duration": 20,
+          "min_amplifier": 1,
+          "max_amplifier": 1
+        },
+        "requirements": {
+          "condition": "minecraft:random_chance",
+          "chance": {
+            "type": "minecraft:enchantment_level",
+            "amount": {
+              "type": "minecraft:linear",
+              "base": 0.111,
+              "per_level_above_first": 0.111
+            }
+          }
+        }
+      }
+    ],
+    "resonance:post_crit": [
+      {
+        "enchanted": "attacker",
+        "affected": "victim",
+        "effect": {
+          "type": "minecraft:apply_mob_effect",
+          "to_apply": "resonance:sparking",
+          "min_duration": 10,
+          "max_duration": 20,
+          "min_amplifier": 2,
+          "max_amplifier": 2
+        },
+        "requirements": {
+          "condition": "minecraft:random_chance",
+          "chance": {
+            "type": "minecraft:enchantment_level",
+            "amount": {
+              "type": "minecraft:linear",
+              "base": 0.333,
+              "per_level_above_first": 0.111
+            }
+          }
+        }
+      },
+      {
+        "enchanted": "victim",
+        "affected": "attacker",
+        "effect": {
+          "type": "minecraft:apply_mob_effect",
+          "to_apply": "resonance:sparking",
+          "min_duration": 10,
+          "max_duration": 20,
+          "min_amplifier": 2,
+          "max_amplifier": 2
+        },
+        "requirements": {
+          "condition": "minecraft:random_chance",
+          "chance": {
+            "type": "minecraft:enchantment_level",
+            "amount": {
+              "type": "minecraft:linear",
+              "base": 0.111,
+              "per_level_above_first": 0.111
+            }
+          }
+        }
+      }
+    ]
+  }
+}
