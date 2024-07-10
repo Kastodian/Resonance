@@ -99,7 +99,7 @@ public class Utils {
 			}
 		}
 		
-		// TODO: EMI SUPPORT
+		// TODO: TRINKETS SUPPORT
 		// if (Resonance.isTrinketsInstalled) {
 		// 	Optional<TrinketComponent> optional = TrinketsApi.getTrinketComponent(entity);
 		// 	if (optional.isPresent()) {
@@ -110,7 +110,7 @@ public class Utils {
 	}
 
 	public static TypedActionResult<ItemStack> trinketHotswap(World world, PlayerEntity user, Hand hand, Item item) {
-		// TODO: EMI SUPPORT
+		// TODO: TRINKETS SUPPORT
 		// if (Resonance.isTrinketsInstalled) {
 		//     ItemStack stack = user.getStackInHand(hand);
 		//     if (TrinketItem.equipItem(user, stack)) { TypedActionResult.success(stack, world.isClient()); }
@@ -124,7 +124,7 @@ public class Utils {
 		if (!checkHands) { entity.getAllArmorItems().forEach(item -> items.add(item)); }
 		else { entity.getEquippedItems().forEach(item -> items.add(item)); }
 			
-		// TODO: EMI SUPPORT
+		// TODO: TRINKETS SUPPORT
 		// if (Resonance.isTrinketsInstalled) {
 		// 	Optional<TrinketComponent> optional = TrinketsApi.getTrinketComponent(entity);
 		// 	if (optional.isPresent()) {

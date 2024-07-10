@@ -27,7 +27,7 @@ public class ExtraFeatureRenderer extends HeldItemFeatureRenderer<AbstractClient
         this.heldItemRenderer = heldItemRenderer;
     }
 
-    // TODO: EMI SUPPORT
+    // TODO: TRINKETS SUPPORT
     @Override
     public void render(MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, AbstractClientPlayerEntity livingEntity, float f, float g, float h, float j, float k, float l) {
         if (!(livingEntity instanceof AbstractClientPlayerEntity)) { return; }

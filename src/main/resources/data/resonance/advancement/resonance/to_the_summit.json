@@ -1,6 +1,6 @@
 {
   "display": {
-    "icon": { "id": "minecraft:snowball" },
+    "icon": { "id": "resonance:jump_orb_normal" },
     "title": { "translate": "advancement.resonance.to_the_summit" },
     "description": { "translate": "advancement.resonance.to_the_summit.desc" },
     "frame": "goal"

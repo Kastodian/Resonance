@@ -1,6 +1,6 @@
 {
   "display": {
-    "icon": { "id": "resonance:sculk_bottle" },
+    "icon": { "id": "resonance:soul_bottle" },
     "title": { "translate": "advancement.resonance.strange_concoction" },
     "description": { "translate": "advancement.resonance.strange_concoction.desc" }
   },

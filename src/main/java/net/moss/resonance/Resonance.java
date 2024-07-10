@@ -106,7 +106,6 @@ import org.slf4j.LoggerFactory;
 import com.google.common.primitives.Ints;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
-
 import java.util.List;
 
 public class Resonance implements ModInitializer {

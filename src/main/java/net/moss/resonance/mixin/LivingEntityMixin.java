@@ -67,7 +67,7 @@ public class LivingEntityMixin {
         LivingEntity defender = ((LivingEntity)(Object)this);
         Hand hand = defender.getActiveHand();
         ItemStack activeItem = defender.getActiveItem();
-        if (defender.getItemUseTimeLeft() >= activeItem.getItem().getMaxUseTime(activeItem, defender) - 5) {
+        if (defender.getItemUseTimeLeft() >= activeItem.getItem().getMaxUseTime(activeItem, defender) - 8) {
             ShieldEvents.SHIELD_PARRY.invoker().parry(defender, source, amount, hand, activeItem);
         }
     }

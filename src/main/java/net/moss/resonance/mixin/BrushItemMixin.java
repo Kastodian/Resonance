@@ -28,10 +28,8 @@ public class BrushItemMixin {
             BlockPos blockPos = blockHitResult.getBlockPos();
             BlockState blockState = world.getBlockState(blockPos);
             if (!(blockState.isOf(Resonance.BUDDING_PEARL_ICE) && blockState.get(BuddingPearlIce.HAS_PEARL))) { return; }
-            System.out.println("ready");
             PlayerEntity playerEntity = (PlayerEntity)user;
             if (!world.isClient() && world.getBlockEntity(blockPos) instanceof BuddingPearlIceBlockEntity blockEntity && blockEntity.brush(world.getTime(), blockHitResult.getSide())) {
-                System.out.println("brushing");
                 EquipmentSlot equipmentSlot = stack.equals(playerEntity.getEquippedStack(EquipmentSlot.OFFHAND)) ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;
                 stack.damage(4, user, equipmentSlot);
             }

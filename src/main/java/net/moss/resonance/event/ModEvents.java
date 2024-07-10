@@ -217,7 +217,8 @@ public class ModEvents {
 				if (entity2 instanceof CreeperEntity creeperEntity) { creeperEntity.ignite(); }
                 else {
 					float damage = (float) ((entity2.getType().isIn(Resonance.SOUND_SENSITIVE_TAG) ? 2 : 1) * strength * 8f / Math.max(pos.distanceTo(entity2.getPos()), 1));
-					entity2.damage(Utils.damageSource(world, Resonance.REVERBERATION_DAMAGE), damage);
+                    if (sourceEntity != null && sourceEntity instanceof LivingEntity livingEntity) { entity2.damage(Utils.damageSource(world, Resonance.REVERBERATION_DAMAGE, livingEntity), damage); }
+                    else { entity2.damage(Utils.damageSource(world, Resonance.REVERBERATION_DAMAGE), damage); }
 				}
 				Utils.customKnockbackClamp(entity1, pos, 0.4f * strength, 2f);
 			}

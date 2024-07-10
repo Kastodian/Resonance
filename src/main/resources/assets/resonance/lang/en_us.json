@@ -173,6 +173,8 @@
     "advancement.resonance.just_another_orb.desc": "Put an orb that's not a Pearl on a Pearl Hub",
     "advancement.resonance.sole_survivor": "Sole Survivor",
     "advancement.resonance.sole_survivor.desc": "Perform 15 Critical Attacks in a row",
+    "advancement.resonance.portable_infection": "Portable Infection",
+    "advancement.resonance.portable_infection.desc": "Use a Tinted Bottle on a Sculk Catalyst as it spreads",
 
     "gamerule.cactiDestroyUniqueItems": "Cacti destroy items tagged as unique",
     "gamerule.jumpOrbRefreshDelay": "The ammount of ticks until a Jump Orb refreshes",

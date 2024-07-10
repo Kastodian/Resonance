@@ -21,7 +21,6 @@ import net.moss.resonance.util.EnchantUtils;
 import net.moss.resonance.util.GroundPoundType;
 import net.moss.resonance.util.Utils;
 import net.moss.resonance.util.interfaces.PlayerEntityInterface;
-
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;

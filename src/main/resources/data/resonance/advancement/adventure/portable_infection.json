@@ -1,0 +1,21 @@
+{
+  "display": {
+    "icon": { "id": "resonance:sculk_bottle" },
+    "title": { "translate": "advancement.resonance.portable_infection" },
+    "description": { "translate": "advancement.resonance.portable_infection.desc" },
+    "frame": "goal"
+  },
+  "parent": "minecraft:adventure/kill_mob_near_sculk_catalyst",
+  "criteria": {
+    "sculk_bottle": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "resonance:sculk_bottle"
+          }
+        ]
+      }
+    }
+  }
+}

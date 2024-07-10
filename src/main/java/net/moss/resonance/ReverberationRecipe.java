@@ -5,6 +5,7 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.recipe.Ingredient;
@@ -43,8 +44,8 @@ public class ReverberationRecipe implements Recipe<SingleStackRecipeInput> {
     @Override public ItemStack createIcon() { return new ItemStack(Resonance.CHARGED_AMETHYST_CLUSTER); }
     @Override public boolean matches(SingleStackRecipeInput singleStackRecipeInput, World world) { return this.ingredient.test(singleStackRecipeInput.item()); }
     @Override public boolean fits(int width, int height) { return true; }
-    @Override public ItemStack getResult(RegistryWrapper.WrapperLookup registriesLookup) { return this.results.isEmpty() ? ItemStack.EMPTY : this.results.get(0); }
-    @Override public ItemStack craft(SingleStackRecipeInput singleStackRecipeInput, RegistryWrapper.WrapperLookup wrapperLookup) { return this.results.isEmpty() ? ItemStack.EMPTY : this.results.get(0); }
+    @Override public ItemStack getResult(RegistryWrapper.WrapperLookup registriesLookup) { return this.results.isEmpty() ? Items.AIR.getDefaultStack() : this.results.get(0); }
+    @Override public ItemStack craft(SingleStackRecipeInput singleStackRecipeInput, RegistryWrapper.WrapperLookup wrapperLookup) { return this.results.isEmpty() ? Items.AIR.getDefaultStack() : this.results.get(0); }
     
     @Override
     public DefaultedList<Ingredient> getIngredients() {

@@ -51,7 +51,6 @@ public class BuddingPearlIceBlockEntity extends BlockEntity {
     }
 
     public boolean brush(long worldTime, Direction hitDirection) {
-        System.out.println("brush");
         if (this.hitDirection == null) { this.hitDirection = hitDirection; }
         this.nextDustTime = worldTime + 40L;
         if (worldTime < this.nextBrushTime || !(this.world instanceof ServerWorld)) { return false; }
