@@ -3,8 +3,7 @@ package net.moss.resonance.item;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.ItemStack;
 
-public class DatapackScarf extends NecklaceTrinket {
-
+public class DatapackScarf extends ScarfItem {
     public DatapackScarf(Settings settings, String modId, String texture) {
         super(settings, modId, texture);
     }

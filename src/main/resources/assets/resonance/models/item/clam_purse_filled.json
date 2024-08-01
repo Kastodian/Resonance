@@ -1,6 +1,0 @@
-{
-    "parent": "item/bundle",
-    "textures": {
-        "layer0": "resonance:item/clam_purse_filled"
-    }
-}

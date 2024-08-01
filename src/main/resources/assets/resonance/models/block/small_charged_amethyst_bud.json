@@ -1,6 +1,6 @@
 {
     "parent": "minecraft:block/cross",
     "textures": {
-      "cross": "resonance:block/charged_large_amethyst_bud"
+      "cross": "resonance:block/small_charged_amethyst_bud"
     }
   }

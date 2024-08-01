@@ -14,7 +14,7 @@
       "item": "minecraft:phantom_membrane"
     },
     "c": {
-      "item": "resonance:charged_amethyst_cluster"
+      "tag": "resonance:charged_amethyst_clusters"
     }
   },
   "result": {

@@ -21,8 +21,8 @@ public class LostSoulEcho extends EmptyLikeBlock {
     @Override
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
         if (random.nextInt(3) == 0) { return; }
-        double d = (double)pos.getX() + 0.9 - (double)(random.nextFloat() * 0.9f);
-        double f = (double)pos.getZ() + 0.9 - (double)(random.nextFloat() * 0.9f);
+        double d = pos.getX() + 0.9 - random.nextFloat() * 0.9f;
+        double f = pos.getZ() + 0.9 - random.nextFloat() * 0.9f;
         world.addParticle(ParticleTypes.SOUL, d, pos.getY(), f, random.nextGaussian() * 0.005, 0, random.nextGaussian() * 0.005);
     }
 }

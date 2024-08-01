@@ -59,9 +59,7 @@ public class PearlHubBlockEntity extends BlockEntity implements Clearable {
         }
         Optional<RecipeEntry<OtherOrbEffectsRecipe>> recipe = world.getServer().getRecipeManager().getFirstMatch(OtherOrbEffectsRecipe.Type.INSTANCE, new SingleStackRecipeInput(pearl), world);
         if (recipe.isPresent()) { this.texture = Identifier.of(recipe.get().value().getTexture() + ".png"); }
-        else { this.texture = Identifier.of("");
-            System.out.println("gagangsage");
-        }
+        else { this.texture = Identifier.of(""); }
     }
 
     public boolean hasPearl() { return !this.pearl.isEmpty(); }

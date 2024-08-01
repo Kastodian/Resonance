@@ -28,7 +28,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.ColorHelper.Argb;
 import net.moss.resonance.Resonance;
 import net.moss.resonance.util.Utils;
-import net.moss.resonance.item.NecklaceTrinket;
+import net.moss.resonance.util.interfaces.ScarfInterface;
 
 @Environment(EnvType.CLIENT)
 @Mixin(ArmorFeatureRenderer.class)
@@ -47,12 +47,12 @@ public abstract class ArmorRendererMixin<T extends LivingEntity, M extends Biped
         BEModel model = this.getModel(EquipmentSlot.CHEST);
         List<ItemStack> equipped = Utils.getAllEquipped(livingEntity, false);
         for (ItemStack item : equipped) {
-            if (item.getItem() instanceof NecklaceTrinket necklaceTrinket) {
+            if (item.getItem() instanceof ScarfInterface necklaceTrinket) {
                 this.setVisible(model, EquipmentSlot.CHEST);
                 ((BipedEntityModel)this.getContextModel()).copyBipedStateTo(model);
                 int special = necklaceTrinket.getSpecial(item);
                 int i = item.isIn(ItemTags.DYEABLE) ? Argb.fullAlpha(DyedColorComponent.getColor(item, 16777215)) : -1;
-                String texture = necklaceTrinket.TEXTURE + (special > 0 ? ("_special_" + special) : "") + ".png";
+                String texture = necklaceTrinket.getTexture() + (special > 0 ? ("_special_" + special) : "") + ".png";
                 VertexConsumer vertexConsumer = vertexConsumerProvider.getBuffer(RenderLayer.getArmorCutoutNoCull(Identifier.of(texture)));
                 model.render(matrixStack, vertexConsumer, light, OverlayTexture.DEFAULT_UV, i);
                 if (item.hasGlint()) {

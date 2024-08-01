@@ -7,9 +7,14 @@
     "pcp"
   ],
   "key": {
-    "w": {
-      "item": "resonance:pearl"
-    },
+    "w": [
+      {
+        "item": "resonance:pearl"
+      },
+      {
+        "item": "resonance:bifurcated_pearl"
+      }
+    ],
     "p": {
       "item": "minecraft:phantom_membrane"
     },

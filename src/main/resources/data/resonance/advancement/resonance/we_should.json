@@ -10,7 +10,10 @@
       "trigger": "resonance:use_pearl_hub",
       "conditions": {
         "item": {
-          "items": "resonance:pearl"
+          "items": [
+            "resonance:pearl",
+            "resonance:bifurcated_pearl"
+          ]
         }
       }
     }

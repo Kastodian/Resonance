@@ -7,6 +7,10 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.jetbrains.annotations.Nullable;
+import dev.emi.trinkets.api.SlotReference;
+import dev.emi.trinkets.api.TrinketComponent;
+import dev.emi.trinkets.api.TrinketItem;
+import dev.emi.trinkets.api.TrinketsApi;
 import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
@@ -40,6 +44,7 @@ import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Pair;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
@@ -56,10 +61,12 @@ import net.minecraft.world.RaycastContext.ShapeType;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 import net.minecraft.world.explosion.ExplosionBehavior;
+import net.moss.resonance.Resonance;
 
 public class Utils {
-	public static DamageSource damageSource(World world, RegistryKey<DamageType> key) { return damageSource(world, key, null);	}
-	public static DamageSource damageSource(World world, RegistryKey<DamageType> key, @Nullable LivingEntity attacker) { return new DamageSource(world.getRegistryManager().get(RegistryKeys.DAMAGE_TYPE).entryOf(key), attacker); }
+	public static DamageSource damageSource(World world, RegistryKey<DamageType> key) { return new DamageSource(world.getRegistryManager().get(RegistryKeys.DAMAGE_TYPE).entryOf(key));	}
+	public static DamageSource damageSource(World world, RegistryKey<DamageType> key, @Nullable Entity attacker) { return new DamageSource(world.getRegistryManager().get(RegistryKeys.DAMAGE_TYPE).entryOf(key), attacker); }
+	public static DamageSource damageSource(World world, RegistryKey<DamageType> key, @Nullable Vec3d position) { return new DamageSource(world.getRegistryManager().get(RegistryKeys.DAMAGE_TYPE).entryOf(key), position); }
 
     public static int[] IntListToArray(List<Integer> list) { return list.stream().mapToInt(Integer::intValue).toArray(); }
     public static List<Integer> ArrayToIntList(int[] array) { return Arrays.stream(array).boxed().collect(Collectors.toList()); }
@@ -98,23 +105,20 @@ public class Utils {
 				if (entity.getEquippedStack(slot).getItem() == item) { return true; }
 			}
 		}
-		
-		// TODO: TRINKETS SUPPORT
-		// if (Resonance.isTrinketsInstalled) {
-		// 	Optional<TrinketComponent> optional = TrinketsApi.getTrinketComponent(entity);
-		// 	if (optional.isPresent()) {
-		// 		if (optional.get().isEquipped(item)) { return true; }
-		// 	}
-		// }
+		if (Resonance.isTrinketsInstalled) {
+			Optional<TrinketComponent> optional = TrinketsApi.getTrinketComponent(entity);
+			if (optional.isPresent()) {
+				if (optional.get().isEquipped(item)) { return true; }
+			}
+		}
 		return false;
 	}
 
 	public static TypedActionResult<ItemStack> trinketHotswap(World world, PlayerEntity user, Hand hand, Item item) {
-		// TODO: TRINKETS SUPPORT
-		// if (Resonance.isTrinketsInstalled) {
-		//     ItemStack stack = user.getStackInHand(hand);
-		//     if (TrinketItem.equipItem(user, stack)) { TypedActionResult.success(stack, world.isClient()); }
-		// }
+		if (Resonance.isTrinketsInstalled) {
+		    ItemStack stack = user.getStackInHand(hand);
+		    if (TrinketItem.equipItem(user, stack)) { TypedActionResult.success(stack, world.isClient()); }
+		}
 		if (item instanceof Equipment equipment) { return equipment.equipAndSwap(item, world, user, hand); }
 		return null;
 	}
@@ -123,17 +127,13 @@ public class Utils {
 		List<ItemStack> items = new ArrayList<>();
 		if (!checkHands) { entity.getAllArmorItems().forEach(item -> items.add(item)); }
 		else { entity.getEquippedItems().forEach(item -> items.add(item)); }
-			
-		// TODO: TRINKETS SUPPORT
-		// if (Resonance.isTrinketsInstalled) {
-		// 	Optional<TrinketComponent> optional = TrinketsApi.getTrinketComponent(entity);
-		// 	if (optional.isPresent()) {
-		// 		List<Pair<SlotReference, ItemStack>> equipped = optional.get().getAllEquipped();
-		// 		for (Pair<SlotReference,ItemStack> pair : equipped) {
-		// 			items.add(pair.getRight());
-		// 		}
-		// 	}
-		// }
+		if (Resonance.isTrinketsInstalled) {
+			Optional<TrinketComponent> optional = TrinketsApi.getTrinketComponent(entity);
+			if (optional.isPresent()) {
+				List<Pair<SlotReference, ItemStack>> equipped = optional.get().getAllEquipped();
+				for (Pair<SlotReference, ItemStack> pair : equipped) { items.add(pair.getRight()); }
+			}
+		}
 		return items;
 	}
 

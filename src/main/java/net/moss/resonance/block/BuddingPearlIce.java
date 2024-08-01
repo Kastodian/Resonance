@@ -28,7 +28,9 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldView;
 import net.minecraft.world.event.GameEvent;
 import net.moss.resonance.Resonance;
 import net.moss.resonance.block.entity.BuddingPearlIceBlockEntity;
@@ -58,7 +60,7 @@ public class BuddingPearlIce extends Block implements BlockEntityProvider {
     @Override
     public void afterBreak(World world, PlayerEntity player, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, ItemStack tool) {
         super.afterBreak(world, player, pos, state, blockEntity, tool);
-        if (blockEntity instanceof BuddingPearlIceBlockEntity buddingPearlIce) {
+        if (blockEntity instanceof BuddingPearlIceBlockEntity buddingPearlIce && world.getGameRules().getBoolean(GameRules.DO_TILE_DROPS)) {
             ItemEntity itemEntity = new ItemEntity(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, buddingPearlIce.getCatalyst().copy().getRecipeRemainder());
             itemEntity.setToDefaultPickupDelay();
             world.spawnEntity(itemEntity);
@@ -83,26 +85,38 @@ public class BuddingPearlIce extends Block implements BlockEntityProvider {
     
     public void craftPearl(BuddingPearlIceBlockEntity blockEntity, BlockPos pos, BlockState state, ServerWorld world, Random random) {
         ItemStack stack = new ItemStack(Resonance.PEARL);
+        ItemStack seed = blockEntity.getSeed();
+        ItemStack potion = blockEntity.getPotion();
+        if (potion.isOf(Resonance.BIFURCATED_PEARL) || seed.isOf(Resonance.BIFURCATED_PEARL)) { stack = new ItemStack(Resonance.BIFURCATED_PEARL); }
 
-        List<Integer> pearlStats = blockEntity.getSeed().get(Resonance.PEARL_STATS);
+        List<Integer> pearlStats = seed.get(Resonance.PEARL_STATS);
         List<Integer> stats = pearlStats == null ? Ints.asList(1, 1, 1, 0) : Ints.asList(pearlStats.get(0), pearlStats.get(1), pearlStats.get(2), pearlStats.get(3));
         int i = random.nextBetween(0, 2);
         stats.set(i, Math.min(3, stats.get(i) + 1));
-        if (stats.get(3) != 1 && random.nextInt(128) == 1) { stats.set(3, 1); }
-        if (blockEntity.hasCatalyst() && blockEntity.getCatalyst().contains(Resonance.CATALYST_STATS)) {
-            List<Integer> catalyst = blockEntity.getCatalyst().get(Resonance.CATALYST_STATS);
-            stats.set(0, Math.min(1, Math.min(stats.get(0) + catalyst.get(0), 3)));
-            stats.set(1, Math.min(1, Math.min(stats.get(1) + catalyst.get(1), 3)));
-            stats.set(2, Math.min(1, Math.min(stats.get(2) + catalyst.get(2), 3)));
-        }
-        stack.set(Resonance.PEARL_STATS, stats);
+        if (potion.contains(Resonance.PEARL_STATS)) {
+            List<Integer> potionStats = potion.get(Resonance.PEARL_STATS);
+            stats.set(0, Math.min((stats.get(0) + potionStats.get(0) / 2), 3));
+            stats.set(1, Math.min((stats.get(1) + potionStats.get(1) / 2), 3));
+            stats.set(2, Math.min((stats.get(2) + potionStats.get(2) / 2), 3));
+        } if (blockEntity.hasCatalyst() && blockEntity.getCatalyst().contains(Resonance.CATALYST_STATS)) {
+            List<Integer> catalystStats = blockEntity.getCatalyst().get(Resonance.CATALYST_STATS);
+            stats.set(0, Math.min(1, Math.min(stats.get(0) + catalystStats.get(0), 3)));
+            stats.set(1, Math.min(1, Math.min(stats.get(1) + catalystStats.get(1), 3)));
+            stats.set(2, Math.min(1, Math.min(stats.get(2) + catalystStats.get(2), 3)));
+        } if (stats.get(3) != 1 && random.nextInt(128) == 1) { stats.set(3, 1); }
         
         PotionContentsComponent potionComponent = new PotionContentsComponent(Potions.AWKWARD);
-        if (blockEntity.getPotion().contains(DataComponentTypes.POTION_CONTENTS)){ potionComponent = blockEntity.getPotion().get(DataComponentTypes.POTION_CONTENTS); }
-        if (blockEntity.getPotion().contains(DataComponentTypes.OMINOUS_BOTTLE_AMPLIFIER)) {
+        if (potion.contains(DataComponentTypes.POTION_CONTENTS)){ potionComponent = potion.get(DataComponentTypes.POTION_CONTENTS); }
+        if (potion.isOf(Resonance.PEARL) && seed.isOf(Resonance.PEARL)) {
+            for (StatusEffectInstance effectInstance : seed.get(DataComponentTypes.POTION_CONTENTS).getEffects()) { potionComponent = potionComponent.with(effectInstance); }
+            stack = new ItemStack(Resonance.BIFURCATED_PEARL);
+        }
+        if (potion.contains(DataComponentTypes.OMINOUS_BOTTLE_AMPLIFIER)) {
             Integer integer = (Integer)stack.getOrDefault(DataComponentTypes.OMINOUS_BOTTLE_AMPLIFIER, 0);
             potionComponent = potionComponent.with(new StatusEffectInstance(StatusEffects.BAD_OMEN, 120000, integer, false, false, true));
         }
+
+        stack.set(Resonance.PEARL_STATS, stats);
         stack.set(DataComponentTypes.POTION_CONTENTS, potionComponent);
 
         blockEntity.clear();
@@ -114,6 +128,12 @@ public class BuddingPearlIce extends Block implements BlockEntityProvider {
     }
 
     @Override
+    public ItemStack getPickStack(WorldView world, BlockPos pos, BlockState state) {
+        if (state.get(AGE) > 2) { return new ItemStack(Resonance.PEARL_ICE); }
+        return new ItemStack(Blocks.ICE);
+    }
+
+    @Override
     protected ItemActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (!world.isClient && world.getBlockEntity(pos) instanceof BuddingPearlIceBlockEntity blockEntity && !state.get(HAS_PEARL)) {
             if ((stack.contains(DataComponentTypes.OMINOUS_BOTTLE_AMPLIFIER) || stack.contains(DataComponentTypes.POTION_CONTENTS)) && !state.get(HAS_POTION).booleanValue()) {
@@ -122,14 +142,15 @@ public class BuddingPearlIce extends Block implements BlockEntityProvider {
                 world.setBlockState(pos, blockState, Block.NOTIFY_ALL);
                 world.emitGameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Emitter.of(player, blockState));
                 world.updateNeighborsAlways(pos.down(), blockState.getBlock());
+                return ItemActionResult.success(world.isClient);
             } else if (stack.contains(Resonance.CATALYST_STATS) && !state.get(HAS_CATALYST).booleanValue()) {
                 blockEntity.setCatalyst(stack.split(1));
                 BlockState blockState = state.with(HAS_CATALYST, true);
                 world.setBlockState(pos, blockState, Block.NOTIFY_ALL);
                 world.emitGameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Emitter.of(player, blockState));
                 world.updateNeighborsAlways(pos.down(), blockState.getBlock());
+                return ItemActionResult.success(world.isClient);
             }
-            return ItemActionResult.success(world.isClient);
         }
         return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }

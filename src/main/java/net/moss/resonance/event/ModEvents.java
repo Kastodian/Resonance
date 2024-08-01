@@ -11,6 +11,8 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
+import net.minecraft.advancement.criterion.Criteria;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.MobSpawnerBlockEntity;
@@ -73,18 +75,12 @@ public class ModEvents {
 		if (world.isClient()) { return ActionResult.PASS; }
 		ItemStack itemstack = player.getStackInHand(hand);
 		if (itemstack.getItem().equals(Resonance.TINTED_BOTTLE)) {
-            Boolean successfulPickup = false;
+            Boolean successfulPickup = true;
             ItemStack bottleType = Resonance.TINTED_BOTTLE.getDefaultStack();
-			if (target.getType() == EntityType.FIREBALL) {
-                successfulPickup = true;
-                bottleType = Resonance.FIREBALL_BOTTLE.getDefaultStack();
-			} else if (target.getType() == EntityType.SHULKER_BULLET) {
-                successfulPickup = true;
-                bottleType = Resonance.SHULKER_BOTTLE.getDefaultStack();
-            } else if (target.getType() == ModEntities.LOST_SOUL) {
-                successfulPickup = true;
-                bottleType = Resonance.SOUL_BOTTLE.getDefaultStack();
-            }
+			if (target.getType() == EntityType.FIREBALL) { bottleType = Resonance.FIREBALL_BOTTLE.getDefaultStack(); }
+            else if (target.getType() == EntityType.SHULKER_BULLET) { bottleType = Resonance.SHULKER_BOTTLE.getDefaultStack(); }
+            else if (target.getType() == ModEntities.LOST_SOUL) { bottleType = Resonance.SOUL_BOTTLE.getDefaultStack(); }
+            else { successfulPickup = false; }
             if (successfulPickup) {
                 Resonance.TINTED_BOTTLE_CRITERION.trigger((ServerPlayerEntity)player, target);
                 world.playSound(null, player.getBlockPos(), SoundEvents.ITEM_BOTTLE_FILL, SoundCategory.PLAYERS);
@@ -104,17 +100,34 @@ public class ModEvents {
 	}
 
     public static ActionResult onBlockInteract(PlayerEntity player, World world, Hand hand, BlockHitResult hitResult) {
-		if (world.isClient()) { return ActionResult.PASS; }
 		ItemStack itemstack = player.getStackInHand(hand);
         BlockPos pos = hitResult.getBlockPos();
 		BlockState state = world.getBlockState(pos);
-        if ((itemstack.isOf(Items.AMETHYST_SHARD) || itemstack.isOf(Resonance.CHARGED_AMETHYST_SHARD) || itemstack.isOf(Resonance.PEARL)) && state.isOf(Blocks.ICE)) {
+        if ((itemstack.isOf(Items.AMETHYST_SHARD) || itemstack.isOf(Resonance.CHARGED_AMETHYST_SHARD) || itemstack.isOf(Resonance.PEARL) || itemstack.isOf(Resonance.BIFURCATED_PEARL)) && state.isOf(Blocks.ICE)) {
+            if (player instanceof ServerPlayerEntity serverPlayerEntity) { Criteria.ITEM_USED_ON_BLOCK.trigger(serverPlayerEntity, pos, itemstack); }
             player.incrementStat(Stats.USED.getOrCreateStat(itemstack.getItem()));
             world.setBlockState(pos, Resonance.BUDDING_PEARL_ICE.getDefaultState());
             state = world.getBlockState(pos);
             world.playSound(player, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.BLOCKS);
             ((BuddingPearlIce)state.getBlock()).putSeed(world, pos, state, itemstack);
             return ActionResult.SUCCESS;
+        } else if (itemstack.isOf(Items.SHEARS)) {
+            Block block = null;
+            if (state.isOf(Blocks.AMETHYST_CLUSTER)) { block = Blocks.LARGE_AMETHYST_BUD; }
+            else if (state.isOf(Blocks.LARGE_AMETHYST_BUD)) { block = Blocks.MEDIUM_AMETHYST_BUD; }
+            else if (state.isOf(Blocks.MEDIUM_AMETHYST_BUD)) { block = Blocks.SMALL_AMETHYST_BUD; }
+            else if (state.isOf(Resonance.CHARGED_AMETHYST_CLUSTER)) { block = Resonance.LARGE_CHARGED_AMETHYST_BUD; }
+            else if (state.isOf(Resonance.LARGE_CHARGED_AMETHYST_BUD)) { block = Resonance.MEDIUM_CHARGED_AMETHYST_BUD; }
+            else if (state.isOf(Resonance.MEDIUM_CHARGED_AMETHYST_BUD)) { block = Resonance.SMALL_CHARGED_AMETHYST_BUD; }
+            if (block != null) {
+                if (player instanceof ServerPlayerEntity serverPlayerEntity) { Criteria.ITEM_USED_ON_BLOCK.trigger(serverPlayerEntity, pos, itemstack); }
+                player.incrementStat(Stats.USED.getOrCreateStat(itemstack.getItem()));
+                world.addBlockBreakParticles(pos, state);
+                world.setBlockState(pos, block.getStateWithProperties(state));
+                world.playSound(player, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_AMETHYST_BLOCK_BREAK, SoundCategory.BLOCKS);
+                itemstack.damage(4, player, LivingEntity.getSlotForHand(hand));
+                player.getItemCooldownManager().set(Items.SHEARS, 20);
+            }
         }
 		return ActionResult.PASS;
 	}
@@ -218,9 +231,9 @@ public class ModEvents {
                 else {
 					float damage = (float) ((entity2.getType().isIn(Resonance.SOUND_SENSITIVE_TAG) ? 2 : 1) * strength * 8f / Math.max(pos.distanceTo(entity2.getPos()), 1));
                     if (sourceEntity != null && sourceEntity instanceof LivingEntity livingEntity) { entity2.damage(Utils.damageSource(world, Resonance.REVERBERATION_DAMAGE, livingEntity), damage); }
-                    else { entity2.damage(Utils.damageSource(world, Resonance.REVERBERATION_DAMAGE), damage); }
+                    else { entity2.damage(Utils.damageSource(world, Resonance.REVERBERATION_DAMAGE, pos), damage); }
 				}
-				Utils.customKnockbackClamp(entity1, pos, 0.4f * strength, 2f);
+				Utils.customKnockbackClamp(entity1, pos, 0.4f * strength, 3f);
 			}
 		}
 	}

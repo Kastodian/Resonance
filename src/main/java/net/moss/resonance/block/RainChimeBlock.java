@@ -32,6 +32,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.intprovider.UniformIntProvider;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
@@ -79,14 +80,19 @@ public class RainChimeBlock extends BlockWithEntity implements Waterloggable {
         else { world.setBlockState(pos, state.with(IS_THUNDERING, false).with(IS_RAINING, false), Block.NOTIFY_ALL); }
     }
 
-    public boolean hasComparatorOutput(BlockState state) { return true; }
-    public int getComparatorOutput(BlockState state, World world, BlockPos pos) { return state.get(IS_THUNDERING) ? 15 : (state.get(IS_RAINING) ? 7 : 0); }
+    @Override public boolean hasComparatorOutput(BlockState state) { return true; }
+    @Override public int getComparatorOutput(BlockState state, World world, BlockPos pos) { return state.get(IS_THUNDERING) ? 15 : (state.get(IS_RAINING) ? 7 : 0); }
+    @Override protected MapCodec<? extends BlockWithEntity> getCodec() { return CODEC; }
+	@Nullable @Override public BlockEntity createBlockEntity(BlockPos blockPos, BlockState blockState) { return new RainChimeBlockEntity(blockPos, blockState); }
+	@Override public BlockRenderType getRenderType(BlockState state) { return BlockRenderType.INVISIBLE; }
+    @Override public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) { return Block.createCuboidShape(5, 8, 5, 11, 16, 11); }
+    @Override public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) { return Block.createCuboidShape(6, 14, 6, 10, 16, 10); }
 
     @Override
     @Nullable
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         BlockState blockState = this.getDefaultState();
-        if ((this.canPlaceAt(blockState, ctx.getWorld(), ctx.getBlockPos()))) {
+        if (this.canPlaceAt(blockState, ctx.getWorld(), ctx.getBlockPos())) {
             FluidState fluidState = ctx.getWorld().getFluidState(ctx.getBlockPos());
             return blockState.with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
         }
@@ -100,30 +106,21 @@ public class RainChimeBlock extends BlockWithEntity implements Waterloggable {
 
     @Override
     public FluidState getFluidState(BlockState state) {
-        if (state.get(WATERLOGGED).booleanValue()) {
-            return Fluids.WATER.getStill(false);
-        }
+        if (state.get(WATERLOGGED).booleanValue()) { return Fluids.WATER.getStill(false); }
         return state.getFluidState();
     }
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if (state.get(WATERLOGGED).booleanValue()) {
-            world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
-        }
-        if (direction == Direction.UP && !state.canPlaceAt(world, pos)) {
-            return Blocks.AIR.getDefaultState();
-        }
+        if (state.get(WATERLOGGED).booleanValue()) { world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world)); }
+        if (direction == Direction.UP && !state.canPlaceAt(world, pos)) { return Blocks.AIR.getDefaultState(); }
         return state;
     }
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
-        if (agitate(pos, state, world, true)) {
-            return ActionResult.SUCCESS;
-        } else {
-            return ActionResult.PASS;
-        }
+        if (agitate(pos, state, world, true)) { return ActionResult.SUCCESS; }
+        else { return ActionResult.PASS; }
     }
 
     @Override
@@ -168,41 +165,13 @@ public class RainChimeBlock extends BlockWithEntity implements Waterloggable {
     }
 
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return Block.createCuboidShape(5, 8, 5, 11, 16, 11);
-    }
-    
-    @Override
-    public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return Block.createCuboidShape(6, 14, 6, 10, 16, 10);
-    }
-
-	@Nullable
-    @Override
-    public BlockEntity createBlockEntity(BlockPos blockPos, BlockState blockState) {
-		return new RainChimeBlockEntity(blockPos, blockState);
-    }
-
-	@Override
-	public BlockRenderType getRenderType(BlockState state) {
-		return BlockRenderType.INVISIBLE;
-	}
-
-    @Override
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
         if (world.isThundering()) {
             ParticleUtil.spawnParticle(Direction.Axis.Y, world, pos, 0.125, ModParticles.SPARK_PARTICLE, UniformIntProvider.create(1, 1));
         }
         if (random.nextInt(10) == 0) {
-            double d = (double)pos.getX() + 0.5;
-            double e = pos.getY();
-            double f = (double)pos.getZ() + 0.5;
-            world.playSound(d, e, f, SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.AMBIENT, 1.0f, 0.5f + world.random.nextFloat() * 1.2f, false);
+            Vec3d vec = pos.toCenterPos();
+            world.playSound(vec.getX(), vec.getY(), vec.getZ(), SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.AMBIENT, 1.0f, 0.5f + world.random.nextFloat() * 1.2f, false);
         }
-    }
-
-    @Override
-    protected MapCodec<? extends BlockWithEntity> getCodec() {
-        return CODEC;
     }
 }

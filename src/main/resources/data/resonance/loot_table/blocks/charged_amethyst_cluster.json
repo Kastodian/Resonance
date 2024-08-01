@@ -3,6 +3,7 @@
   "pools": [
     {
       "rolls": 1,
+      "bonus_rolls": 0,
       "entries": [
         {
           "type": "minecraft:alternatives",
@@ -12,49 +13,62 @@
               "name": "resonance:charged_amethyst_cluster",
               "conditions": [
                 {
-                  "condition": "minecraft:block_state_property",
-                  "block": "resonance:charged_amethyst_cluster",
-                  "properties": {
-                    "stage": "0"
-                  }
-                },
-                {
                   "condition": "minecraft:match_tool",
                   "predicate": {
                     "predicates": {
-                          "minecraft:enchantments": [
-                            {
-                              "enchantments": "minecraft:silk_touch",
-                              "levels": {
-                                "min": 1
-                              }
-                            }
-                          ]
+                      "minecraft:enchantments": [
+                        {
+                          "enchantments": "minecraft:silk_touch",
+                          "levels": {
+                            "min": 1
+                          }
                         }
+                      ]
+                    }
                   }
                 }
               ]
             },
             {
-              "type": "minecraft:item",
-              "name": "resonance:charged_amethyst_shard",
-              "functions": [
+              "type": "minecraft:alternatives",
+              "children": [
                 {
-                  "function": "minecraft:set_count",
-                  "count": {
-                    "type": "minecraft:uniform",
-                    "min": 2,
-                    "max": 5
-                  },
-                  "add": false
+                  "type": "minecraft:item",
+                  "name": "resonance:charged_amethyst_shard",
+                  "functions": [
+                    {
+                      "function": "minecraft:set_count",
+                      "count": 4,
+                      "add": false
+                    },
+                    {
+                      "function": "minecraft:apply_bonus",
+                      "enchantment": "minecraft:fortune",
+                      "formula": "minecraft:ore_drops"
+                    }
+                  ],
+                  "conditions": [
+                    {
+                      "condition": "minecraft:match_tool",
+                      "predicate": {
+                        "items": "#minecraft:cluster_max_harvestables"
+                      }
+                    }
+                  ]
                 },
                 {
-                  "function": "minecraft:apply_bonus",
-                  "enchantment": "minecraft:fortune",
-                  "formula": "minecraft:ore_drops"
-                },
-                {
-                  "function": "minecraft:explosion_decay"
+                  "type": "minecraft:item",
+                  "name": "resonance:charged_amethyst_shard",
+                  "functions": [
+                    {
+                      "function": "minecraft:set_count",
+                      "count": 2,
+                      "add": false
+                    },
+                    {
+                      "function": "minecraft:explosion_decay"
+                    }
+                  ]
                 }
               ]
             }
@@ -62,5 +76,6 @@
         }
       ]
     }
-  ]
+  ],
+  "random_sequence": "minecraft:blocks/amethyst_cluster"
 }

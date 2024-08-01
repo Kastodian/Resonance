@@ -1,0 +1,10 @@
+{
+  "type": "resonance:reverberation",
+  "ingredient": {
+    "item": "resonance:large_charged_amethyst_bud"
+  },
+  "results": [
+    { "id": "minecraft:large_amethyst_bud" }
+  ],
+  "resonates": true
+}

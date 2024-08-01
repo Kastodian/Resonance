@@ -15,7 +15,8 @@ public class TintedBottleBlock extends LanternBlock {
         super(settings);
         this.ITEM = bottle;
     }
-
+    
+    @Override
     public ItemStack getPickStack(WorldView world, BlockPos pos, BlockState state) {
         return new ItemStack(ITEM);
     }

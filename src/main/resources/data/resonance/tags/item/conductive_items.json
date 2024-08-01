@@ -1,12 +1,14 @@
 {
     "values": [
-      "resonance:charged_amethyst_cluster",
+      "#resonance:charged_amethyst_clusters",
       "resonance:charged_amethyst_shard",
       "resonance:rock_candy",
       "resonance:enchanted_rock_candy",
+      "resonance:whistling_arrow",
       "resonance:amethyst_shield",
       "resonance:copper_shield",
       "resonance:pearl",
+      "resonance:bifurcated_pearl",
       "resonance:pearl_hub",
       "minecraft:trident",
       "minecraft:mace",

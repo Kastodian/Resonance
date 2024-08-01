@@ -2,8 +2,7 @@ package net.moss.resonance.item;
 
 import net.minecraft.item.ItemStack;
 
-public class DyeableScarf extends NecklaceTrinket {
-
+public class DyeableScarf extends ScarfItem {
     public DyeableScarf(Settings settings, String modId, String texture) {
         super(settings, modId, texture);
     }

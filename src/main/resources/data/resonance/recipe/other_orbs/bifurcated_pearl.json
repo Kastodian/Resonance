@@ -1,0 +1,6 @@
+{
+    "type": "resonance:other_orb_effects",
+    "ingredient": { "item": "resonance:bifurcated_pearl" },
+    "result": { "id": "resonance:bifurcated_pearl" },
+    "texture": "resonance:textures/block/pearl"
+  }

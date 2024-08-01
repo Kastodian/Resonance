@@ -82,7 +82,7 @@ public class PearlHub extends HorizontalFacingBlock implements BlockEntityProvid
         if (state.get(HAS_PEARL).booleanValue()) {
             return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
-        if (stack.isIn(Resonance.PEARL_ITEMS_TAG) || stack.isOf(Resonance.PEARL)) {
+        if (stack.isIn(Resonance.PEARL_ITEMS_TAG) || stack.isOf(Resonance.PEARL) || stack.isOf(Resonance.BIFURCATED_PEARL)) {
             return PearlHub.putPearlIfAbsent(player, world, pos, state, stack) ? ItemActionResult.success(world.isClient) : ItemActionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
         }
         return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;

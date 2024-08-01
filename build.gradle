@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '1.6-SNAPSHOT'
+	id 'fabric-loom' version '1.7-SNAPSHOT'
 	id 'maven-publish'
 }
 
@@ -41,10 +41,10 @@ dependencies {
 	//modLocalRuntime "dev.emi:emi-fabric:${project.emi_version}"
 
 
-	//modCompileOnly "dev.emi:trinkets:${project.trinkets_version}"
-	//modLocalRuntime "dev.emi:trinkets:${project.trinkets_version}"
-	//modApi "dev.onyxstudios.cardinal-components-api:cardinal-components-base:5.4.0"
-    //modApi "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:5.4.0"
+	modCompileOnly "dev.emi:trinkets:${project.trinkets_version}"
+	modLocalRuntime "dev.emi:trinkets:${project.trinkets_version}"
+	modApi "dev.onyxstudios.cardinal-components-api:cardinal-components-base:5.4.0"
+    modApi "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:5.4.0"
 }
 
 processResources {

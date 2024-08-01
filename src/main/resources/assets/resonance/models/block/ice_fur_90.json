@@ -1,0 +1,50 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"particle": "resonance:block/ice_fur",
+		"ice_fur": "resonance:block/ice_fur"
+	},
+	"elements": [
+		{
+			"from": [11, 0, 0],
+			"to": [11, 16, 16],
+			"shade": false,
+			"rotation": {"angle": 0, "axis": "z", "origin": [8, 8, 8]},
+			"faces": {
+				"east": {"uv": [0, 0, 16, 16], "rotation": 270, "texture": "#ice_fur"},
+				"west": {"uv": [0, 0, 16, 16], "rotation": 90, "texture": "#ice_fur"}
+			}
+		},
+		{
+			"from": [1.53073, 4.30448, 0],
+			"to": [17.53073, 4.30448, 16],
+			"shade": false,
+			"rotation": {"angle": -22.5, "axis": "z", "origin": [8, 8, 8]},
+			"faces": {
+				"up": {"uv": [0, 0, 16, 16], "rotation": 180, "texture": "#ice_fur"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#ice_fur"}
+			}
+		},
+		{
+			"from": [1.53073, 11.69552, 0],
+			"to": [17.53073, 11.69552, 16],
+			"shade": false,
+			"rotation": {"angle": 22.5, "axis": "z", "origin": [8, 8, 8]},
+			"faces": {
+				"up": {"uv": [0, 0, 16, 16], "rotation": 180, "texture": "#ice_fur"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#ice_fur"}
+			}
+		},
+		{
+			"from": [5.22836, 1.14805, 0],
+			"to": [5.22836, 17.14805, 16],
+			"shade": false,
+			"rotation": {"angle": 22.5, "axis": "z", "origin": [8, 8, 8]},
+			"faces": {
+				"east": {"uv": [0, 0, 16, 16], "rotation": 270, "texture": "#ice_fur"},
+				"west": {"uv": [0, 0, 16, 16], "rotation": 90, "texture": "#ice_fur"}
+			}
+		}
+	]
+}

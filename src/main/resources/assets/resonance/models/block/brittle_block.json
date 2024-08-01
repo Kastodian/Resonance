@@ -1,0 +1,20 @@
+{
+  "parent": "block/block",
+  "textures": {
+    "all": "resonance:block/brittle_block",
+    "particle": "resonance:block/brittle_block"
+  },
+  "elements": [
+      {   "from": [ -0.001, -0.001, -0.001 ],
+          "to": [ 16.001, 16.001, 16.001 ],
+          "faces": {
+              "down":  { "texture": "#all", "cullface": "down" },
+              "up":    { "texture": "#all", "cullface": "up" },
+              "north": { "texture": "#all", "cullface": "north" },
+              "south": { "texture": "#all", "cullface": "south" },
+              "west":  { "texture": "#all", "cullface": "west" },
+              "east":  { "texture": "#all", "cullface": "east" }
+          }
+      }
+  ]
+}

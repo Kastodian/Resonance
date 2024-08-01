@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": [
+    {
+      "item": "resonance:large_charged_amethyst_bud"
+    },
+    {
+      "item": "resonance:charged_amethyst_cluster"
+    }
+  ],
+  "result": {
+    "id": "resonance:medium_charged_amethyst_bud"
+  }
+}

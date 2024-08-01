@@ -1,9 +1,7 @@
 package net.moss.resonance.item;
 
 import java.util.List;
-
 import org.jetbrains.annotations.Nullable;
-
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -132,6 +130,9 @@ public class TintedBottle extends Item {
     @Override
     public ActionResult useOnBlock(ItemUsageContext context) {
         PlayerEntity playerEntity = context.getPlayer();
+        if (context.getWorld().getBlockState(context.getBlockPos()).isOf(Resonance.BUDDING_PEARL_ICE)) {
+            return ActionResult.CONSUME;
+        }
         if (playerEntity.isSneaking()) {
             ActionResult actionResult = this.place(new ItemPlacementContext(context));
             if (!actionResult.isAccepted() && context.getStack().contains(DataComponentTypes.FOOD)) {

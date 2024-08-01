@@ -43,7 +43,7 @@ public class EnchantUtils {
 	public static void recoilCheck(LivingEntity entity, @Nullable DamageSource damageSource, ItemStack stack, float strength, @Nullable Float clamp, boolean modifyCheck) {
 		if (EnchantmentHelper.hasAnyEnchantmentsWith(stack, Resonance.HAS_RECOIL) && entity.getWorld() instanceof ServerWorld world) {
 			Vec3d source = entity.getEyePos().add(entity.getRotationVec(1.0f));
-			if (damageSource == null) { damageSource = Utils.damageSource(world, DamageTypes.INDIRECT_MAGIC, entity); }
+			if (damageSource == null) { damageSource = Utils.damageSource(world, DamageTypes.INDIRECT_MAGIC); }
 			if (modifyCheck) { strength += 0.2f * EnchantmentHelper.modifyKnockback(world, stack, entity, damageSource, (float) entity.getAttributeBaseValue(EntityAttributes.GENERIC_ATTACK_KNOCKBACK)); }
 			Utils.customKnockbackClamp(entity, source, strength, clamp);
 		}

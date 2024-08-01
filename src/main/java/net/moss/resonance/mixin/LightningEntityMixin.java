@@ -41,9 +41,7 @@ public class LightningEntityMixin {
 		if (this.ambientTick == 2) {
 			BlockPos blockPos = this.getAffectedBlockPos();
 			conductElectricity(blockPos, 12);
-			for (BlockPos blockPos2 : conductedBlocks) {
-				electrify(blockPos2);
-			}
+			for (BlockPos blockPos2 : conductedBlocks) { electrify(blockPos2); }
 			LightningEntity Lightning = (LightningEntity)(Object) this;
 			if (Lightning.getWorld() instanceof ServerWorld world) {
 				List<Entity> list = Utils.entitiesInRadius(world, Lightning.getPos(), Lightning, 2, 2, Entity::isAlive);
@@ -88,41 +86,22 @@ public class LightningEntityMixin {
 	public void electrify(BlockPos blockPos) {
 		LightningEntity Lightning = (LightningEntity)(Object) this;
         World world = Lightning.getWorld();
-		Block block = world.getBlockState(blockPos).getBlock();
 		BlockState state = world.getBlockState(blockPos);
-		if (block == Blocks.AMETHYST_CLUSTER || block == Blocks.LARGE_AMETHYST_BUD || block == Blocks.MEDIUM_AMETHYST_BUD || block == Blocks.SMALL_AMETHYST_BUD || block == Resonance.CHARGED_AMETHYST_CLUSTER) {
-			Direction direction = state.get(ChargedAmethystBlock.FACING);
-			if (block != Resonance.CHARGED_AMETHYST_CLUSTER) {
-				direction = state.get(AmethystClusterBlock.FACING);
-				int stage = 0;
-				if (block == Blocks.MEDIUM_AMETHYST_BUD) {stage = 1;}
-				else if (block == Blocks.SMALL_AMETHYST_BUD) {stage = 2;}
-				BlockState blockState = (BlockState)Resonance.CHARGED_AMETHYST_CLUSTER.getDefaultState().with(ChargedAmethystBlock.FACING, state.get(AmethystClusterBlock.FACING)).with(ChargedAmethystBlock.WATERLOGGED, state.get(AmethystClusterBlock.WATERLOGGED)).with(ChargedAmethystBlock.STAGE, stage);
-				world.setBlockState(blockPos, blockState, Block.NOTIFY_LISTENERS);
-			}
-			else if (state.get(ChargedAmethystBlock.STAGE) >=1) {
-				BlockState blockState = (BlockState)Resonance.CHARGED_AMETHYST_CLUSTER.getDefaultState().with(ChargedAmethystBlock.FACING, state.get(ChargedAmethystBlock.FACING)).with(ChargedAmethystBlock.WATERLOGGED, state.get(ChargedAmethystBlock.WATERLOGGED)).with(ChargedAmethystBlock.STAGE, state.get(ChargedAmethystBlock.STAGE) - 1);
-				world.setBlockState(blockPos, blockState, Block.NOTIFY_LISTENERS);
-			}
+		Block block = state.getBlock();
+		if (block instanceof AmethystClusterBlock) {
+			int stage = 0;
+			if (block == Blocks.MEDIUM_AMETHYST_BUD || block == Resonance.MEDIUM_CHARGED_AMETHYST_BUD) { stage = 1; }
+			else if (block == Blocks.SMALL_AMETHYST_BUD || block == Resonance.SMALL_CHARGED_AMETHYST_BUD) { stage = 2; }
+			BlockState blockState = ChargedAmethystBlock.changeState(state, stage);
+			world.setBlockState(blockPos, blockState, Block.NOTIFY_LISTENERS);
 			Vec3d posOffest = new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ());
 			Vector3f rotOffest = new Vector3f(0,0,0);
-			if (direction == Direction.DOWN) {
-				posOffest = new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ()).add(0.5, 0.8, 0.5);
-				rotOffest = new Vector3f(1.57f, 1.57f, 0);
-			} else if (direction == Direction.UP) {
-				posOffest = new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ()).add(0.5, 0.2, 0.5);
-				rotOffest = new Vector3f(1.57f, 1.57f, 0);
-			} else if (direction == Direction.NORTH) {
-				posOffest = new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ()).add(0.5, 0.5, 0.8);
-			} else if (direction == Direction.SOUTH) {
-				posOffest = new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ()).add(0.5, 0.5, 0.2);
-			} else if (direction == Direction.EAST) {
-				posOffest = new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ()).add(0.2, 0.5, 0.5);
-				rotOffest = new Vector3f(0.1f, 1.57f, 0);
-			} else {
-				posOffest = new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ()).add(0.8, 0.5, 0.5);
-				rotOffest = new Vector3f(0.1f, 1.57f, 0);
-			}
+			Direction direction = state.get(AmethystClusterBlock.FACING);
+			if (direction == Direction.DOWN) { rotOffest = new Vector3f(1.57f, 1.57f, 0); }
+			else if (direction == Direction.UP) { rotOffest = new Vector3f(1.57f, 1.57f, 0); }
+			else if (direction == Direction.EAST) { rotOffest = new Vector3f(0.1f, 1.57f, 0); }
+			else { rotOffest = new Vector3f(0.1f, 1.57f, 0); }
+			posOffest = blockPos.toCenterPos();
 			ReverberateEvent.REVERBERATE.invoker().onResonate(world, posOffest, rotOffest, null, Lightning, 2, false);
 		}
 	}

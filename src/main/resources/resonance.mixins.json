@@ -17,7 +17,8 @@
     "BrushItemMixin",
     "TridentItemMixin",
     "AbstractFurnaceBlockMixin",
-    "AbstractFurnaceBlockEntityAccessor"
+    "AbstractFurnaceBlockEntityAccessor",
+    "AbstractCauldronBlockAccessor"
   ],
   "client": [
     "ArmorRendererMixin",

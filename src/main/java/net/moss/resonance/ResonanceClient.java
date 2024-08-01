@@ -14,6 +14,7 @@ import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.DyedColorComponent;
 import net.minecraft.util.Identifier;
 import net.moss.resonance.block.renderer.RainChimeBlockRenderer;
+import net.moss.resonance.block.renderer.BrittleBlockEntityRenderer;
 import net.moss.resonance.block.renderer.BuddingPearlIceBlockEntityRenderer;
 import net.moss.resonance.block.renderer.PearlHubBlockEntityRenderer;
 import net.moss.resonance.entity.ModEntities;
@@ -33,6 +34,9 @@ public class ResonanceClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         BlockRenderLayerMap.INSTANCE.putBlock(Resonance.CHARGED_AMETHYST_CLUSTER, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(Resonance.LARGE_CHARGED_AMETHYST_BUD, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(Resonance.MEDIUM_CHARGED_AMETHYST_BUD, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(Resonance.SMALL_CHARGED_AMETHYST_BUD, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(Resonance.TREASURE_HOARD, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(Resonance.BOOK_PILE, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(Resonance.COMPOST_HEAP, RenderLayer.getCutout());
@@ -40,6 +44,8 @@ public class ResonanceClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(Resonance.JUMP_ORB_NORMAL, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(Resonance.JUMP_ORB_STRONG, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(Resonance.PEARL_HUB, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(Resonance.ICICLE, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(Resonance.ICE_FUR, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(Resonance.TINTED_BOTTLE_BLOCK, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putBlock(Resonance.SCULK_BOTTLE_BLOCK, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putBlock(Resonance.SOUL_BOTTLE_BLOCK, RenderLayer.getTranslucent());
@@ -47,6 +53,7 @@ public class ResonanceClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(Resonance.LIGHTNING_BOTTLE_BLOCK, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putBlock(Resonance.SHULKER_BOTTLE_BLOCK, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putBlock(Resonance.BUDDING_PEARL_ICE, RenderLayer.getTranslucent());
+        BlockRenderLayerMap.INSTANCE.putBlock(Resonance.BRITTLE_BLOCK, RenderLayer.getTranslucent());
         
         ParticleFactoryRegistry.getInstance().register(ModParticles.SMALL_RING_PARTICLE, SmallRingParticle.Factory::new);
         ParticleFactoryRegistry.getInstance().register(ModParticles.MEDIUM_RING_PARTICLE, MediumRingParticle.Factory::new);
@@ -63,6 +70,7 @@ public class ResonanceClient implements ClientModInitializer {
         BlockEntityRendererFactories.register(Resonance.RAIN_CHIME_BLOCK_ENTITY, RainChimeBlockRenderer::new);
         BlockEntityRendererFactories.register(Resonance.PEARL_HUB_BLOCK_ENTITY, PearlHubBlockEntityRenderer::new);
         BlockEntityRendererFactories.register(Resonance.BUDDING_PEARL_ICE_BLOCK_ENTITY, BuddingPearlIceBlockEntityRenderer::new);
+        BlockEntityRendererFactories.register(Resonance.BRITTLE_BLOCK_ENTITY, BrittleBlockEntityRenderer::new);
         
         ColorProviderRegistry.ITEM.register((stack, tintIndex) -> stack.contains(DataComponentTypes.DYED_COLOR) ? DyedColorComponent.getColor(stack, 16777215) : -1, Resonance.SCARF);
 

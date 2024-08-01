@@ -2,6 +2,9 @@
     "replace": false,
     "values": [
       "resonance:charged_amethyst_cluster",
+      "resonance:large_charged_amethyst_bud",
+      "resonance:medium_charged_amethyst_bud",
+      "resonance:small_charged_amethyst_bud",
       "resonance:rain_chime",
       "resonance:treasure_hoard",
       "resonance:jump_orb_normal",
