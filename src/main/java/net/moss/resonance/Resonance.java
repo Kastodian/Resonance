@@ -77,6 +77,7 @@ import net.minecraft.component.type.AttributeModifierSlot;
 import net.minecraft.component.type.AttributeModifiersComponent;
 import net.minecraft.component.type.FoodComponent;
 import net.minecraft.component.type.PotionContentsComponent;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.effect.EnchantmentEffectEntry;
 import net.minecraft.enchantment.effect.EnchantmentEntityEffect;
 import net.minecraft.enchantment.effect.EnchantmentValueEffect;
@@ -288,7 +289,10 @@ public class Resonance implements ModInitializer {
     // Game Events ------------------------------------------------------------------------------------------------------------------------------------------------------------------
     public static final RegistryEntry.Reference<GameEvent> SHIELD_PARRY_EVENT = Registerizer.gameEvent(MOD_ID, "shield_parry");
     public static final RegistryEntry.Reference<GameEvent> REVERBERATE_EVENT = Registerizer.gameEvent(MOD_ID, "reverberate");
-
+    // Enchants ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    public static final RegistryKey<Enchantment> SPARKING_ENCHANT = RegistryKey.of(RegistryKeys.ENCHANTMENT, Identifier.of(MOD_ID, "sparking"));
+    public static final RegistryKey<Enchantment> RECOILING_CURSE = RegistryKey.of(RegistryKeys.ENCHANTMENT, Identifier.of(MOD_ID, "recoiling_curse"));
+    
     
 
 	public static final ItemGroup ResonanceModGroup = Registry.register(Registries.ITEM_GROUP, Identifier.of(MOD_ID, "resonance_group_id"), FabricItemGroup.builder().displayName(Text.translatable("itemGroup.resonance.resonance_group_id")).icon(() -> new ItemStack(CHARGED_AMETHYST_SHARD)).entries((displayContext, entries) -> {

@@ -27,7 +27,6 @@ import net.minecraft.world.World;
 import net.moss.resonance.util.Utils;
 import net.moss.resonance.entity.SculkProjectileEntity;
 
-
 public class SculkProjectileEntity extends ProjectileEntity {
     private final SculkSpreadManager spreadManager;
 

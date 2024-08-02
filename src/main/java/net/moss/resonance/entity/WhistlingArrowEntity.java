@@ -16,9 +16,7 @@ import net.minecraft.world.World;
 import net.moss.resonance.Resonance;
 import net.moss.resonance.event.ReverberateEvent;
 
-public class WhistlingArrowEntity
-extends PersistentProjectileEntity {
-
+public class WhistlingArrowEntity extends PersistentProjectileEntity {
     public WhistlingArrowEntity(EntityType<? extends WhistlingArrowEntity> entityType, World world) {
         super((EntityType<? extends PersistentProjectileEntity>)entityType, world);
     }
