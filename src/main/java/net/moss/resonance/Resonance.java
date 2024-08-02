@@ -44,6 +44,7 @@ import net.minecraft.world.gen.feature.PlacedFeature;
 import net.moss.resonance.advancement.*;
 import net.moss.resonance.block.*;
 import net.moss.resonance.block.entity.RainChimeBlockEntity;
+import net.moss.resonance.compat.trinkets.TrinketsCompat;
 import net.moss.resonance.block.entity.BrittleBlockEntity;
 import net.moss.resonance.block.entity.BuddingPearlIceBlockEntity;
 import net.moss.resonance.block.entity.PearlHubBlockEntity;
@@ -235,29 +236,16 @@ public class Resonance implements ModInitializer {
     public static final Item DATAPACK_SCARF = Registerizer.item(MOD_ID, "datapack_scarf", new DatapackScarf(new Settings(), MOD_ID, "datapack_scarf"));
     public static final Item DATAPACK_BACK_ITEM = Registerizer.item(MOD_ID, "datapack_back_item", new BackRenderItem(new Settings()));
 	public static final Item SCARF = Registerizer.item(MOD_ID, "scarf", new DyeableScarf(new Settings(), MOD_ID, "scarf"));
-    public static final Item PHANTOM_SCARF = Registerizer.item(MOD_ID, "phantom_scarf", isTrinketsInstalled ?
-            new ScarfTrinket(new Settings().attributeModifiers(AttributeModifiersComponent.builder()
-                    .add(EntityAttributes.GENERIC_SAFE_FALL_DISTANCE, new EntityAttributeModifier(Identifier.of(MOD_ID, "armor.phantom_scarf"), 2, Operation.ADD_VALUE), AttributeModifierSlot.ARMOR)
-                    .build()), MOD_ID, "phantom_scarf") : 
-            new ScarfItem(new Settings().attributeModifiers(AttributeModifiersComponent.builder()
-                    .add(EntityAttributes.GENERIC_SAFE_FALL_DISTANCE, new EntityAttributeModifier(Identifier.of(MOD_ID, "armor.phantom_scarf"), 2, Operation.ADD_VALUE), AttributeModifierSlot.ARMOR)
-                    .build()), MOD_ID, "phantom_scarf"));
-    public static final Item SPIRIT_SCARF = Registerizer.item(MOD_ID, "spirit_scarf", isTrinketsInstalled ?
-            new ScarfTrinket(new Settings().attributeModifiers(AttributeModifiersComponent.builder()
-                    .add(EntityAttributes.PLAYER_BLOCK_INTERACTION_RANGE, new EntityAttributeModifier(Identifier.of(MOD_ID, "armor.spirit_scarf"), 1, Operation.ADD_VALUE), AttributeModifierSlot.ARMOR)
-                    .add(EntityAttributes.PLAYER_ENTITY_INTERACTION_RANGE, new EntityAttributeModifier(Identifier.of(MOD_ID, "armor.spirit_scarf"), 1, Operation.ADD_VALUE), AttributeModifierSlot.ARMOR)
-                    .build()), MOD_ID, "spirit_scarf") : 
-            new ScarfItem(new Settings().attributeModifiers(AttributeModifiersComponent.builder()
-                    .add(EntityAttributes.PLAYER_BLOCK_INTERACTION_RANGE, new EntityAttributeModifier(Identifier.of(MOD_ID, "armor.spirit_scarf"), 1, Operation.ADD_VALUE), AttributeModifierSlot.ARMOR)
-                    .add(EntityAttributes.PLAYER_ENTITY_INTERACTION_RANGE, new EntityAttributeModifier(Identifier.of(MOD_ID, "armor.spirit_scarf"), 1, Operation.ADD_VALUE), AttributeModifierSlot.ARMOR)
-                    .build()), MOD_ID, "spirit_scarf"));
-    public static final Item ECHO_SCARF = Registerizer.item(MOD_ID, "echo_scarf", isTrinketsInstalled ?
-            new ScarfTrinket(new Settings().attributeModifiers(AttributeModifiersComponent.builder()
-                    .add(EntityAttributes.PLAYER_SNEAKING_SPEED, new EntityAttributeModifier(Identifier.of(MOD_ID, "armor.echo_scarf"), 0.3, Operation.ADD_VALUE), AttributeModifierSlot.ARMOR)
-                    .build()), MOD_ID, "echo_scarf") : 
-            new ScarfItem(new Settings().attributeModifiers(AttributeModifiersComponent.builder()
-                    .add(EntityAttributes.PLAYER_SNEAKING_SPEED, new EntityAttributeModifier(Identifier.of(MOD_ID, "armor.echo_scarf"), 0.3, Operation.ADD_VALUE), AttributeModifierSlot.ARMOR)
-                    .build()), MOD_ID, "echo_scarf"));
+	public static final Item PHANTOM_SCARF = Registerizer.item(MOD_ID, "phantom_scarf", new ScarfItem(new Settings().attributeModifiers(AttributeModifiersComponent.builder()
+            .add(EntityAttributes.GENERIC_SAFE_FALL_DISTANCE, new EntityAttributeModifier(Identifier.of(MOD_ID, "armor.phantom_scarf"), 2, Operation.ADD_VALUE), AttributeModifierSlot.ARMOR)
+            .build()), MOD_ID, "phantom_scarf"));
+	public static final Item SPIRIT_SCARF = Registerizer.item(MOD_ID, "spirit_scarf", new ScarfItem(new Settings().attributeModifiers(AttributeModifiersComponent.builder()
+            .add(EntityAttributes.PLAYER_BLOCK_INTERACTION_RANGE, new EntityAttributeModifier(Identifier.of(MOD_ID, "armor.spirit_scarf"), 1, Operation.ADD_VALUE), AttributeModifierSlot.ARMOR)
+            .add(EntityAttributes.PLAYER_ENTITY_INTERACTION_RANGE, new EntityAttributeModifier(Identifier.of(MOD_ID, "armor.spirit_scarf"), 1, Operation.ADD_VALUE), AttributeModifierSlot.ARMOR)
+            .build()), MOD_ID, "spirit_scarf"));
+	public static final Item ECHO_SCARF = Registerizer.item(MOD_ID, "echo_scarf", new ScarfItem(new Settings().attributeModifiers(AttributeModifiersComponent.builder()
+            .add(EntityAttributes.PLAYER_SNEAKING_SPEED, new EntityAttributeModifier(Identifier.of(MOD_ID, "armor.echo_scarf"), 0.3, Operation.ADD_VALUE), AttributeModifierSlot.ARMOR)
+            .build()), MOD_ID, "echo_scarf"));
 	public static final Block JUMP_ORB_NORMAL = Registerizer.block(MOD_ID, "jump_orb_normal", new JumpOrbBlock(NORMAL_DOUBLE_JUMP), true);
 	public static final Block JUMP_ORB_STRONG = Registerizer.block(MOD_ID, "jump_orb_strong", new JumpOrbBlock(STRONG_DOUBLE_JUMP), true);
 	public static final Item PEARL = Registerizer.item(MOD_ID, "pearl", new Pearl(new Settings().component(DataComponentTypes.POTION_CONTENTS, new PotionContentsComponent(Potions.AWKWARD)).component(PEARL_STATS, Ints.asList(1,1,1,0))));
@@ -292,8 +280,6 @@ public class Resonance implements ModInitializer {
     // Enchants ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
     public static final RegistryKey<Enchantment> SPARKING_ENCHANT = RegistryKey.of(RegistryKeys.ENCHANTMENT, Identifier.of(MOD_ID, "sparking"));
     public static final RegistryKey<Enchantment> RECOILING_CURSE = RegistryKey.of(RegistryKeys.ENCHANTMENT, Identifier.of(MOD_ID, "recoiling_curse"));
-    
-    
 
 	public static final ItemGroup ResonanceModGroup = Registry.register(Registries.ITEM_GROUP, Identifier.of(MOD_ID, "resonance_group_id"), FabricItemGroup.builder().displayName(Text.translatable("itemGroup.resonance.resonance_group_id")).icon(() -> new ItemStack(CHARGED_AMETHYST_SHARD)).entries((displayContext, entries) -> {
         entries.add(Items.BUNDLE);
@@ -331,9 +317,13 @@ public class Resonance implements ModInitializer {
         entries.add(ICE_FUR);
     }).build());
 
+
+
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
 	public void onInitialize() {
+        if (isTrinketsInstalled) { TrinketsCompat.test(); }
+
         FuelRegistry.INSTANCE.add(BOOK_PILE, 600);
         FuelRegistry.INSTANCE.add(Items.FIRE_CHARGE, 1200);
         CompostingChanceRegistry.INSTANCE.add(Items.BAMBOO, 0.3f);
