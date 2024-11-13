@@ -7,10 +7,12 @@ import net.minecraft.block.FluidBlock;
 import net.minecraft.block.SnowyBlock;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.LightType;
+import net.minecraft.world.World;
 import net.moss.resonance.Resonance;
 
 public class PearlIce extends SnowyBlock {
@@ -40,5 +42,21 @@ public class PearlIce extends SnowyBlock {
             BlockState state2 = world.getBlockState(blockPos);
             if (state2.isOf(Resonance.ICE_FUR) && state2.hasRandomTicks()) { state2.randomTick(world, blockPos, random); return; }
         }
+    }
+
+    @Override
+    protected void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+        super.onStateReplaced(state, world, pos, newState, moved);
+        if (moved && newState.isOf(Blocks.MOVING_PISTON) && newState.contains(Properties.FACING) && world instanceof ServerWorld serverWorld) {
+            Direction pushed = newState.get(Properties.FACING);
+            pos = pos.offset(pushed);
+            for (Direction direction : Direction.values()) {
+                if (direction == pushed || serverWorld.random.nextFloat() < 0.25F) {
+                    BlockPos newPos = pos.offset(direction);
+                    BrittleBlock.makeBrittle(serverWorld.getBlockState(newPos), serverWorld, newPos, world.random);
+                }
+            }
+        }
+
     }
 }

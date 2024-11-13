@@ -179,9 +179,9 @@ public class Resonance implements ModInitializer {
             .addAttributeModifier(EntityAttributes.GENERIC_ATTACK_DAMAGE, Identifier.of(MOD_ID, "effect.soul_fatigue"), -1, Operation.ADD_VALUE)
             .addAttributeModifier(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, Identifier.of(MOD_ID, "effect.soul_fatigue"), -1, Operation.ADD_VALUE));
     public static final RegistryEntry<StatusEffect> NORMAL_DOUBLE_JUMP = Registerizer.effect(Resonance.MOD_ID, "normal_double_jump", new DoubleJumpEffect()
-            .addAttributeModifier(Resonance.JUMPS,Identifier.of(MOD_ID, "effect.normal_double_jump"), 1f, Operation.ADD_VALUE));
+            .addAttributeModifier(Resonance.DOUBLE_JUMPS,Identifier.of(MOD_ID, "effect.normal_double_jump"), 1f, Operation.ADD_VALUE));
     public static final RegistryEntry<StatusEffect> STRONG_DOUBLE_JUMP = Registerizer.effect(Resonance.MOD_ID, "strong_double_jump", new DoubleJumpEffect()
-            .addAttributeModifier(Resonance.JUMPS, Identifier.of(MOD_ID, "effect.strong_double_jump"), 1f, Operation.ADD_VALUE));
+            .addAttributeModifier(Resonance.DOUBLE_JUMPS, Identifier.of(MOD_ID, "effect.strong_double_jump"), 1f, Operation.ADD_VALUE));
     public static final RegistryEntry<StatusEffect> CRUSHING_WEIGHT = Registerizer.effect(Resonance.MOD_ID, "crushing_weight", new CrushingWeightEffect()
             .addAttributeModifier(EntityAttributes.PLAYER_BLOCK_BREAK_SPEED, Identifier.of(MOD_ID, "effect.crushing_weight"), -0.2f, Operation.ADD_MULTIPLIED_TOTAL)
             .addAttributeModifier(EntityAttributes.GENERIC_JUMP_STRENGTH, Identifier.of(MOD_ID, "effect.crushing_weight"), -0.2f, Operation.ADD_MULTIPLIED_TOTAL)
@@ -273,7 +273,8 @@ public class Resonance implements ModInitializer {
     public static final StructurePlacementType<UniqueStructurePlacement> UNIQUE_PLACEMENT_TYPE = Registry.register(Registries.STRUCTURE_PLACEMENT, Identifier.of(MOD_ID, "unique"), () -> UniqueStructurePlacement.CODEC);
     public static final RegistryKey<PlacedFeature> ICICLE_DOWN_FEATURE = RegistryKey.of(RegistryKeys.PLACED_FEATURE, Identifier.of(MOD_ID, "icicle_down"));
 	// Attribute --------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    public static final RegistryEntry<EntityAttribute> JUMPS = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID, "double_jump"), new ClampedEntityAttribute("attribute." + MOD_ID + '.' + "jumps", 0, 0, 1024).setTracked(true));
+    public static final RegistryEntry<EntityAttribute> DOUBLE_JUMPS = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID, "double_jump"), new ClampedEntityAttribute("attribute." + MOD_ID + '.' + "double_jumps", 0, 0, 1024).setTracked(true));
+    public static final RegistryEntry<EntityAttribute> WALL_JUMPS = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID, "wall_jump"), new ClampedEntityAttribute("attribute." + MOD_ID + '.' + "wall_jumps", 0, 0, 1024).setTracked(true));
     // Game Events ------------------------------------------------------------------------------------------------------------------------------------------------------------------
     public static final RegistryEntry.Reference<GameEvent> SHIELD_PARRY_EVENT = Registerizer.gameEvent(MOD_ID, "shield_parry");
     public static final RegistryEntry.Reference<GameEvent> REVERBERATE_EVENT = Registerizer.gameEvent(MOD_ID, "reverberate");

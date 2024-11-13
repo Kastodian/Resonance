@@ -30,7 +30,7 @@ public class DoubleJumpEffect extends StatusEffect {
 
     public static void performDoubleJump(ServerPlayerEntity player) {
         Resonance.DOUBLE_JUMP_CRITERION.trigger(player);
-        player.getWorld().playSound(null, player.getBlockPos(), Resonance.DOUBLE_JUMP_SOUND.value(), SoundCategory.PLAYERS);
+        player.getWorld().playSound(null, player.getBlockPos(), Resonance.DOUBLE_JUMP_SOUND.value(), SoundCategory.PLAYERS, 0.15f, 1);
         RegistryEntry<StatusEffect> effectType = player.hasStatusEffect(Resonance.STRONG_DOUBLE_JUMP) ? Resonance.STRONG_DOUBLE_JUMP : Resonance.NORMAL_DOUBLE_JUMP;
         Utils.decrementStatusEffectAmplifiers(player, effectType, null);
     }

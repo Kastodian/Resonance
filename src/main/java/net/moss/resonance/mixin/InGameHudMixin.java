@@ -31,13 +31,9 @@ public abstract class InGameHudMixin {
         MinecraftClient client = MinecraftClient.getInstance();
         if (!blinking && type == HeartType.NORMAL && client.cameraEntity instanceof PlayerEntity player) {
             int offset = 0;
-            if (player.hasStatusEffect(Resonance.SOUL_FATIGUE)) {
-                offset = 0;
-            } else if (player.hasStatusEffect(Resonance.SPARKING)) {
-                offset = 13;
-            } else {
-                return;
-            }
+            if (player.hasStatusEffect(Resonance.SOUL_FATIGUE)) { offset = 0; }
+            else if (player.hasStatusEffect(Resonance.SPARKING)) { offset = 13; }
+            else { return; }
             context.drawTexture(CUSTOM_HEARTS, x-2, y-2, (half ? 13 : 0) + (hardcore ? 26 : 0), offset, 13, 13);
             ci.cancel();
         }
@@ -51,12 +47,12 @@ public abstract class InGameHudMixin {
         ClientPlayerEntity player = client.player;
         if (player.hasStatusEffect(Resonance.CRUSHING_WEIGHT)) {
             RenderSystem.disableDepthTest();
-            RenderSystem.depthMask((boolean)false);
+            RenderSystem.depthMask(false);
             RenderSystem.enableBlend();
             context.setShaderColor(1.0f, 1.0f, 1.0f, MathHelper.lerp(tickCounter.getTickDelta(false), ((ClientPlayerEntityInterface)player).getPrevCrushingWeightIntensity(), ((ClientPlayerEntityInterface)player).getCrushingWeightIntensity()));
             context.drawTexture(NARROW_VISION, 0, 0, -90, 0.0f, 0.0f, i, j, i, j);
             RenderSystem.disableBlend();
-            RenderSystem.depthMask((boolean)true);
+            RenderSystem.depthMask(true);
             RenderSystem.enableDepthTest();
         }
     }

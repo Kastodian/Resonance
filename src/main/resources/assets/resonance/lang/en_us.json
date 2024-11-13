@@ -55,8 +55,11 @@
     "painting.resonance.tower.author": "Moss",
     "painting.resonance.team.title": "Team",
     "painting.resonance.team.author": "Moss",
+    "painting.resonance.sublimation.title": "Sublimation",
+    "painting.resonance.sublimation.author": "Moss",
 
-    "attribute.resonance.jumps": "Jumps",
+    "attribute.resonance.double_jumps": "Jumps",
+    "attribute.resonance.wall_jumps": "Wall Jumps",
 
     "resonance.sparks": "Electricity sparks",
     "resonance.reverberation": "Amethyst reverberates",

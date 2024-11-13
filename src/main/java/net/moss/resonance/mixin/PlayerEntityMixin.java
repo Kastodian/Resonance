@@ -75,7 +75,9 @@ public class PlayerEntityMixin implements PlayerEntityInterface {
     }
 
     @Inject(method = "createPlayerAttributes", at = @At("RETURN"))
-    private static void addAttributes(final CallbackInfoReturnable<DefaultAttributeContainer.Builder> info) { info.getReturnValue().add(Resonance.JUMPS); }
+    private static void addAttributes(final CallbackInfoReturnable<DefaultAttributeContainer.Builder> info) {
+        info.getReturnValue().add(Resonance.DOUBLE_JUMPS).add(Resonance.WALL_JUMPS);
+    }
 
     @Inject(at = @At(value = "HEAD"), method = "attack", locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
     private void attack(Entity target, CallbackInfo callbackInfo) {
