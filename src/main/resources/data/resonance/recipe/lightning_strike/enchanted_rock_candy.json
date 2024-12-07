@@ -1,0 +1,10 @@
+{
+  "type": "resonance:lightning_strike",
+  "ingredient": {
+    "item": "resonance:rock_candy"
+  },
+  "results": [
+    { "id": "resonance:enchanted_rock_candy" }
+  ],
+  "resonates": true
+}

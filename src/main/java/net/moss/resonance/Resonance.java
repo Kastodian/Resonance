@@ -158,6 +158,8 @@ public class Resonance implements ModInitializer {
     public static final RecipeType<ReverberationRecipe> REVERBERATE_RECIPE_TYPE = Registry.register(Registries.RECIPE_TYPE, Identifier.of(MOD_ID, ReverberationRecipe.Type.ID), ReverberationRecipe.Type.INSTANCE);
     public static final RecipeSerializer<OtherOrbEffectsRecipe> OTHER_ORB_RECIPE_SERIALIZER = Registry.register(Registries.RECIPE_SERIALIZER, Identifier.of(MOD_ID, OtherOrbEffectsRecipe.Serializer.ID), OtherOrbEffectsRecipe.Serializer.INSTANCE);
     public static final RecipeType<OtherOrbEffectsRecipe> OTHER_ORB_RECIPE_TYPE = Registry.register(Registries.RECIPE_TYPE, Identifier.of(MOD_ID, OtherOrbEffectsRecipe.Type.ID), OtherOrbEffectsRecipe.Type.INSTANCE);
+    public static final RecipeSerializer<LightningStrikeRecipe> LIGHTNING_STRIKE_RECIPE_SERIALIZER = Registry.register(Registries.RECIPE_SERIALIZER, Identifier.of(MOD_ID, LightningStrikeRecipe.Serializer.ID), LightningStrikeRecipe.Serializer.INSTANCE);
+    public static final RecipeType<LightningStrikeRecipe> LIGHTNING_STRIKE_RECIPE_TYPE = Registry.register(Registries.RECIPE_TYPE, Identifier.of(MOD_ID, LightningStrikeRecipe.Type.ID), LightningStrikeRecipe.Type.INSTANCE);
     // Components -------------------------------------------------------------------------------------------------------------------------------------------------------------------
     public static final ComponentType<List<Integer>> PEARL_STATS = Registry.register(Registries.DATA_COMPONENT_TYPE, Identifier.of(MOD_ID, "pearl_stats"), ComponentType.<List<Integer>>builder().codec(Codec.INT.listOf()).build());
     public static final ComponentType<List<Integer>> CATALYST_STATS = Registry.register(Registries.DATA_COMPONENT_TYPE, Identifier.of(MOD_ID, "catalyst_stats"), ComponentType.<List<Integer>>builder().codec(Codec.INT.listOf()).build());
@@ -214,10 +216,10 @@ public class Resonance implements ModInitializer {
     public static final Item CHARGED_AMETHYST_SHARD = Registerizer.item(MOD_ID, "charged_amethyst_shard", new Item(new Settings()));
     public static final Item WHISTLING_ARROW = Registerizer.item(MOD_ID, "whistling_arrow", new WhistlingArrow(new Settings()));
     public static final Item AMETHYST_SHIELD = Registerizer.item(MOD_ID, "amethyst_shield", new CustomShield(new Settings().maxDamage(336), 133, 20, Items.AMETHYST_SHARD));
-    public static final Item ROCK_CANDY = Registerizer.item(MOD_ID, "rock_candy", new Item(new Settings().food(new FoodComponent.Builder().nutrition(6).saturationModifier(0.3f).build())));
-    public static final Item ENCHANTED_ROCK_CANDY = Registerizer.item(MOD_ID, "enchanted_rock_candy", new Item(new Settings().component(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, true).rarity(Rarity.UNCOMMON).food(new FoodComponent.Builder().nutrition(8).saturationModifier(0.2f).statusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 1000, 0), 1f).statusEffect(new StatusEffectInstance(SPARKING, 180, 0), 0.5f).build())));
+    public static final Item ROCK_CANDY = Registerizer.item(MOD_ID, "rock_candy", new Item(new Settings().food(new FoodComponent.Builder().nutrition(4).saturationModifier(0.4f).build())));
+    public static final Item ENCHANTED_ROCK_CANDY = Registerizer.item(MOD_ID, "enchanted_rock_candy", new Item(new Settings().component(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, true).rarity(Rarity.UNCOMMON).food(new FoodComponent.Builder().nutrition(5).saturationModifier(0.6f).statusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 1000, 0), 1f).statusEffect(new StatusEffectInstance(SPARKING, 180, 0), 0.5f).build())));
     public static final Block RAIN_CHIME = Registerizer.block(MOD_ID, "rain_chime", new RainChimeBlock(AbstractBlock.Settings.create()), true);
-    public static final Item COPPER_SHIELD = Registerizer.item(MOD_ID, "copper_shield", new CustomShield(new Settings().maxDamage(336).attributeModifiers(AttributeModifiersComponent.builder()
+    public static final Item COPPER_SHIELD = Registerizer.item(MOD_ID, "copper_shield", new CustomShield(new Settings().maxDamage(512).attributeModifiers(AttributeModifiersComponent.builder()
             .add(EntityAttributes.GENERIC_ARMOR, new EntityAttributeModifier(Identifier.of(MOD_ID, "armor.sheild"), 2, Operation.ADD_VALUE), AttributeModifierSlot.HAND)
             .build()), 66, 10, Items.COPPER_INGOT));
     public static final Item TINTED_BOTTLE = Registerizer.item(MOD_ID, "tinted_bottle", new TintedBottle(new Settings().maxCount(16)));
@@ -232,9 +234,7 @@ public class Resonance implements ModInitializer {
     public static final Block COMPOST_HEAP = Registerizer.block(MOD_ID, "compost_heap", new HeapBlock(8, 8, 11, 11, 7, AbstractBlock.Settings.copy(Blocks.DIRT).sounds(BlockSoundGroup.AZALEA_LEAVES).nonOpaque().strength(0.5f, 0.3f)), true);
     public static final Block DATAPACK_BLOCK = Registerizer.block(MOD_ID, "datapack_block", new DatapackBlock(AbstractBlock.Settings.copy(Blocks.BARREL).nonOpaque().strength(1.2f, 1f)), true);
     public static final Item DATAPACK_ITEM = Registerizer.item(MOD_ID, "datapack_item", new DatapackItem(new Settings()));
-    public static final Item DATAPACK_HAT = Registerizer.item(MOD_ID, "datapack_hat", new DatapackHat(new Settings()));
     public static final Item DATAPACK_SCARF = Registerizer.item(MOD_ID, "datapack_scarf", new DatapackScarf(new Settings(), MOD_ID, "datapack_scarf"));
-    public static final Item DATAPACK_BACK_ITEM = Registerizer.item(MOD_ID, "datapack_back_item", new BackRenderItem(new Settings()));
 	public static final Item SCARF = Registerizer.item(MOD_ID, "scarf", new DyeableScarf(new Settings(), MOD_ID, "scarf"));
 	public static final Item PHANTOM_SCARF = Registerizer.item(MOD_ID, "phantom_scarf", new ScarfItem(new Settings().attributeModifiers(AttributeModifiersComponent.builder()
             .add(EntityAttributes.GENERIC_SAFE_FALL_DISTANCE, new EntityAttributeModifier(Identifier.of(MOD_ID, "armor.phantom_scarf"), 2, Operation.ADD_VALUE), AttributeModifierSlot.ARMOR)
@@ -272,6 +272,7 @@ public class Resonance implements ModInitializer {
     public static final RegistryKey<World> DREAM_SWEET = RegistryKey.of(RegistryKeys.WORLD, Identifier.of(MOD_ID, "dream_sweet"));
     public static final StructurePlacementType<UniqueStructurePlacement> UNIQUE_PLACEMENT_TYPE = Registry.register(Registries.STRUCTURE_PLACEMENT, Identifier.of(MOD_ID, "unique"), () -> UniqueStructurePlacement.CODEC);
     public static final RegistryKey<PlacedFeature> ICICLE_DOWN_FEATURE = RegistryKey.of(RegistryKeys.PLACED_FEATURE, Identifier.of(MOD_ID, "icicle_down"));
+	public static final RegistryKey<PlacedFeature> PEARL_ICE_BLOB_FEATURE = RegistryKey.of(RegistryKeys.PLACED_FEATURE, Identifier.of(MOD_ID, "pearl_ice_blob"));
 	// Attribute --------------------------------------------------------------------------------------------------------------------------------------------------------------------
     public static final RegistryEntry<EntityAttribute> DOUBLE_JUMPS = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID, "double_jump"), new ClampedEntityAttribute("attribute." + MOD_ID + '.' + "double_jumps", 0, 0, 1024).setTracked(true));
     public static final RegistryEntry<EntityAttribute> WALL_JUMPS = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID, "wall_jump"), new ClampedEntityAttribute("attribute." + MOD_ID + '.' + "wall_jumps", 0, 0, 1024).setTracked(true));
@@ -283,7 +284,6 @@ public class Resonance implements ModInitializer {
     public static final RegistryKey<Enchantment> RECOILING_CURSE = RegistryKey.of(RegistryKeys.ENCHANTMENT, Identifier.of(MOD_ID, "recoiling_curse"));
 
 	public static final ItemGroup ResonanceModGroup = Registry.register(Registries.ITEM_GROUP, Identifier.of(MOD_ID, "resonance_group_id"), FabricItemGroup.builder().displayName(Text.translatable("itemGroup.resonance.resonance_group_id")).icon(() -> new ItemStack(CHARGED_AMETHYST_SHARD)).entries((displayContext, entries) -> {
-        entries.add(Items.BUNDLE);
         entries.add(SMALL_CHARGED_AMETHYST_BUD);
         entries.add(MEDIUM_CHARGED_AMETHYST_BUD);
         entries.add(LARGE_CHARGED_AMETHYST_BUD);
@@ -295,12 +295,6 @@ public class Resonance implements ModInitializer {
         entries.add(RAIN_CHIME);
         entries.add(AMETHYST_SHIELD);
         entries.add(COPPER_SHIELD);
-        entries.add(TINTED_BOTTLE);
-        entries.add(SCULK_BOTTLE);
-        entries.add(SOUL_BOTTLE);
-        entries.add(FIREBALL_BOTTLE);
-        entries.add(LIGHTNING_BOTTLE);
-        entries.add(SHULKER_BOTTLE);
         entries.add(SCARF);
         entries.add(PHANTOM_SCARF);
         entries.add(SPIRIT_SCARF);
@@ -308,11 +302,17 @@ public class Resonance implements ModInitializer {
         entries.add(TREASURE_HOARD);
         entries.add(BOOK_PILE);
         entries.add(COMPOST_HEAP);
-        entries.add(JUMP_ORB_NORMAL);
-        entries.add(JUMP_ORB_STRONG);
+        entries.add(TINTED_BOTTLE);
+        entries.add(SCULK_BOTTLE);
+        entries.add(SOUL_BOTTLE);
+        entries.add(FIREBALL_BOTTLE);
+        entries.add(LIGHTNING_BOTTLE);
+        entries.add(SHULKER_BOTTLE);
         entries.add(PEARL);
         entries.add(BIFURCATED_PEARL);
         entries.add(PEARL_HUB);
+        entries.add(JUMP_ORB_NORMAL);
+        entries.add(JUMP_ORB_STRONG);
         entries.add(PEARL_ICE);
         entries.add(ICICLE);
         entries.add(ICE_FUR);
@@ -335,9 +335,7 @@ public class Resonance implements ModInitializer {
             if (entries.getContext().hasPermissions()) {
                 entries.add(DATAPACK_BLOCK);
                 entries.add(DATAPACK_ITEM);
-                entries.add(DATAPACK_HAT);
                 entries.add(DATAPACK_SCARF);
-                entries.add(DATAPACK_BACK_ITEM);
             }
         });
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.SPAWN_EGGS).register(entries -> {
@@ -349,6 +347,7 @@ public class Resonance implements ModInitializer {
         CauldronBehavior.WATER_CAULDRON_BEHAVIOR.map().putIfAbsent(SCARF, CauldronBehavior.CLEAN_DYEABLE_ITEM);
 
         BiomeModifications.addFeature(BiomeSelectors.tag(BiomeTags.POLAR_BEARS_SPAWN_ON_ALTERNATE_BLOCKS), GenerationStep.Feature.VEGETAL_DECORATION, ICICLE_DOWN_FEATURE);
+        BiomeModifications.addFeature(BiomeSelectors.tag(BiomeTags.POLAR_BEARS_SPAWN_ON_ALTERNATE_BLOCKS), GenerationStep.Feature.UNDERGROUND_DECORATION, PEARL_ICE_BLOB_FEATURE);
 
         SculkSensorFrequencyRegistry.register(SHIELD_PARRY_EVENT.registryKey(), 5);
         SculkSensorFrequencyRegistry.register(REVERBERATE_EVENT.registryKey(), 15);

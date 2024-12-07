@@ -194,6 +194,7 @@
     "catagory.resonance": "Resonance",
 
     "emi.category.resonance.reverberation": "Reverberation",
+    "emi.category.resonance.lightning_strike": "Lightning Strike",
     "tag.item.resonance.conductive_items": "Conducts electricity",
     "tag.item.resonance.charged_amethyst_clusters": "Charged Amethyst Clusters",
     "tag.item.resonance.unique_items": "Can't despawn or be destroyed",

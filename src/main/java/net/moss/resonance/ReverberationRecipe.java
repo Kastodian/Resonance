@@ -20,8 +20,6 @@ import java.util.Iterator;
 
 public class ReverberationRecipe implements Recipe<SingleStackRecipeInput> {
     protected final Ingredient ingredient;
-    //protected final ItemStack result;
-    //protected final ItemStack biproduct;
     protected final boolean isMaterialConsumed;
     protected final boolean resonates;
     protected final int explosionPower;

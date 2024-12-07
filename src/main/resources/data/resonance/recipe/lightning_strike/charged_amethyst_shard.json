@@ -1,0 +1,10 @@
+{
+  "type": "resonance:lightning_strike",
+  "ingredient": {
+    "item": "minecraft:amethyst_shard"
+  },
+  "results": [
+    { "id": "resonance:charged_amethyst_shard" }
+  ],
+  "resonates": true
+}

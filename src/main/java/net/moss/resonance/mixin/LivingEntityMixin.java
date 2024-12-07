@@ -199,17 +199,4 @@ public class LivingEntityMixin {
             }
         }
     }
-
-    // @Inject(method = "dropInventory", at = @At("TAIL"))
-    // protected void dropInventory(CallbackInfo info) {
-    //     PlayerEntity player = (PlayerEntity)(Object) this;
-    //     if (player.getWorld().isClient()) { return; }
-    //     if (StandHandler.canUseStand(player)) {
-    //         Stand stand = StandHandler.getStand(player);
-    //         stand.desummonStand(player);
-    //         if (player.getWorld().getGameRules().getBoolean(ResonanceStands.EJECT_DISC_ON_DEATH)) {
-    //             stand.ejectDisc(player);
-    //         }
-    //     }
-    // }
 }

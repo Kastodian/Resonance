@@ -52,7 +52,6 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.LightType;
@@ -182,15 +181,9 @@ public class Utils {
 	public static void customKnockbackDampen(LivingEntity entity, Vec3d source, float strength, Vec3d dampenMultipliers) { customKnockback(entity, source, strength, new Vec3d(0, 0, 0), dampenMultipliers, null); }
 
     public static EntityHitResult entityRaycast(PlayerEntity player, float distance) {
-        float f = player.getPitch();
-        float g = player.getYaw();
         Vec3d vec3d = player.getEyePos();
-        float j = -MathHelper.cos(-f * 0.017453292F);
-        float k = MathHelper.sin(-f * 0.017453292F);
-        float l = MathHelper.sin(-g * 0.017453292F - 3.1415927F) * j;
-        float n = MathHelper.cos(-g * 0.017453292F - 3.1415927F) * j;
-        Vec3d vec3d2 = vec3d.add(l * distance, k * distance, n * distance);
-        return ProjectileUtil.raycast(player, vec3d, vec3d2, new Box(vec3d, vec3d2), (entity) -> { return !entity.isSpectator() && entity.canHit(); }, (double) distance);
+		Vec3d vec3d2 = vec3d.add(player.getRotationVector(player.getPitch(), player.getYaw()).multiply(distance));
+        return ProjectileUtil.raycast(player, vec3d, vec3d2, new Box(vec3d, vec3d2), (entity) -> { return !entity.isSpectator() && entity.canHit(); }, distance * 10);
     }
 
     public static BlockHitResult blockRaycast(World world, PlayerEntity player, float distance, RaycastContext.FluidHandling fluidHandling) {

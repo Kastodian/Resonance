@@ -1,0 +1,10 @@
+{
+  "type": "resonance:reverberation",
+  "ingredient": {
+    "item": "minecraft:dark_oak_chest_boat"
+  },
+  "results": [
+    { "id": "minecraft:chest" },
+    { "id": "minecraft:dark_oak_boat" }
+  ]
+}

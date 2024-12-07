@@ -48,6 +48,11 @@ public class BuddingPearlIceBlockEntity extends BlockEntity {
         this.spreadManager.tick(world, pos2, random, true);
         this.spreadManager.tick(world, pos2, random, true);
         this.spreadManager.tick(world, pos2, random, true);
+        if ((potion.isOf(Resonance.PEARL) && seed.isOf(Resonance.PEARL)) || (potion.isOf(Resonance.BIFURCATED_PEARL) && seed.isOf(Resonance.BIFURCATED_PEARL))) {
+            this.spreadManager.tick(world, pos2, random, true);
+            this.spreadManager.tick(world, pos2, random, true);
+            this.spreadManager.tick(world, pos2, random, true);
+        }
     }
 
     public boolean brush(long worldTime, Direction hitDirection) {

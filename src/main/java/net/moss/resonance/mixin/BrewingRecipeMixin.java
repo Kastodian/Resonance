@@ -52,6 +52,8 @@ public class BrewingRecipeMixin {
         builder.registerPotionRecipe(Resonance.LEVITATION_POTION_1, Items.PHANTOM_MEMBRANE, Resonance.LEVITATION_AND_SLOWFALLING_POTION_1);
         builder.registerPotionRecipe(Resonance.LEVITATION_POTION_2, Items.PHANTOM_MEMBRANE, Resonance.LEVITATION_AND_SLOWFALLING_POTION_1);
         builder.registerPotionRecipe(Resonance.LEVITATION_POTION_3, Items.PHANTOM_MEMBRANE, Resonance.LEVITATION_AND_SLOWFALLING_POTION_1);
+        builder.registerPotionRecipe(Potions.SLOW_FALLING, Resonance.SHULKER_BOTTLE, Resonance.LEVITATION_AND_SLOWFALLING_POTION_1);
+        builder.registerPotionRecipe(Potions.LONG_SLOW_FALLING, Resonance.SHULKER_BOTTLE, Resonance.LEVITATION_AND_SLOWFALLING_POTION_1);
         
         builder.registerPotionRecipe(Resonance.LEVITATION_AND_SLOWFALLING_POTION_1, Items.REDSTONE, Resonance.LEVITATION_AND_SLOWFALLING_POTION_2);
         builder.registerPotionRecipe(Resonance.LEVITATION_AND_SLOWFALLING_POTION_3, Items.REDSTONE, Resonance.LEVITATION_AND_SLOWFALLING_POTION_2);

@@ -12,6 +12,7 @@
     "MobSpawnerLogicAccessor",
     "ServerWorldAccessor",
     "ItemEntityMixin",
+    "EntityMixin",
     "BrewingRecipeMixin",
     "RangedWeaponItemMixin",
     "BrushItemMixin",

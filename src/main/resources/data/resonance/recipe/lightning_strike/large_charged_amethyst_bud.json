@@ -1,0 +1,10 @@
+{
+  "type": "resonance:lightning_strike",
+  "ingredient": {
+    "item": "minecraft:large_amethyst_bud"
+  },
+  "results": [
+    { "id": "resonance:large_charged_amethyst_bud" }
+  ],
+  "resonates": true
+}

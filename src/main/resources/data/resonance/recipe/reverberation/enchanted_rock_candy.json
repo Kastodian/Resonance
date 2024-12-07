@@ -1,0 +1,10 @@
+{
+  "type": "resonance:reverberation",
+  "ingredient": {
+    "item": "resonance:enchanted_rock_candy"
+  },
+  "results": [
+    { "id": "resonance:rock_candy" }
+  ],
+  "resonates": true
+}

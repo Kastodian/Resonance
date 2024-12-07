@@ -7,9 +7,14 @@
     "asa"
   ],
   "key": {
-    "a": {
-      "item": "minecraft:amethyst_shard"
-    },
+    "a": [
+      {
+        "item": "resonance:charged_amethyst_shard"
+      },
+      {
+        "item": "minecraft:amethyst_shard"
+      }
+    ],
     "f": [
       {
         "item": "minecraft:item_frame"

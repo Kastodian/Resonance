@@ -1,0 +1,10 @@
+{
+  "type": "resonance:reverberation",
+  "ingredient": {
+    "item": "minecraft:mangrove_chest_boat"
+  },
+  "results": [
+    { "id": "minecraft:chest" },
+    { "id": "minecraft:mangrove_boat" }
+  ]
+}

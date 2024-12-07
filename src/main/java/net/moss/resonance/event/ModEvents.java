@@ -15,6 +15,7 @@ import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.TntBlock;
 import net.minecraft.block.entity.MobSpawnerBlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -32,6 +33,8 @@ import net.minecraft.world.World.ExplosionSourceType;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.event.GameEvent;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.PersistentProjectileEntity;
+import net.minecraft.entity.projectile.PersistentProjectileEntity.PickupPermission;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsage;
 import net.minecraft.item.Items;
@@ -59,6 +62,7 @@ import net.minecraft.util.math.Vec3d;
 import net.moss.resonance.Resonance;
 import net.moss.resonance.ReverberationRecipe;
 import net.moss.resonance.block.BuddingPearlIce;
+import net.moss.resonance.block.JumpOrbBlock;
 import net.moss.resonance.command.LocateUniqueStructureCommand;
 import net.moss.resonance.entity.ModEntities;
 import net.moss.resonance.mixin.MobSpawnerLogicAccessor;
@@ -197,7 +201,7 @@ public class ModEvents {
 
     public static void onReverberate(World world, Vec3d pos, Vector3f angle, @Nullable Entity immuneEntity, @Nullable Entity sourceEntity, float strength, boolean windCharged) {
         world.emitGameEvent(Resonance.REVERBERATE_EVENT, pos, GameEvent.Emitter.of(world.getBlockState(BlockPos.ofFloored(pos))));
-		if (!windCharged) { world.createExplosion(sourceEntity, Utils.damageSource(world, Resonance.REVERBERATION_DAMAGE), new CustomWindChargeBehavior(0f), pos.getX(), pos.getY(), pos.getZ(), 0.5f, false, World.ExplosionSourceType.TRIGGER, ModParticles.AMETHYST_PARTICLE, ModParticles.AMETHYST_PARTICLE, Resonance.REVERBERATION_SOUND); }
+		if (!windCharged) { world.createExplosion(sourceEntity, Utils.damageSource(world, Resonance.REVERBERATION_DAMAGE), new CustomWindChargeBehavior(0f), pos.getX(), pos.getY(), pos.getZ(), strength / 2, false, World.ExplosionSourceType.TRIGGER, ModParticles.AMETHYST_PARTICLE, ModParticles.AMETHYST_PARTICLE, Resonance.REVERBERATION_SOUND); }
 		if (world instanceof ServerWorld world2) {
 			world2.spawnParticles(ModParticles.SMALL_RING_PARTICLE, pos.getX(), pos.getY(), pos.getZ(), 1, 0, 0, 0, 3);
 			world2.spawnParticles(ModParticles.AMETHYST_PARTICLE, pos.getX(), pos.getY(), pos.getZ(), (int) (10 * strength), 0, 0, 0, 1);
@@ -209,7 +213,16 @@ public class ModEvents {
 					world2.spawnParticles(ModParticles.MEDIUM_RING_PARTICLE, spawnerPos.getX(), spawnerPos.getY(), spawnerPos.getZ(), 1, 0, 0, 0, 1);
 					world2.spawnParticles(ParticleTypes.ENCHANT, spawnerPos.getX(), spawnerPos.getY() + 0.75, spawnerPos.getZ(), 20, 0, 0, 0, 1);
 					((MobSpawnerLogicAccessor) mobSpawnerBlockEntity.getLogic()).setSpawnDelay(world.random.nextInt(15));
-				}
+				} else if (world.getBlockState(blockPos).getBlock() == Resonance.BRITTLE_BLOCK) {
+                    world.breakBlock(blockPos, true, sourceEntity);
+                } else if (world.getBlockState(blockPos).getBlock() == Blocks.TNT) {
+                    TntBlock.primeTnt(world, blockPos);
+                } else if (world.getBlockState(blockPos).getBlock() instanceof JumpOrbBlock) {
+                    Vec3d vec3d = blockPos.toCenterPos();
+					world2.spawnParticles(ModParticles.MEDIUM_RING_PARTICLE, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 1, 0, 0, 0, 1);
+                    world.playSound(null, blockPos, SoundEvents.BLOCK_AMETHYST_BLOCK_RESONATE, SoundCategory.BLOCKS, 2f, 0.5f + world.random.nextFloat() * 1.2f);
+                    world.setBlockState(blockPos, world.getBlockState(blockPos).with(JumpOrbBlock.EXPENDED, false), Block.NOTIFY_LISTENERS);
+                }
 			}
 		} else { world.addParticle(ModParticles.SMALL_RING_PARTICLE, true, pos.getX(), pos.getY(), pos.getZ(), angle.x, angle.y, angle.z); }
         List<Entity> list = Utils.entitiesInRadius(world, pos, immuneEntity, 3, 3, Entity::isAlive);
@@ -217,23 +230,27 @@ public class ModEvents {
 			if (entity2 instanceof ItemEntity entity1 && world instanceof ServerWorld world2) {
 				entity2.addVelocity(0, 0.1, 0);
 				ItemStack material = entity1.getStack();
-				Optional<RecipeEntry<ReverberationRecipe>> recipe = world2.getServer().getRecipeManager().getFirstMatch(ReverberationRecipe.Type.INSTANCE, new SingleStackRecipeInput(material), world2);
+				Optional<RecipeEntry<ReverberationRecipe>> recipe = world2.getRecipeManager().getFirstMatch(ReverberationRecipe.Type.INSTANCE, new SingleStackRecipeInput(material), world2);
          		if (recipe.isPresent()) {
 					ReverberationRecipe reverberationRecipe = recipe.get().value();
 					int explosionPower = reverberationRecipe.getExplosionPower();
 					if (reverberationRecipe.getResonates() && strength > 0.2f) { ReverberateEvent.REVERBERATE.invoker().onResonate(world, entity1.getPos(), angle, entity1, sourceEntity, 0.2f, false); }
 					if (explosionPower > 0) { world2.createExplosion(sourceEntity, entity1.getX(), entity1.getY(), entity1.getZ(), explosionPower, ExplosionSourceType.MOB); }
-					for (ItemStack stack : reverberationRecipe.getResults()) { world.spawnEntity(new ItemEntity(world, entity1.getX(), entity1.getY(), entity1.getZ(), stack, 0, 0.2, 0)); }
+					for (ItemStack stack : reverberationRecipe.getResults()) { world.spawnEntity(new ItemEntity(world, entity1.getX(), entity1.getY(), entity1.getZ(), stack.copy(), 0, 0.2, 0)); }
 					if (material.getCount() > 0 && reverberationRecipe.getIsMaterialConsumed()) { material.decrement(1); }
 				}
-            } else if (entity2 instanceof LivingEntity entity1 && !entity1.isBlocking()) {
+            } else if (!entity2.equals(sourceEntity) && entity2 instanceof PersistentProjectileEntity entity1 && !entity1.getItemStack().isEmpty() && entity1.pickupType == PickupPermission.ALLOWED) {
+                ItemEntity itemEntity = new ItemEntity(world, entity1.getX(), entity1.getY(), entity1.getZ(), entity1.getItemStack().copy());
+                world.spawnEntity(itemEntity);
+                entity1.discard();
+			} else if (entity2 instanceof LivingEntity entity1 && !entity1.isBlocking()) {
 				if (entity2 instanceof CreeperEntity creeperEntity) { creeperEntity.ignite(); }
                 else {
 					float damage = (float) ((entity2.getType().isIn(Resonance.SOUND_SENSITIVE_TAG) ? 2 : 1) * strength * 8f / Math.max(pos.distanceTo(entity2.getPos()), 1));
                     if (sourceEntity != null && sourceEntity instanceof LivingEntity livingEntity) { entity2.damage(Utils.damageSource(world, Resonance.REVERBERATION_DAMAGE, livingEntity), damage); }
                     else { entity2.damage(Utils.damageSource(world, Resonance.REVERBERATION_DAMAGE, pos), damage); }
 				}
-				Utils.customKnockbackClamp(entity1, pos, 0.4f * strength, 3f);
+				Utils.customKnockbackClamp(entity1, pos, 0.8f * strength, 3f);
 			}
 		}
 	}
@@ -253,22 +270,22 @@ public class ModEvents {
                 ReverberateEvent.REVERBERATE.invoker().onResonate(defender.getEntityWorld(), defender.getEyePos(), new Vector3f(0f, 0f, 0f), defender, defender, 0.5f, false);
             }
         } else if (shield.getItem() == Resonance.COPPER_SHIELD) {
-            if (source != null) {
+            if (source != null && source.isDirect()) {
                 if (source.getAttacker() instanceof PlayerEntity player) {
                     player.getItemCooldownManager().set(shield.getItem(), 66);
                     player.clearActiveItem();
                     player.getWorld().sendEntityStatus(player, (byte) 30);
                 }
                 if (source.getAttacker() instanceof LivingEntity entity) {
-                    entity.takeKnockback(0.6, defender.getX() - entity.getX(), defender.getZ() - entity.getZ());
+                    entity.takeKnockback(0.7, defender.getX() - entity.getX(), defender.getZ() - entity.getZ());
                     entity.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 50, 2, false, false, false));
                     entity.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 100, 2, false, false, false));
                 }
             }
         } else {
-            if (source != null) {
+            if (source != null && source.isDirect()) {
                 if (source.getAttacker() instanceof LivingEntity entity) {
-                    entity.takeKnockback(0.4, defender.getX() - entity.getX(), defender.getZ() - entity.getZ());
+                    entity.takeKnockback(0.3, defender.getX() - entity.getX(), defender.getZ() - entity.getZ());
                 }
             }
         }

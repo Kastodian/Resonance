@@ -1,0 +1,12 @@
+{
+  "type": "resonance:reverberation",
+  "ingredient": {
+    "item": "minecraft:music_disc_5"
+  },
+  "results": [
+    {
+      "id": "minecraft:disc_fragment_5",
+      "count": 9
+    }
+  ]
+}

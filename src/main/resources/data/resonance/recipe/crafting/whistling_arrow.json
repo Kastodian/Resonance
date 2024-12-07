@@ -7,9 +7,14 @@
     " s "
   ],
   "key": {
-    "s": {
-      "item": "minecraft:amethyst_shard"
-    },
+    "s": [
+      {
+        "item": "resonance:charged_amethyst_shard"
+      },
+      {
+        "item": "minecraft:amethyst_shard"
+      }
+    ],
     "a": {
       "item": "minecraft:arrow"
     }

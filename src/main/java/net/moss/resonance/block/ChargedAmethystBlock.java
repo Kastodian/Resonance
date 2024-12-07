@@ -82,12 +82,12 @@ public class ChargedAmethystBlock extends AmethystClusterBlock {
     public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
         world.playSound(null, pos, SoundEvents.BLOCK_AMETHYST_CLUSTER_BREAK, SoundCategory.BLOCKS, 1f, 1f);
         world.playSound(null, pos, SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.BLOCKS, 1f, 1f);
-        resonateBlock(world, state, pos, 0.6f, false);
+        resonateBlock(world, state, pos, 1f - (stage * 0.3f), false);
     }
 
     @Override
     public BlockState onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-        if (world instanceof ServerWorld serverWorld) { resonateBlock(serverWorld, state, pos, 1f, false); }
+        if (world instanceof ServerWorld serverWorld) { resonateBlock(serverWorld, state, pos, 1f - (stage * 0.2f), false); }
         return super.onBreak(world, pos, state, player);
     }
 

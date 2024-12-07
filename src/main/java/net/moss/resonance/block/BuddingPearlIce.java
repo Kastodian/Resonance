@@ -93,6 +93,8 @@ public class BuddingPearlIce extends Block implements BlockEntityProvider {
         List<Integer> stats = pearlStats == null ? Ints.asList(1, 1, 1, 0) : Ints.asList(pearlStats.get(0), pearlStats.get(1), pearlStats.get(2), pearlStats.get(3));
         int i = random.nextBetween(0, 2);
         stats.set(i, Math.min(3, stats.get(i) + 1));
+        int j = random.nextBetween(0, 2);
+        if (i != j) { stats.set(j, Math.min(3, stats.get(j) + 1)); }
         if (potion.contains(Resonance.PEARL_STATS)) {
             List<Integer> potionStats = potion.get(Resonance.PEARL_STATS);
             stats.set(0, Math.min((stats.get(0) + potionStats.get(0) / 2), 3));
@@ -100,9 +102,9 @@ public class BuddingPearlIce extends Block implements BlockEntityProvider {
             stats.set(2, Math.min((stats.get(2) + potionStats.get(2) / 2), 3));
         } if (blockEntity.hasCatalyst() && blockEntity.getCatalyst().contains(Resonance.CATALYST_STATS)) {
             List<Integer> catalystStats = blockEntity.getCatalyst().get(Resonance.CATALYST_STATS);
-            stats.set(0, Math.min(1, Math.min(stats.get(0) + catalystStats.get(0), 3)));
-            stats.set(1, Math.min(1, Math.min(stats.get(1) + catalystStats.get(1), 3)));
-            stats.set(2, Math.min(1, Math.min(stats.get(2) + catalystStats.get(2), 3)));
+            stats.set(0, Math.max(1, Math.min(stats.get(0) + catalystStats.get(0), 3)));
+            stats.set(1, Math.max(1, Math.min(stats.get(1) + catalystStats.get(1), 3)));
+            stats.set(2, Math.max(1, Math.min(stats.get(2) + catalystStats.get(2), 3)));
         } if (stats.get(3) != 1 && random.nextInt(128) == 1) { stats.set(3, 1); }
         
         PotionContentsComponent potionComponent = new PotionContentsComponent(Potions.AWKWARD);

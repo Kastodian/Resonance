@@ -11,9 +11,14 @@
     {
       "item": "minecraft:emerald"
     },
-    {
-      "item": "minecraft:amethyst_shard"
-    }
+    [
+      {
+        "item": "resonance:charged_amethyst_shard"
+      },
+      {
+        "item": "minecraft:amethyst_shard"
+      }
+    ]
   ],
   "result": {
     "id": "resonance:treasure_hoard",

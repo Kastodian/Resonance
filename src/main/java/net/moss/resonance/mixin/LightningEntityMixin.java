@@ -12,7 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Direction.Axis;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.moss.resonance.Resonance;
@@ -23,6 +23,7 @@ import net.moss.resonance.particle.ModParticles;
 import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -34,7 +35,7 @@ import java.util.Set;
 public class LightningEntityMixin {
 	@Shadow private int ambientTick;
 	@Shadow private BlockPos getAffectedBlockPos() { return null; };
-	private final Set<BlockPos> conductedBlocks = Sets.newHashSet();
+	@Unique private final Set<BlockPos> conductedBlocks = Sets.newHashSet();
 
 	@Inject(at = @At("HEAD"), method = "tick", cancellable = true)
 	public void tick(CallbackInfo info) {
@@ -52,6 +53,7 @@ public class LightningEntityMixin {
 								world.spawnParticles(ModParticles.SPARK_PARTICLE, entity2.getX(), entity2.getY() + entity2.getHeight()/2, entity2.getZ(), 20, 0, 0, 0, 1);
 								entity1.takeKnockback(0.5, Lightning.getX() - entity1.getX(), Lightning.getZ() - entity1.getZ());
 								entity1.addStatusEffect(new StatusEffectInstance(Resonance.SPARKING, 15 * 20, 2));
+								break;
 							}
 						}
         	        }
@@ -66,18 +68,14 @@ public class LightningEntityMixin {
         World world = Lightning.getWorld();
 		--strength;
 		if (world.getBlockState(blockPos).isIn(Resonance.CONDUCTIVE_BLOCKS_TAG)) {
-			if (!conductedBlocks.contains(blockPos)) {
-				conductedBlocks.add(blockPos);
-			}
+			if (!conductedBlocks.contains(blockPos)) { conductedBlocks.add(blockPos); }
 			if (strength >= 0) {
 				BlockPos blockPos2 = blockPos.offset(Direction.random(Random.create()));
 				for (int i = 0; i < 6; ++i) {
 					if (!Lightning.getWorld().getBlockState(blockPos2).isIn(Resonance.CONDUCTIVE_BLOCKS_TAG) && !conductedBlocks.contains(blockPos2)) {
 						blockPos2 = blockPos.offset(Direction.random(Random.create()));
 					}
-					else {
-						conductElectricity(blockPos2, strength - 1);
-					}
+					else { conductElectricity(blockPos2, strength - 1); }
 				}
 			}
 		}
@@ -92,17 +90,13 @@ public class LightningEntityMixin {
 			int stage = 0;
 			if (block == Blocks.MEDIUM_AMETHYST_BUD || block == Resonance.MEDIUM_CHARGED_AMETHYST_BUD) { stage = 1; }
 			else if (block == Blocks.SMALL_AMETHYST_BUD || block == Resonance.SMALL_CHARGED_AMETHYST_BUD) { stage = 2; }
-			BlockState blockState = ChargedAmethystBlock.changeState(state, stage);
-			world.setBlockState(blockPos, blockState, Block.NOTIFY_LISTENERS);
-			Vec3d posOffest = new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ());
+			world.setBlockState(blockPos, ChargedAmethystBlock.changeState(state, stage), Block.NOTIFY_LISTENERS);
 			Vector3f rotOffest = new Vector3f(0,0,0);
 			Direction direction = state.get(AmethystClusterBlock.FACING);
-			if (direction == Direction.DOWN) { rotOffest = new Vector3f(1.57f, 1.57f, 0); }
-			else if (direction == Direction.UP) { rotOffest = new Vector3f(1.57f, 1.57f, 0); }
-			else if (direction == Direction.EAST) { rotOffest = new Vector3f(0.1f, 1.57f, 0); }
+			if (direction.getAxis().isVertical()) { rotOffest = new Vector3f(1.57f, 1.57f, 0); }
+			else if (direction.getAxis() == Axis.X) { rotOffest = new Vector3f(0.1f, 1.57f, 0); }
 			else { rotOffest = new Vector3f(0.1f, 1.57f, 0); }
-			posOffest = blockPos.toCenterPos();
-			ReverberateEvent.REVERBERATE.invoker().onResonate(world, posOffest, rotOffest, null, Lightning, 2, false);
+			ReverberateEvent.REVERBERATE.invoker().onResonate(world, blockPos.toCenterPos(), rotOffest, null, Lightning, 2, false);
 		}
 	}
 }

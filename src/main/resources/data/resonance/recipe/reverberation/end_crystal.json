@@ -1,0 +1,8 @@
+{
+  "type": "resonance:reverberation",
+  "ingredient": {
+    "item": "minecraft:end_crystal"
+  },
+  "results": [],
+  "explosionPower": 2
+}
