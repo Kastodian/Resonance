@@ -6,6 +6,9 @@
         {
             "item": "resonance:tinted_bottle"
         },
+	    {
+      	    "item": "minecraft:gunpowder"
+    	},
         {
             "item": "minecraft:fire_charge"
         }

@@ -12,6 +12,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.passive.FoxEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
@@ -27,7 +28,6 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.Clearable;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -39,7 +39,7 @@ import net.moss.resonance.Resonance;
 import net.moss.resonance.block.PearlHub;
 import net.moss.resonance.util.Utils;
 
-public class PearlHubBlockEntity extends BlockEntity implements Clearable {
+public class PearlHubBlockEntity extends BlockEntity implements Inventory {
     ItemStack pearl = ItemStack.EMPTY;
     Identifier texture;
     
@@ -97,6 +97,7 @@ public class PearlHubBlockEntity extends BlockEntity implements Clearable {
 
     public int pulsePearl(World world, BlockPos pos) {
         if (!world.isClient && hasPearl()) {
+            world.emitGameEvent(null, GameEvent.BLOCK_ACTIVATE, pos);
             world.playSound(null, pos, SoundEvents.BLOCK_SCULK_SHRIEKER_SHRIEK, SoundCategory.BLOCKS, 0.7f, 0.6f + world.random.nextFloat() * 0.4f);
             return affectEntities(world, pos, Utils.entitiesInRadius(world, this.getPos().toCenterPos(), null, 3, 3, Entity::isAlive));
         }
@@ -168,5 +169,44 @@ public class PearlHubBlockEntity extends BlockEntity implements Clearable {
         }
 
         return recuperation;
+    }
+
+    @Override
+    public boolean canPlayerUse(PlayerEntity player) {
+        return Inventory.canPlayerUse(null, player);
+    }
+
+    @Override
+    public ItemStack getStack(int slot) {
+        return this.getPearl();
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return !this.hasPearl();
+    }
+
+    @Override
+    public ItemStack removeStack(int slot) {
+        ItemStack stack = this.getPearl();
+        clear();
+        PearlHub.setHasPearl(null, world, pos, getCachedState(), false);
+        return stack;
+    }
+
+    @Override
+    public ItemStack removeStack(int slot, int amount) {
+        return removeStack(slot);
+    }
+
+    @Override
+    public void setStack(int slot, ItemStack stack) {
+        setPearl(stack);
+        PearlHub.setHasPearl(null, world, pos, getCachedState(), true);
+    }
+
+    @Override
+    public int size() {
+        return 1;
     }
 }

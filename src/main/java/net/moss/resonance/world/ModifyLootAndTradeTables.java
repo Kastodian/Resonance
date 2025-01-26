@@ -20,6 +20,7 @@ public class ModifyLootAndTradeTables {
     private static final Identifier TRIAL_CHAMBER_SUPPLY = Identifier.of("chests/trial_chambers/supply");
     private static final Identifier TRIAL_CHAMBER_CORRIDOR = Identifier.of("chests/trial_chambers/corridor");
     private static final Identifier TRIAL_CHAMBER_INTERSECTION = Identifier.of("chests/trial_chambers/intersection");
+    private static final Identifier JUNGLE_TEMPLE = Identifier.of("chests/jungle_temple");
 
     public static void modifyLootTables() {
         LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
@@ -39,8 +40,8 @@ public class ModifyLootAndTradeTables {
                 tableBuilder.pool(Utils.potionLootPoolBuilder(1, 0.1f, Resonance.PEARL, 1, 1, Potions.REGENERATION));
                 tableBuilder.pool(Utils.potionLootPoolBuilder(1, 0.1f, Resonance.PEARL, 1, 1, Resonance.DARKNESS_POTION_1));
                 tableBuilder.pool(Utils.potionLootPoolBuilder(1, 0.1f, Resonance.PEARL, 1, 1, Resonance.SOUL_FATIGUE_POTION_2));
-            } else if (BASTION_OTHER.equals(id)) {
-                tableBuilder.pool(Utils.lootPoolBuilder(1, 0.1f, Resonance.TREASURE_HOARD.asItem(), 1, 1));
+            } else if (BASTION_OTHER.equals(id) || JUNGLE_TEMPLE.equals(id)) {
+                tableBuilder.pool(Utils.lootPoolBuilder(1, 0.2f, Resonance.TREASURE_HOARD.asItem(), 1, 1));
             } else if (BASTION_TREASURE.equals(id)) {
                 tableBuilder.pool(Utils.lootPoolBuilder(2, 0.3f, Resonance.TREASURE_HOARD.asItem(), 1, 3));
             } else if (END_CITY.equals(id)) {

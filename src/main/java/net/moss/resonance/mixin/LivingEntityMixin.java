@@ -189,7 +189,7 @@ public class LivingEntityMixin {
     @Inject(at = @At(value = "HEAD"), method = "onDeath", cancellable = true)
     protected void onDeath(DamageSource damageSource, CallbackInfo info) {
         LivingEntity entity = (LivingEntity)(Object) this;
-        if (entity.getType().isIn(EntityTypeTags.SKELETONS) && (entity.hasStatusEffect(Resonance.SOUL_FATIGUE) || entity instanceof WitherSkeletonEntity)) {
+        if ((entity.getType().isIn(EntityTypeTags.SKELETONS) && entity.hasStatusEffect(Resonance.SOUL_FATIGUE)) || entity instanceof WitherSkeletonEntity) {
             World world = entity.getWorld();
             if (entity.getRandom().nextInt(5) - world.getDifficulty().getId() <= 0) {
                 LostSoulEntity lostSoulEntity = new LostSoulEntity(ModEntities.LOST_SOUL, world);

@@ -7,15 +7,7 @@
   "parent": "resonance:resonance/pearls_to_the_players",
   "criteria": {
     "use_hub": {
-      "trigger": "resonance:use_pearl_hub",
-      "conditions": {
-        "item": {
-          "items": [
-            "resonance:pearl",
-            "resonance:bifurcated_pearl"
-          ]
-        }
-      }
+      "trigger": "resonance:use_pearl_hub"
     }
   },
   "rewards": {

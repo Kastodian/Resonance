@@ -40,12 +40,12 @@ public abstract class InGameHudMixin {
     }
 
     @Inject(method = "renderMiscOverlays", at = @At("HEAD"), cancellable = true)
-    private void drawHeart(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
+    private void renderMiscOverlays(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
         int i = context.getScaledWindowWidth();
         int j = context.getScaledWindowHeight();
         MinecraftClient client = MinecraftClient.getInstance();
         ClientPlayerEntity player = client.player;
-        if (player.hasStatusEffect(Resonance.CRUSHING_WEIGHT)) {
+        if (((ClientPlayerEntityInterface)player).getPrevCrushingWeightIntensity() > 0) {
             RenderSystem.disableDepthTest();
             RenderSystem.depthMask(false);
             RenderSystem.enableBlend();

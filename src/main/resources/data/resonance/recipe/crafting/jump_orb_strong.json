@@ -1,6 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
+  "group": "jump_orbs",
   "pattern": [
     " c ",
     "jwj",

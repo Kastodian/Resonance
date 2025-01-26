@@ -185,15 +185,15 @@ public class Resonance implements ModInitializer {
     public static final RegistryEntry<StatusEffect> STRONG_DOUBLE_JUMP = Registerizer.effect(Resonance.MOD_ID, "strong_double_jump", new DoubleJumpEffect()
             .addAttributeModifier(Resonance.DOUBLE_JUMPS, Identifier.of(MOD_ID, "effect.strong_double_jump"), 1f, Operation.ADD_VALUE));
     public static final RegistryEntry<StatusEffect> CRUSHING_WEIGHT = Registerizer.effect(Resonance.MOD_ID, "crushing_weight", new CrushingWeightEffect()
-            .addAttributeModifier(EntityAttributes.PLAYER_BLOCK_BREAK_SPEED, Identifier.of(MOD_ID, "effect.crushing_weight"), -0.2f, Operation.ADD_MULTIPLIED_TOTAL)
-            .addAttributeModifier(EntityAttributes.GENERIC_JUMP_STRENGTH, Identifier.of(MOD_ID, "effect.crushing_weight"), -0.2f, Operation.ADD_MULTIPLIED_TOTAL)
-            .addAttributeModifier(EntityAttributes.GENERIC_STEP_HEIGHT, Identifier.of(MOD_ID, "effect.crushing_weight"), -0.2f, Operation.ADD_MULTIPLIED_TOTAL)
-            .addAttributeModifier(EntityAttributes.GENERIC_GRAVITY, Identifier.of(MOD_ID, "effect.crushing_weight"), 0.2f, Operation.ADD_MULTIPLIED_TOTAL)
             .addAttributeModifier(EntityAttributes.GENERIC_FALL_DAMAGE_MULTIPLIER, Identifier.of(MOD_ID, "effect.crushing_weight"), 0.1f, Operation.ADD_MULTIPLIED_TOTAL)
-            .addAttributeModifier(EntityAttributes.GENERIC_ATTACK_SPEED, Identifier.of(MOD_ID, "effect.crushing_weight"), -0.1f, Operation.ADD_MULTIPLIED_TOTAL)
+            .addAttributeModifier(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, Identifier.of(MOD_ID, "effect.crushing_weight"), 2, Operation.ADD_VALUE)
             .addAttributeModifier(EntityAttributes.GENERIC_SAFE_FALL_DISTANCE, Identifier.of(MOD_ID, "effect.crushing_weight"), -1.0, Operation.ADD_VALUE)
+            .addAttributeModifier(EntityAttributes.PLAYER_BLOCK_BREAK_SPEED, Identifier.of(MOD_ID, "effect.crushing_weight"), -0.2f, Operation.ADD_MULTIPLIED_TOTAL)
             .addAttributeModifier(EntityAttributes.GENERIC_MOVEMENT_SPEED, Identifier.of(MOD_ID, "effect.crushing_weight"), -0.2f, Operation.ADD_MULTIPLIED_TOTAL)
-            .addAttributeModifier(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, Identifier.of(MOD_ID, "effect.crushing_weight"), 2, Operation.ADD_VALUE));
+            .addAttributeModifier(EntityAttributes.GENERIC_JUMP_STRENGTH, Identifier.of(MOD_ID, "effect.crushing_weight"), -0.2f, Operation.ADD_MULTIPLIED_TOTAL)
+            .addAttributeModifier(EntityAttributes.GENERIC_ATTACK_SPEED, Identifier.of(MOD_ID, "effect.crushing_weight"), -0.1f, Operation.ADD_MULTIPLIED_TOTAL)
+            .addAttributeModifier(EntityAttributes.GENERIC_STEP_HEIGHT, Identifier.of(MOD_ID, "effect.crushing_weight"), -0.2f, Operation.ADD_MULTIPLIED_TOTAL)
+            .addAttributeModifier(EntityAttributes.GENERIC_GRAVITY, Identifier.of(MOD_ID, "effect.crushing_weight"), 0.2f, Operation.ADD_MULTIPLIED_TOTAL));
     public static final RegistryEntry<Potion> SPARKING_POTION_1 = Registerizer.potion(Resonance.MOD_ID, "sparking_potion_1", SPARKING, 30*20, 1);
     public static final RegistryEntry<Potion> SPARKING_POTION_2 = Registerizer.potion(Resonance.MOD_ID, "sparking_potion_2", SPARKING, 60*20, 1);
     public static final RegistryEntry<Potion> SPARKING_POTION_3 = Registerizer.potion(Resonance.MOD_ID, "sparking_potion_3", SPARKING, 15*20, 3);
@@ -263,6 +263,9 @@ public class Resonance implements ModInitializer {
     public static final Block FIREBALL_BOTTLE_BLOCK = Registerizer.block(MOD_ID, "fireball_bottle", new TintedBottleBlock(AbstractBlock.Settings.create().mapColor(MapColor.GRAY).solid().blockVision(Blocks::never).breakInstantly().sounds(BlockSoundGroup.GLASS).nonOpaque().pistonBehavior(PistonBehavior.DESTROY), FIREBALL_BOTTLE), false);
     public static final Block LIGHTNING_BOTTLE_BLOCK = Registerizer.block(MOD_ID, "lightning_bottle", new TintedBottleBlock(AbstractBlock.Settings.create().mapColor(MapColor.GRAY).solid().blockVision(Blocks::never).breakInstantly().sounds(BlockSoundGroup.GLASS).nonOpaque().pistonBehavior(PistonBehavior.DESTROY), LIGHTNING_BOTTLE), false);
     public static final Block SHULKER_BOTTLE_BLOCK = Registerizer.block(MOD_ID, "shulker_bottle", new TintedBottleBlock(AbstractBlock.Settings.create().mapColor(MapColor.GRAY).solid().blockVision(Blocks::never).breakInstantly().sounds(BlockSoundGroup.GLASS).nonOpaque().pistonBehavior(PistonBehavior.DESTROY), SHULKER_BOTTLE), false);
+    
+    // public static final Block ABYSSAL_HEART = Registerizer.block(MOD_ID, "abyssal_heart", new PearlIce(AbstractBlock.Settings.copy(Blocks.SMOOTH_BASALT).luminance(state -> -15)), true);
+    
     // Block Entity -----------------------------------------------------------------------------------------------------------------------------------------------------------------
     public static BlockEntityType<RainChimeBlockEntity> RAIN_CHIME_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE, Identifier.of(MOD_ID, "rain_chime"), BlockEntityType.Builder.create(RainChimeBlockEntity::new, RAIN_CHIME).build());
     public static BlockEntityType<BuddingPearlIceBlockEntity> BUDDING_PEARL_ICE_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE, Identifier.of(MOD_ID, "budding_pearl_ice"), BlockEntityType.Builder.create(BuddingPearlIceBlockEntity::new, BUDDING_PEARL_ICE).build());
@@ -316,6 +319,7 @@ public class Resonance implements ModInitializer {
         entries.add(PEARL_ICE);
         entries.add(ICICLE);
         entries.add(ICE_FUR);
+        // entries.add(ABYSSAL_HEART);
     }).build());
 
 
@@ -327,6 +331,7 @@ public class Resonance implements ModInitializer {
 
         FuelRegistry.INSTANCE.add(BOOK_PILE, 600);
         FuelRegistry.INSTANCE.add(Items.FIRE_CHARGE, 1200);
+        FuelRegistry.INSTANCE.add(FIREBALL_BOTTLE, 1800);
         CompostingChanceRegistry.INSTANCE.add(Items.BAMBOO, 0.3f);
         CompostingChanceRegistry.INSTANCE.add(ROCK_CANDY, 0.2f);
         CompostingChanceRegistry.INSTANCE.add(ENCHANTED_ROCK_CANDY, 0.2f);

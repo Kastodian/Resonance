@@ -15,8 +15,10 @@ import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.NoteBlock;
 import net.minecraft.block.TntBlock;
 import net.minecraft.block.entity.MobSpawnerBlockEntity;
+import net.minecraft.block.enums.NoteBlockInstrument;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
@@ -203,25 +205,36 @@ public class ModEvents {
         world.emitGameEvent(Resonance.REVERBERATE_EVENT, pos, GameEvent.Emitter.of(world.getBlockState(BlockPos.ofFloored(pos))));
 		if (!windCharged) { world.createExplosion(sourceEntity, Utils.damageSource(world, Resonance.REVERBERATION_DAMAGE), new CustomWindChargeBehavior(0f), pos.getX(), pos.getY(), pos.getZ(), strength / 2, false, World.ExplosionSourceType.TRIGGER, ModParticles.AMETHYST_PARTICLE, ModParticles.AMETHYST_PARTICLE, Resonance.REVERBERATION_SOUND); }
 		if (world instanceof ServerWorld world2) {
-			world2.spawnParticles(ModParticles.SMALL_RING_PARTICLE, pos.getX(), pos.getY(), pos.getZ(), 1, 0, 0, 0, 3);
+			// world2.spawnParticles(ModParticles.SMALL_RING_PARTICLE, pos.getX(), pos.getY(), pos.getZ(), 1, 0, 0, 0, 3);
 			world2.spawnParticles(ModParticles.AMETHYST_PARTICLE, pos.getX(), pos.getY(), pos.getZ(), (int) (10 * strength), 0, 0, 0, 1);
 			if (strength >= 1.5) { world2.spawnParticles(ModParticles.MEDIUM_RING_PARTICLE, pos.getX(), pos.getY(), pos.getZ(), 1, 0, 0, 0, 1); }
 			for (Direction direction : Direction.values()) {
 				BlockPos blockPos = BlockPos.ofFloored(pos).offset(direction);
+                Block block = world.getBlockState(blockPos).getBlock();
 				if (world.getBlockEntity(blockPos) instanceof MobSpawnerBlockEntity mobSpawnerBlockEntity) {
 					Vec3d spawnerPos = new Vec3d(blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5);
 					world2.spawnParticles(ModParticles.MEDIUM_RING_PARTICLE, spawnerPos.getX(), spawnerPos.getY(), spawnerPos.getZ(), 1, 0, 0, 0, 1);
 					world2.spawnParticles(ParticleTypes.ENCHANT, spawnerPos.getX(), spawnerPos.getY() + 0.75, spawnerPos.getZ(), 20, 0, 0, 0, 1);
 					((MobSpawnerLogicAccessor) mobSpawnerBlockEntity.getLogic()).setSpawnDelay(world.random.nextInt(15));
-				} else if (world.getBlockState(blockPos).getBlock() == Resonance.BRITTLE_BLOCK) {
+				} else if (block == Resonance.BRITTLE_BLOCK) {
                     world.breakBlock(blockPos, true, sourceEntity);
-                } else if (world.getBlockState(blockPos).getBlock() == Blocks.TNT) {
+                } else if (block == Blocks.TNT) {
                     TntBlock.primeTnt(world, blockPos);
-                } else if (world.getBlockState(blockPos).getBlock() instanceof JumpOrbBlock) {
+                    world.setBlockState(blockPos, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL_AND_REDRAW);
+                } else if (block instanceof JumpOrbBlock) {
                     Vec3d vec3d = blockPos.toCenterPos();
 					world2.spawnParticles(ModParticles.MEDIUM_RING_PARTICLE, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 1, 0, 0, 0, 1);
                     world.playSound(null, blockPos, SoundEvents.BLOCK_AMETHYST_BLOCK_RESONATE, SoundCategory.BLOCKS, 2f, 0.5f + world.random.nextFloat() * 1.2f);
                     world.setBlockState(blockPos, world.getBlockState(blockPos).with(JumpOrbBlock.EXPENDED, false), Block.NOTIFY_LISTENERS);
+                } else if (block instanceof NoteBlock) {
+                    BlockState state = world.getBlockState(blockPos).cycle(NoteBlock.NOTE);
+                    if (((NoteBlockInstrument)state.get(NoteBlock.INSTRUMENT)).isNotBaseBlock() || world.getBlockState(blockPos.up()).isAir()) {
+                        Vec3d vec3d = blockPos.toCenterPos();
+                        world2.spawnParticles(ModParticles.MEDIUM_RING_PARTICLE, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 1, 0, 0, 0, 1);
+                        world.setBlockState(blockPos, state, Block.NOTIFY_ALL);
+                        world.addSyncedBlockEvent(blockPos, block, 0, 0);
+                        world.emitGameEvent(null, GameEvent.NOTE_BLOCK_PLAY, blockPos);
+                    }
                 }
 			}
 		} else { world.addParticle(ModParticles.SMALL_RING_PARTICLE, true, pos.getX(), pos.getY(), pos.getZ(), angle.x, angle.y, angle.z); }
@@ -252,6 +265,11 @@ public class ModEvents {
 				}
 				Utils.customKnockbackClamp(entity1, pos, 0.8f * strength, 3f);
 			}
+            else if (entity2.isAttackable()) {
+                float damage = (float) ((entity2.getType().isIn(Resonance.SOUND_SENSITIVE_TAG) ? 2 : 1) * strength * 8f / Math.max(pos.distanceTo(entity2.getPos()), 1));
+                if (sourceEntity != null && sourceEntity instanceof LivingEntity livingEntity) { entity2.damage(Utils.damageSource(world, Resonance.REVERBERATION_DAMAGE, livingEntity), damage); }
+                else { entity2.damage(Utils.damageSource(world, Resonance.REVERBERATION_DAMAGE, pos), damage); }
+            }
 		}
 	}
 

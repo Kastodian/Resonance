@@ -1,0 +1,6 @@
+{
+  "parent": "resonance:block/brittle_block",
+  "textures": {
+    "all": "resonance:block/brittle_block_cracked"
+  }
+}

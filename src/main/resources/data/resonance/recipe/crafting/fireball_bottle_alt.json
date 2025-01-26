@@ -6,13 +6,13 @@
         {
             "item": "resonance:tinted_bottle"
         },
-	{
+	    {
       	    "item": "minecraft:gunpowder"
     	},
     	{
     	    "item": "minecraft:blaze_powder"
-	},
-	[
+        },
+        [
       	    {
                 "item": "minecraft:coal"
       	    },

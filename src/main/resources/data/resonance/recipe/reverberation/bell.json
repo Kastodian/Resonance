@@ -1,0 +1,9 @@
+{
+  "type": "resonance:reverberation",
+  "ingredient": {
+    "item": "minecraft:bell"
+  },
+  "results": [],
+  "isMaterialConsumed": false,
+  "resonates": true
+}

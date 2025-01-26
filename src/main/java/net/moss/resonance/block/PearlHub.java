@@ -81,9 +81,13 @@ public class PearlHub extends HorizontalFacingBlock implements BlockEntityProvid
     protected ItemActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (state.get(HAS_PEARL).booleanValue()) {
             return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-        }
-        if (stack.isIn(Resonance.PEARL_ITEMS_TAG) || stack.isOf(Resonance.PEARL) || stack.isOf(Resonance.BIFURCATED_PEARL)) {
-            return PearlHub.putPearlIfAbsent(player, world, pos, state, stack) ? ItemActionResult.success(world.isClient) : ItemActionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
+        } else if (stack.isIn(Resonance.PEARL_ITEMS_TAG) || stack.isOf(Resonance.PEARL) || stack.isOf(Resonance.BIFURCATED_PEARL)) {
+            world.playSound(null, pos, Resonance.PEARL_HUB_ADD_SOUND.value(), SoundCategory.BLOCKS);
+            if (!world.isClient && world.getBlockEntity(pos) instanceof PearlHubBlockEntity blockEntity) {
+                blockEntity.setPearl(stack.split(1));
+                PearlHub.setHasPearl(player, world, pos, state, true);
+            }
+            return ItemActionResult.success(world.isClient);
         }
         return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
@@ -94,6 +98,7 @@ public class PearlHub extends HorizontalFacingBlock implements BlockEntityProvid
         if (world.getBlockEntity(pos) instanceof PearlHubBlockEntity blockEntity && state.get(HAS_PEARL)) {
             if (player.isSneaking()) {
                 this.dropPearl(blockEntity, world, pos);
+                blockEntity.clear();
                 PearlHub.setHasPearl(player, world, pos, state, false);
                 return ActionResult.success(true);
             } else if (!state.get(EXPENDED)) {
@@ -101,6 +106,7 @@ public class PearlHub extends HorizontalFacingBlock implements BlockEntityProvid
                 world.playSound(null, pos, Resonance.PEARL_HUB_USE_SOUND.value(), SoundCategory.BLOCKS);
                 int i = blockEntity.usePearl(world, pos, player);
                 world.scheduleBlockTick(pos, this, world.getGameRules().getInt(Resonance.PEARL_REFRESH_DELAY_GAMERULE) / i);
+                world.emitGameEvent(player, GameEvent.BLOCK_ACTIVATE, pos);
                 return ActionResult.success(true);
             }
         }
@@ -122,6 +128,7 @@ public class PearlHub extends HorizontalFacingBlock implements BlockEntityProvid
     public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
         world.playSound(null, pos, SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.BLOCKS);
         world.setBlockState(pos, state.with(EXPENDED, false), Block.NOTIFY_LISTENERS);
+        world.emitGameEvent(null, GameEvent.BLOCK_DEACTIVATE, pos);
     }
 
     @Override
@@ -140,18 +147,6 @@ public class PearlHub extends HorizontalFacingBlock implements BlockEntityProvid
         world.playSound(null, pos, Resonance.PEARL_HUB_REMOVE_SOUND.value(), SoundCategory.BLOCKS);
         itemEntity.setToDefaultPickupDelay();
         world.spawnEntity(itemEntity);
-    }
-
-    public static boolean putPearlIfAbsent(@Nullable Entity user, World world, BlockPos pos, BlockState state, ItemStack stack) {
-        if (!state.get(HAS_PEARL).booleanValue()) {
-            world.playSound(null, pos, Resonance.PEARL_HUB_ADD_SOUND.value(), SoundCategory.BLOCKS);
-            if (!world.isClient && world.getBlockEntity(pos) instanceof PearlHubBlockEntity blockEntity) {
-                blockEntity.setPearl(stack.split(1));
-                PearlHub.setHasPearl(user, world, pos, state, true);
-            }
-            return true;
-        }
-        return false;
     }
 
     public static void setHasPearl(@Nullable Entity user, World world, BlockPos pos, BlockState state, boolean hasPearl) {

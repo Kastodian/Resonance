@@ -76,7 +76,12 @@ public class BuddingPearlIce extends Block implements BlockEntityProvider {
 
     @Override
     protected void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        if (random.nextInt(40) == 0 && world.getBlockEntity(pos) instanceof BuddingPearlIceBlockEntity blockEntity) {
+        int chance = 40;
+        if (pos.getY() < 1) { chance -= 5; }
+        if (world.isSkyVisible(pos)) { chance += 10; }
+        if (world.isThundering()) { chance -= 15; }
+        else if (world.isRaining()) { chance -= 10; }
+        if (random.nextInt(chance) == 0 && world.getBlockEntity(pos) instanceof BuddingPearlIceBlockEntity blockEntity) {
             blockEntity.spreadSculk(state, world, random);
             if (getAge(state) == 5 && blockEntity.canCraftPearl()) { craftPearl(blockEntity, pos, state, world, random); }
             else { world.setBlockState(pos, state.with(AGE, getAge(state) + 1), Block.NOTIFY_LISTENERS); }

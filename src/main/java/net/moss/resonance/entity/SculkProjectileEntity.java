@@ -97,7 +97,7 @@ public class SculkProjectileEntity extends ProjectileEntity {
         this.spreadManager.tick(world, this.getBlockPos(), world.getRandom(), true);
         HitResult hitResult;
         Entity entity = this.getOwner();
-        if (!world.isClient && (entity != null && entity.isRemoved() || !world.isChunkLoaded(this.getChunkPos().x, this.getChunkPos().z))) {
+        if (!world.isClient && (this.age > 12000 && entity != null && entity.isRemoved() || !world.isChunkLoaded(this.getChunkPos().x, this.getChunkPos().z))) {
             this.discard();
             return;
         }

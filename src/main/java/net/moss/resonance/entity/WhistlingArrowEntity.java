@@ -4,6 +4,7 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.TntBlock;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
@@ -42,6 +43,13 @@ public class WhistlingArrowEntity extends PersistentProjectileEntity {
         super.onHit(target);
         this.getWorld().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.NEUTRAL, 1f, 1f);
         ReverberateEvent.REVERBERATE.invoker().onResonate(getWorld(), this.getPos(), new Vector3f((float) (this.prevPitch / 180 * Math.PI), (float) (this.prevYaw / 180 * Math.PI), 0f), this, this.getOwner(), 1f, false); 
+    }
+
+    @Override
+    protected void onDeflected(Entity deflector, boolean fromAttack) {
+        this.getWorld().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.NEUTRAL, 1f, 1f);
+        ReverberateEvent.REVERBERATE.invoker().onResonate(getWorld(), this.getPos(), new Vector3f((float) (this.prevPitch / 180 * Math.PI), (float) (this.prevYaw / 180 * Math.PI), 0f), this, this.getOwner(), 1f, false); 
+        super.onDeflected(deflector, fromAttack);
     }
 
     @Override

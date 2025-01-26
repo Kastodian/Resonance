@@ -8,7 +8,8 @@
               "items": [
                 "minecraft:book",
                 "minecraft:bookshelf",
-                "minecraft:paper"
+                "minecraft:paper",
+                "minecraft:enchanting_table"
               ]
             }
           ]

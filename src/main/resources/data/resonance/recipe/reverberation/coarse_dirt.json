@@ -1,0 +1,9 @@
+{
+  "type": "resonance:reverberation",
+  "ingredient": {
+    "item": "minecraft:coarse_dirt"
+  },
+  "results": [
+    { "id": "minecraft:dirt" }
+  ]
+}

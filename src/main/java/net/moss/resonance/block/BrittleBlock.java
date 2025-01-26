@@ -9,6 +9,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -19,6 +20,8 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.state.StateManager;
+import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ItemActionResult;
 import net.minecraft.util.hit.BlockHitResult;
@@ -37,9 +40,17 @@ import net.moss.resonance.block.entity.BrittleBlockEntity;
 
 public class BrittleBlock extends BlockWithEntity {
     public static final MapCodec<BrittleBlock> CODEC = createCodec(BrittleBlock::new);
+    public static final BooleanProperty CRACKED = BooleanProperty.of("cracked");
 
     public BrittleBlock(Settings settings) {
         super(settings);
+        this.setDefaultState(this.getDefaultState().with(CRACKED, false));
+    }
+
+    @Override
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        super.appendProperties(builder);
+        builder.add(CRACKED);
     }
 
     public void setStoredState(BlockState state, ServerWorld world, BlockPos pos, BlockState storedState) {
@@ -51,12 +62,12 @@ public class BrittleBlock extends BlockWithEntity {
     @SuppressWarnings("static-access")
     @Override
     protected void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-		if (world.getBlockEntity(pos) instanceof BrittleBlockEntity brittleBlockEntity && world.getGameRules().getBoolean(GameRules.DO_TILE_DROPS)) {
+		if (!newState.isOf(Resonance.BRITTLE_BLOCK) && world.getBlockEntity(pos) instanceof BrittleBlockEntity brittleBlockEntity && world.getGameRules().getBoolean(GameRules.DO_TILE_DROPS)) {
 			BlockState storedState = brittleBlockEntity.getStoredState();
             storedState.getBlock().dropStacks(storedState, world, pos, brittleBlockEntity);
+            world.removeBlockEntity(pos);
 		}
         super.onStateReplaced(state, world, pos, newState, moved);
-        world.removeBlockEntity(pos);
     }
 
     @Override
@@ -72,6 +83,13 @@ public class BrittleBlock extends BlockWithEntity {
     protected BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
         if (world.getBlockEntity(pos) instanceof BrittleBlockEntity brittleBlockEntity && brittleBlockEntity.getStoredState().isAir()) { world.breakBlock(pos, true); }
         return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+    }
+
+    @Override
+    public void onLandedUpon(World world, BlockState state, BlockPos pos, Entity entity, float fallDistance) {
+        if (state.get(CRACKED)) { world.breakBlock(pos, true, entity); }
+        else if (world.getRandom().nextInt(3) == 0) { world.setBlockState(pos, state.with(CRACKED, true), Block.NOTIFY_LISTENERS); }
+        super.onLandedUpon(world, state, pos, entity, fallDistance);
     }
 
     @Override
