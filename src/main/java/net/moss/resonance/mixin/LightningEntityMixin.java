@@ -3,7 +3,6 @@ package net.moss.resonance.mixin;
 import net.minecraft.block.AmethystClusterBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LightningEntity;
 import net.minecraft.entity.LivingEntity;
@@ -16,8 +15,8 @@ import net.minecraft.util.math.Direction.Axis;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.moss.resonance.Resonance;
+import net.moss.resonance.util.Dischargable;
 import net.moss.resonance.util.Utils;
-import net.moss.resonance.block.ChargedAmethystBlock;
 import net.moss.resonance.event.ReverberateEvent;
 import net.moss.resonance.particle.ModParticles;
 import org.joml.Vector3f;
@@ -29,6 +28,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import com.google.common.collect.Sets;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Mixin(LightningEntity.class)
@@ -87,16 +87,16 @@ public class LightningEntityMixin {
 		BlockState state = world.getBlockState(blockPos);
 		Block block = state.getBlock();
 		if (block instanceof AmethystClusterBlock) {
-			int stage = 0;
-			if (block == Blocks.MEDIUM_AMETHYST_BUD || block == Resonance.MEDIUM_CHARGED_AMETHYST_BUD) { stage = 1; }
-			else if (block == Blocks.SMALL_AMETHYST_BUD || block == Resonance.SMALL_CHARGED_AMETHYST_BUD) { stage = 2; }
-			world.setBlockState(blockPos, ChargedAmethystBlock.changeState(state, stage), Block.NOTIFY_LISTENERS);
-			Vector3f rotOffest = new Vector3f(0,0,0);
-			Direction direction = state.get(AmethystClusterBlock.FACING);
-			if (direction.getAxis().isVertical()) { rotOffest = new Vector3f(1.57f, 1.57f, 0); }
-			else if (direction.getAxis() == Axis.X) { rotOffest = new Vector3f(0.1f, 1.57f, 0); }
-			else { rotOffest = new Vector3f(0.1f, 1.57f, 0); }
-			ReverberateEvent.REVERBERATE.invoker().onResonate(world, blockPos.toCenterPos(), rotOffest, null, Lightning, 2, false);
+			Optional<BlockState> blockstate = Dischargable.getIncreasedChargeState(state);
+			if (blockstate.isPresent()) {
+				world.setBlockState(blockPos, blockstate.get(), Block.NOTIFY_LISTENERS);
+				Vector3f rotOffest = new Vector3f(0,0,0);
+				Direction direction = state.get(AmethystClusterBlock.FACING);
+				if (direction.getAxis().isVertical()) { rotOffest = new Vector3f(1.57f, 1.57f, 0); }
+				else if (direction.getAxis() == Axis.X) { rotOffest = new Vector3f(0.1f, 1.57f, 0); }
+				else { rotOffest = new Vector3f(0.1f, 1.57f, 0); }
+				ReverberateEvent.REVERBERATE.invoker().onResonate(world, blockPos.toCenterPos(), rotOffest, null, Lightning, 2, false);
+			}
 		}
 	}
 }

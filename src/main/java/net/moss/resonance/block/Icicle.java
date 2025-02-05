@@ -79,7 +79,7 @@ public class Icicle extends Block implements LandingBlock, Waterloggable {
     @Override
     protected BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
         if ((Boolean)state.get(WATERLOGGED)) { world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world)); }
-        if (direction != Direction.UP && direction != Direction.DOWN) { return state; }
+        if (direction.getAxis() != Direction.Axis.Y) { return state; }
         else {
             Direction direction2 = (Direction)state.get(VERTICAL_DIRECTION);
             if (direction2 == Direction.DOWN && world.getBlockTickScheduler().isQueued(pos, this)) {

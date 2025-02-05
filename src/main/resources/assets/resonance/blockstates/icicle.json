@@ -22,8 +22,8 @@
       "model": "resonance:block/icicle/icicle_down_tip"
     },
     "thickness=tip,vertical_direction=up": [
-      { "model": "resonance:block/icicle/icicle_up_tip" },
-      { "model": "resonance:block/icicle/icicle_up_tip" },
+      { "model": "resonance:block/icicle/icicle_up_tip_0" },
+      { "model": "resonance:block/icicle/icicle_up_tip_0" },
       { "model": "resonance:block/icicle/icicle_up_tip_1" }
     ],
     "thickness=tip_merge,vertical_direction=down": {

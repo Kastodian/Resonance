@@ -1,5 +1,7 @@
 package net.moss.resonance.particle;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.VertexConsumer;
@@ -10,6 +12,7 @@ import net.minecraft.util.math.Vec3d;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
+@Environment(EnvType.CLIENT)
 public class SmallRingParticle extends SpriteBillboardParticle {
 	private final SpriteProvider sprites;
 	private static Quaternionf QUATERNION = new Quaternionf(0F, 0F, 0F, 1F);
@@ -94,6 +97,7 @@ public class SmallRingParticle extends SpriteBillboardParticle {
 		return ParticleTextureSheet.PARTICLE_SHEET_TRANSLUCENT;
 	}
 
+	@Environment(EnvType.CLIENT)
 	public record Factory(SpriteProvider sprites) implements ParticleFactory<SimpleParticleType> {
 		public Particle createParticle(SimpleParticleType type, ClientWorld world, double x, double y, double z, double velX, double velY, double velZ) {
 			return new SmallRingParticle(world, x, y, z, velX, velY, velZ, sprites);

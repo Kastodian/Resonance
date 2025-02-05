@@ -13,6 +13,7 @@ import net.minecraft.block.ShapeContext;
 import net.minecraft.block.dispenser.DispenserBehavior;
 import net.minecraft.block.dispenser.FallibleItemDispenserBehavior;
 import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.DyedColorComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LightningEntity;
 import net.minecraft.entity.Entity.RemovalReason;
@@ -43,6 +44,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 import net.minecraft.world.event.GameEvent.Emitter;
 import net.moss.resonance.Resonance;
+import net.moss.resonance.block.BathyalVent;
 import net.moss.resonance.entity.LostSoulEntity;
 import net.moss.resonance.util.Utils;
 import net.minecraft.world.RaycastContext;
@@ -69,6 +71,10 @@ public class TintedBottle extends Item {
                 if (serverWorld.getRandom().nextInt(4) == 0) { serverWorld.setBlockState(blockPos, blockState.with(SculkCatalystBlock.BLOOM, false), Block.NOTIFY_LISTENERS); }
                 this.setSuccess(true);
                 return this.replace(pointer, stack, new ItemStack(Resonance.SCULK_BOTTLE));
+            } else if (blockState.isOf(Resonance.BATHYAL_VENT) && blockState.get(BathyalVent.LIT) && blockState.get(BathyalVent.WATERLOGGED)) {
+                serverWorld.setBlockState(blockPos, blockState.with(BathyalVent.LIT, false).with(BathyalVent.WATERLOGGED, false), Block.NOTIFY_LISTENERS);
+                this.setSuccess(true);
+                return this.replace(pointer, stack, new ItemStack(Resonance.VENT_FLUID_BOTTLE));
             }
             List<Entity> list = pointer.world().getEntitiesByClass(Entity.class, new Box(blockPos), Entity::isAlive);
             for (Entity entity : list) {
@@ -99,7 +105,7 @@ public class TintedBottle extends Item {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity playerEntity, Hand hand) {
         ItemStack itemStack = playerEntity.getStackInHand(hand);
-        if (!playerEntity.isSneaking()) { return TypedActionResult.pass(itemStack); }
+        if (playerEntity.isSneaking()) { return TypedActionResult.pass(itemStack); }
         BlockHitResult blockHitResult = TintedBottle.raycast(world, playerEntity, RaycastContext.FluidHandling.NONE);
         BlockPos blockPos = blockHitResult.getBlockPos();
         List<Entity> list = Utils.entitiesInRadius(world, blockHitResult.getPos(), playerEntity, 2, 2, Entity::isAlive);
@@ -121,6 +127,14 @@ public class TintedBottle extends Item {
                 if (world.getRandom().nextInt(4) == 0) { world.setBlockState(blockPos, blockState.with(SculkCatalystBlock.BLOOM, false), Block.NOTIFY_LISTENERS); }
                 playerEntity.incrementStat(Stats.USED.getOrCreateStat(this));
                 ItemStack itemStack2 = ItemUsage.exchangeStack(itemStack, playerEntity, Resonance.SCULK_BOTTLE.getDefaultStack());
+                return TypedActionResult.success(itemStack2, world.isClient());
+            } else if (blockState.isOf(Resonance.BATHYAL_VENT) && blockState.get(BathyalVent.LIT) && blockState.get(BathyalVent.WATERLOGGED)) {
+                world.playSound(null, blockPos, SoundEvents.ITEM_BOTTLE_FILL, SoundCategory.PLAYERS, 1.0f, world.getRandom().nextFloat() * 0.4f + 0.8f);
+                world.setBlockState(blockPos, blockState.with(BathyalVent.LIT, false).with(BathyalVent.WATERLOGGED, false), Block.NOTIFY_LISTENERS);
+                playerEntity.incrementStat(Stats.USED.getOrCreateStat(this));
+                ItemStack stack = Resonance.VENT_FLUID_BOTTLE.getDefaultStack();
+                stack.set(DataComponentTypes.DYED_COLOR, new DyedColorComponent(blockState.get(BathyalVent.COLOR).getFireworkColor(), true));
+                ItemStack itemStack2 = ItemUsage.exchangeStack(itemStack, playerEntity, stack);
                 return TypedActionResult.success(itemStack2, world.isClient());
             }
         }

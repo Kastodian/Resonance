@@ -1,6 +1,7 @@
 {
     "replace": false,
     "values": [
-      "resonance:scarf"
+      "resonance:scarf",
+      "resonance:vent_fluid_bottle"
     ]
   }

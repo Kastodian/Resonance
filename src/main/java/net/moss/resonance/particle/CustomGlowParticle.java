@@ -1,11 +1,14 @@
 package net.moss.resonance.particle;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.SimpleParticleType;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.random.Random;
 
+@Environment(EnvType.CLIENT)
 public class CustomGlowParticle extends SpriteBillboardParticle {
 	static final Random RANDOM = Random.create();
     private final SpriteProvider sprites;
@@ -44,6 +47,7 @@ public class CustomGlowParticle extends SpriteBillboardParticle {
         return j | k << 16;
     }
 
+    @Environment(EnvType.CLIENT)
     public record SparkFactory(SpriteProvider sprites) implements ParticleFactory<SimpleParticleType> {
 		public Particle createParticle(SimpleParticleType type, ClientWorld world, double x, double y, double z, double velX, double velY, double velZ) {
 			CustomGlowParticle sparkParticle = new CustomGlowParticle(world, x, y, z, velX, velY, velZ, sprites);
@@ -53,6 +57,7 @@ public class CustomGlowParticle extends SpriteBillboardParticle {
 		}
 	}
 
+    @Environment(EnvType.CLIENT)
     public record AmethystFactory(SpriteProvider sprites) implements ParticleFactory<SimpleParticleType> {
 		public Particle createParticle(SimpleParticleType type, ClientWorld world, double x, double y, double z, double velX, double velY, double velZ) {
 			CustomGlowParticle amethystParticle = new CustomGlowParticle(world, x, y, z, velX, velY, velZ, sprites);
@@ -63,6 +68,7 @@ public class CustomGlowParticle extends SpriteBillboardParticle {
 		}
 	}
 
+    @Environment(EnvType.CLIENT)
     public record GoldenGlitter(SpriteProvider sprites) implements ParticleFactory<SimpleParticleType> {
 		public Particle createParticle(SimpleParticleType type, ClientWorld world, double x, double y, double z, double velX, double velY, double velZ) {
 			CustomGlowParticle glitterParticle = new CustomGlowParticle(world, x, y, z, velX, velY, velZ, sprites);

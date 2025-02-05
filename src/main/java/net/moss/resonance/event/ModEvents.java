@@ -63,6 +63,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.moss.resonance.Resonance;
 import net.moss.resonance.ReverberationRecipe;
+import net.moss.resonance.block.BathyalHeart;
 import net.moss.resonance.block.BuddingPearlIce;
 import net.moss.resonance.block.JumpOrbBlock;
 import net.moss.resonance.command.LocateUniqueStructureCommand;
@@ -86,11 +87,12 @@ public class ModEvents {
 			if (target.getType() == EntityType.FIREBALL) { bottleType = Resonance.FIREBALL_BOTTLE.getDefaultStack(); }
             else if (target.getType() == EntityType.SHULKER_BULLET) { bottleType = Resonance.SHULKER_BOTTLE.getDefaultStack(); }
             else if (target.getType() == ModEntities.LOST_SOUL) { bottleType = Resonance.SOUL_BOTTLE.getDefaultStack(); }
+            else if (target.getType() == ModEntities.VENT_FLUID_PROJECTILE) { bottleType = Resonance.VENT_FLUID_BOTTLE.getDefaultStack(); }
             else { successfulPickup = false; }
             if (successfulPickup) {
                 Resonance.TINTED_BOTTLE_CRITERION.trigger((ServerPlayerEntity)player, target);
                 world.playSound(null, player.getBlockPos(), SoundEvents.ITEM_BOTTLE_FILL, SoundCategory.PLAYERS);
-				player.incrementStat(Stats.USED.getOrCreateStat(itemstack.getItem()));
+				player.incrementStat(Stats.USED.getOrCreateStat(Resonance.TINTED_BOTTLE));
                 target.remove(RemovalReason.DISCARDED);
                 if (itemstack.getCount() > 1) {
                     ItemUsage.exchangeStack(itemstack, player, bottleType);
@@ -205,7 +207,7 @@ public class ModEvents {
         world.emitGameEvent(Resonance.REVERBERATE_EVENT, pos, GameEvent.Emitter.of(world.getBlockState(BlockPos.ofFloored(pos))));
 		if (!windCharged) { world.createExplosion(sourceEntity, Utils.damageSource(world, Resonance.REVERBERATION_DAMAGE), new CustomWindChargeBehavior(0f), pos.getX(), pos.getY(), pos.getZ(), strength / 2, false, World.ExplosionSourceType.TRIGGER, ModParticles.AMETHYST_PARTICLE, ModParticles.AMETHYST_PARTICLE, Resonance.REVERBERATION_SOUND); }
 		if (world instanceof ServerWorld world2) {
-			// world2.spawnParticles(ModParticles.SMALL_RING_PARTICLE, pos.getX(), pos.getY(), pos.getZ(), 1, 0, 0, 0, 3);
+			world2.spawnParticles(ModParticles.SMALL_RING_PARTICLE, pos.getX(), pos.getY(), pos.getZ(), 1, 0, 0, 0, 3);
 			world2.spawnParticles(ModParticles.AMETHYST_PARTICLE, pos.getX(), pos.getY(), pos.getZ(), (int) (10 * strength), 0, 0, 0, 1);
 			if (strength >= 1.5) { world2.spawnParticles(ModParticles.MEDIUM_RING_PARTICLE, pos.getX(), pos.getY(), pos.getZ(), 1, 0, 0, 0, 1); }
 			for (Direction direction : Direction.values()) {
@@ -226,6 +228,7 @@ public class ModEvents {
 					world2.spawnParticles(ModParticles.MEDIUM_RING_PARTICLE, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 1, 0, 0, 0, 1);
                     world.playSound(null, blockPos, SoundEvents.BLOCK_AMETHYST_BLOCK_RESONATE, SoundCategory.BLOCKS, 2f, 0.5f + world.random.nextFloat() * 1.2f);
                     world.setBlockState(blockPos, world.getBlockState(blockPos).with(JumpOrbBlock.EXPENDED, false), Block.NOTIFY_LISTENERS);
+                    world.emitGameEvent(sourceEntity, GameEvent.BLOCK_ACTIVATE, blockPos);
                 } else if (block instanceof NoteBlock) {
                     BlockState state = world.getBlockState(blockPos).cycle(NoteBlock.NOTE);
                     if (((NoteBlockInstrument)state.get(NoteBlock.INSTRUMENT)).isNotBaseBlock() || world.getBlockState(blockPos.up()).isAir()) {
@@ -233,8 +236,15 @@ public class ModEvents {
                         world2.spawnParticles(ModParticles.MEDIUM_RING_PARTICLE, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 1, 0, 0, 0, 1);
                         world.setBlockState(blockPos, state, Block.NOTIFY_ALL);
                         world.addSyncedBlockEvent(blockPos, block, 0, 0);
-                        world.emitGameEvent(null, GameEvent.NOTE_BLOCK_PLAY, blockPos);
+                        world.emitGameEvent(sourceEntity, GameEvent.NOTE_BLOCK_PLAY, blockPos);
                     }
+                } else if (block == Resonance.BATHYAL_HEART) {
+                    BlockState state = world.getBlockState(blockPos);
+                    int input = world.getRandom().nextBetween(0, world.getReceivedRedstonePower(blockPos));
+                    Vec3d vec3d = blockPos.toCenterPos();
+                    world2.spawnParticles(ModParticles.MEDIUM_RING_PARTICLE, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 1, 0, 0, 0, 1);
+                    world.setBlockState(blockPos, state.with(BathyalHeart.POWER, input), Block.NOTIFY_ALL);
+                    world.emitGameEvent(sourceEntity, GameEvent.BLOCK_ACTIVATE, blockPos);
                 }
 			}
 		} else { world.addParticle(ModParticles.SMALL_RING_PARTICLE, true, pos.getX(), pos.getY(), pos.getZ(), angle.x, angle.y, angle.z); }

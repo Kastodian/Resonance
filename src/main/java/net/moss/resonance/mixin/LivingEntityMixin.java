@@ -159,7 +159,7 @@ public class LivingEntityMixin {
 
     @Inject(at = @At(value = "HEAD"), method = "canFreeze", cancellable = true)
     private void canFreeze(CallbackInfoReturnable<Boolean> cir) {
-        if (Utils.isItemEquipped((LivingEntity)(Object) this, Resonance.SCARF, false)){
+        if (Utils.isItemEquipped((LivingEntity)(Object) this, Resonance.SCARF, false)) {
             cir.setReturnValue(false);
         }
     }

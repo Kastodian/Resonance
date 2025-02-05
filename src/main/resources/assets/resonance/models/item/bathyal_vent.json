@@ -1,0 +1,6 @@
+{
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "resonance:block/bathyal_vent_tip_0"
+    }
+}

@@ -1,5 +1,6 @@
 package net.moss.resonance.block;
 
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import org.joml.Math;
 import org.joml.Vector3f;
@@ -16,6 +17,7 @@ import net.minecraft.world.explosion.Explosion;
 import net.moss.resonance.Resonance;
 import net.moss.resonance.event.ReverberateEvent;
 import net.moss.resonance.particle.ModParticles;
+import net.moss.resonance.util.Dischargable;
 import net.minecraft.particle.ParticleUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -26,16 +28,16 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.intprovider.UniformIntProvider;
 import net.minecraft.util.math.random.Random;
 
-public class ChargedAmethystBlock extends AmethystClusterBlock {
+public class ChargedAmethystBlock extends AmethystClusterBlock implements Dischargable {
     public static final BooleanProperty POWERED = Properties.POWERED;
     private static final Integer[] STAGE_TO_HEIGHT = new Integer[]{7,5,4,3};
     private static final Integer[] STAGE_TO_XZOFFSET = new Integer[]{3,3,3,4};
-    private final int stage;
+	private final Dischargable.ChargeLevel chargeLevel;
 
-    public ChargedAmethystBlock(int stage) {
-        super(STAGE_TO_HEIGHT[stage], STAGE_TO_XZOFFSET[stage], AbstractBlock.Settings.copy(Blocks.AMETHYST_CLUSTER).luminance(state -> 7 - 2 * stage));
+    public ChargedAmethystBlock(Dischargable.ChargeLevel chargeLevel) {
+        super(STAGE_TO_HEIGHT[chargeLevel.getNumber()], STAGE_TO_XZOFFSET[chargeLevel.getNumber()], AbstractBlock.Settings.copy(Blocks.AMETHYST_CLUSTER).luminance(state -> 7 - 2 * chargeLevel.getNumber()));
         this.setDefaultState(this.getDefaultState().with(POWERED, false));
-        this.stage = stage;
+        this.chargeLevel = chargeLevel;
     }
 
     @Override
@@ -45,26 +47,28 @@ public class ChargedAmethystBlock extends AmethystClusterBlock {
     }
 
     @Override public boolean hasComparatorOutput(BlockState state) { return true; }
-    @Override public int getComparatorOutput(BlockState state, World world, BlockPos pos) { return Math.clamp(1, 15, (3 - this.stage) * 5); }
+    @Override public int getComparatorOutput(BlockState state, World world, BlockPos pos) { return Math.clamp(1, 15, (3 - chargeLevel.getNumber()) * 5); }
     @Override public boolean hasRandomTicks(BlockState state) { return true; }
-    public int getStage() { return stage; }
 
     @Override
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
         if (random.nextInt(50) != 0) { return; }
         BlockState holdingBlock = world.getBlockState(pos.offset(state.get(FACING).getOpposite()));
         if (holdingBlock.isOf(Blocks.BUDDING_AMETHYST) || holdingBlock.isOf(Blocks.AMETHYST_BLOCK)) { return; }
+        tickDegradation(state, world, pos, random);
+    }
 
+    @Override
+    public void tickDegradation(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+        this.tryDegrade(state, world, pos, random).ifPresent(degraded -> world.setBlockState(pos, degraded));
+    }
+
+    @Override
+    public Optional<BlockState> tryDegrade(BlockState state, ServerWorld world, BlockPos pos, Random random) {
         world.playSound(null, pos, SoundEvents.BLOCK_AMETHYST_CLUSTER_BREAK, SoundCategory.BLOCKS, 1f, 1f);
         world.playSound(null, pos, SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.BLOCKS, 1f, 1f);
         resonateBlock(world, state, pos, 1, false);
-        if (this.stage < 3) {
-            BlockState blockState = changeState(state, this.stage + 1);
-            world.setBlockState(pos, blockState, Block.NOTIFY_LISTENERS);
-        } else {
-            BlockState blockState = Blocks.SMALL_AMETHYST_BUD.getDefaultState().with(FACING, state.get(FACING)).with(WATERLOGGED, state.get(WATERLOGGED));
-            world.setBlockState(pos, blockState, Block.NOTIFY_LISTENERS);
-        }
+		return this.getDegradationResult(state);
     }
     
     @Override
@@ -82,12 +86,12 @@ public class ChargedAmethystBlock extends AmethystClusterBlock {
     public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
         world.playSound(null, pos, SoundEvents.BLOCK_AMETHYST_CLUSTER_BREAK, SoundCategory.BLOCKS, 1f, 1f);
         world.playSound(null, pos, SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.BLOCKS, 1f, 1f);
-        resonateBlock(world, state, pos, 1f - (stage * 0.3f), false);
+        resonateBlock(world, state, pos, 1f - (chargeLevel.getNumber() * 0.3f), false);
     }
 
     @Override
     public BlockState onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-        if (world instanceof ServerWorld serverWorld) { resonateBlock(serverWorld, state, pos, 1f - (stage * 0.2f), false); }
+        if (world instanceof ServerWorld serverWorld) { resonateBlock(serverWorld, state, pos, 1f - (chargeLevel.getNumber() * 0.2f), false); }
         return super.onBreak(world, pos, state, player);
     }
 
@@ -115,5 +119,10 @@ public class ChargedAmethystBlock extends AmethystClusterBlock {
     protected void onExploded(BlockState state, World world, BlockPos pos, Explosion explosion, BiConsumer<ItemStack, BlockPos> stackMerger) {
         if (world instanceof ServerWorld serverWorld && explosion.getPower() > 0.5f) { resonateBlock(serverWorld, world.getBlockState(pos), pos, 1.5f, true); }
         super.onExploded(state, world, pos, explosion, stackMerger);
+    }
+
+    @Override
+    public ChargeLevel getDegradationLevel() {
+        return chargeLevel;
     }
 }

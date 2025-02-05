@@ -1,11 +1,14 @@
 package net.moss.resonance.particle;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.SimpleParticleType;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.random.Random;
 
+@Environment(EnvType.CLIENT)
 public class MediumRingParticle extends SpriteBillboardParticle {
 	static final Random RANDOM = Random.create();
     private final SpriteProvider sprites;
@@ -48,6 +51,7 @@ public class MediumRingParticle extends SpriteBillboardParticle {
         return ParticleTextureSheet.PARTICLE_SHEET_TRANSLUCENT;
     }
 
+	@Environment(EnvType.CLIENT)
     public record Factory(SpriteProvider sprites) implements ParticleFactory<SimpleParticleType> {
 		public Particle createParticle(SimpleParticleType type, ClientWorld world, double x, double y, double z, double velX, double velY, double velZ) {
 			MediumRingParticle ringParticle = new MediumRingParticle(world, x, y, z, velX, velY, velZ, sprites);

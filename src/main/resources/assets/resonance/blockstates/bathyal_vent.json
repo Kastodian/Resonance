@@ -1,0 +1,27 @@
+{
+  "variants": {
+    "thickness=base": {
+      "model": "resonance:block/bathyal_vent/bathyal_vent_base"
+    },
+    "thickness=frustum": [
+      { "model": "resonance:block/bathyal_vent/bathyal_vent_frustum_0" },
+      { "model": "resonance:block/bathyal_vent/bathyal_vent_frustum_1" },
+      { "model": "resonance:block/bathyal_vent/bathyal_vent_frustum_2" }
+    ],
+    "thickness=middle": [
+      { "model": "resonance:block/bathyal_vent/bathyal_vent_middle_0" },
+      { "model": "resonance:block/bathyal_vent/bathyal_vent_middle_1" },
+      { "model": "resonance:block/bathyal_vent/bathyal_vent_middle_2" }
+    ],
+    "thickness=tip,lit=false": [
+      { "model": "resonance:block/bathyal_vent/bathyal_vent_tip_0" },
+      { "model": "resonance:block/bathyal_vent/bathyal_vent_tip_1" },
+      { "model": "resonance:block/bathyal_vent/bathyal_vent_tip_2" }
+    ],
+    "thickness=tip,lit=true": [
+      { "model": "resonance:block/bathyal_vent/bathyal_vent_tip_0" },
+      { "model": "resonance:block/bathyal_vent/bathyal_vent_tip_1" },
+      { "model": "resonance:block/bathyal_vent/bathyal_vent_tip_2" }
+    ]
+  }
+}

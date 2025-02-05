@@ -19,7 +19,8 @@
     "TridentItemMixin",
     "AbstractFurnaceBlockMixin",
     "AbstractFurnaceBlockEntityAccessor",
-    "AbstractCauldronBlockAccessor"
+    "AbstractCauldronBlockAccessor",
+    "RedstoneViewMixin"
   ],
   "client": [
     "ArmorRendererMixin",

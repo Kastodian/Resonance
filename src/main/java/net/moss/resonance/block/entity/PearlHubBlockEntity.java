@@ -105,7 +105,7 @@ public class PearlHubBlockEntity extends BlockEntity implements Inventory {
     }
 
     public int affectEntities(World world, BlockPos pos, List<Entity> entities) {
-        int recuperation = 6;
+        int recuperation = 5;
         int duration = 3;
         int strength = 3;
         if (pearl.contains(Resonance.PEARL_STATS)) {

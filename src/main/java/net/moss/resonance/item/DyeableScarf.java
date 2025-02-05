@@ -18,7 +18,7 @@ public class DyeableScarf extends ScarfItem {
             return 3;
         } else if (name.equals("ace") || name.equals("ace pride") || name.equals("ace pride scarf") || name.equals("asexual") || name.equals("asexual pride") || name.equals("asexual pride scarf")) {
             return 4;
-        } else if (name.equals("lesbian") || name.equals("lesbian pride") || name.equals("lesbian pride scarf")) {
+        } else if (name.equals("lesbian") || name.equals("lesbian pride") || name.equals("lesbian pride scarf") || name.equals("long bacon")) {
             return 5;
         }
         return 0;

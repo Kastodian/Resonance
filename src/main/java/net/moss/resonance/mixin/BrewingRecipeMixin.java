@@ -62,6 +62,18 @@ public class BrewingRecipeMixin {
         builder.registerPotionRecipe(Resonance.LEVITATION_AND_SLOWFALLING_POTION_1, Items.FERMENTED_SPIDER_EYE, Potions.LEAPING);
         builder.registerPotionRecipe(Resonance.LEVITATION_AND_SLOWFALLING_POTION_2, Items.FERMENTED_SPIDER_EYE, Potions.LONG_LEAPING);
         builder.registerPotionRecipe(Resonance.LEVITATION_AND_SLOWFALLING_POTION_3, Items.FERMENTED_SPIDER_EYE, Potions.STRONG_LEAPING);
+        
+        builder.registerPotionRecipe(Potions.THICK, Resonance.VENT_FLUID_BOTTLE, Resonance.WITHERING_POTION_1);
+        
+        builder.registerPotionRecipe(Resonance.WITHERING_POTION_1, Items.REDSTONE, Resonance.WITHERING_POTION_2);
+        builder.registerPotionRecipe(Resonance.WITHERING_POTION_3, Items.REDSTONE, Resonance.WITHERING_POTION_2);
+        builder.registerPotionRecipe(Resonance.WITHERING_POTION_1, Items.GLOWSTONE_DUST, Resonance.WITHERING_POTION_3);
+        builder.registerPotionRecipe(Resonance.WITHERING_POTION_2, Items.GLOWSTONE_DUST, Resonance.WITHERING_POTION_3);
+        builder.registerPotionRecipe(Resonance.WITHERING_POTION_1, Items.FERMENTED_SPIDER_EYE, Potions.WATER_BREATHING);
+        builder.registerPotionRecipe(Resonance.WITHERING_POTION_2, Items.FERMENTED_SPIDER_EYE, Potions.WATER_BREATHING);
+        builder.registerPotionRecipe(Resonance.WITHERING_POTION_3, Items.FERMENTED_SPIDER_EYE, Potions.WATER_BREATHING);
+
+        builder.registerPotionRecipe(Potions.MUNDANE, Items.GLOWSTONE_DUST, Potions.AWKWARD);
         return (builder);
     }
 }

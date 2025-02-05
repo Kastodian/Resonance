@@ -1,0 +1,6 @@
+{
+  "type": "emi:world_interaction",
+  "left": "item:resonance:bathyal_vent",
+  "right": "item:resonance:tinted_bottle",
+  "output": "item:resonance:vent_fluid_bottle"
+}

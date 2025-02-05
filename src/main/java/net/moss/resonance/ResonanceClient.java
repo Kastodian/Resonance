@@ -21,9 +21,11 @@ import net.moss.resonance.entity.ModEntities;
 import net.moss.resonance.entity.client.LostSoulModel;
 import net.moss.resonance.entity.client.LostSoulRenderer;
 import net.moss.resonance.entity.client.SculkProjectileRenderer;
+import net.moss.resonance.entity.client.VentFluidProjectileRenderer;
 import net.moss.resonance.entity.client.WhistlingArrowRenderer;
 import net.moss.resonance.particle.ModParticles;
 import net.moss.resonance.particle.SmallRingParticle;
+import net.moss.resonance.particle.VentSmokeParticle;
 import net.moss.resonance.world.DreamSweetSkyRenderer;
 import net.moss.resonance.particle.CustomGlowParticle;
 import net.moss.resonance.particle.MediumRingParticle;
@@ -54,16 +56,21 @@ public class ResonanceClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(Resonance.SHULKER_BOTTLE_BLOCK, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putBlock(Resonance.BUDDING_PEARL_ICE, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putBlock(Resonance.BRITTLE_BLOCK, RenderLayer.getTranslucent());
+        BlockRenderLayerMap.INSTANCE.putBlock(Resonance.BATHYAL_VENT, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(Resonance.VENT_FLUID_BOTTLE_BLOCK, RenderLayer.getTranslucent());
+        BlockRenderLayerMap.INSTANCE.putBlock(Resonance.VENT_FLUID, RenderLayer.getTranslucent());
         
         ParticleFactoryRegistry.getInstance().register(ModParticles.SMALL_RING_PARTICLE, SmallRingParticle.Factory::new);
         ParticleFactoryRegistry.getInstance().register(ModParticles.MEDIUM_RING_PARTICLE, MediumRingParticle.Factory::new);
         ParticleFactoryRegistry.getInstance().register(ModParticles.SPARK_PARTICLE, CustomGlowParticle.SparkFactory::new);
         ParticleFactoryRegistry.getInstance().register(ModParticles.AMETHYST_PARTICLE, CustomGlowParticle.AmethystFactory::new);
         ParticleFactoryRegistry.getInstance().register(ModParticles.GOLDEN_GLITTER, CustomGlowParticle.GoldenGlitter::new);
+        ParticleFactoryRegistry.getInstance().register(ModParticles.VENT_SMOKE, VentSmokeParticle.Factory::new);
 
         EntityRendererRegistry.register(ModEntities.WHISTLING_ARROW, WhistlingArrowRenderer::new);
         EntityRendererRegistry.register(ModEntities.SCULK_PROJECTILE, SculkProjectileRenderer::new);
         EntityRendererRegistry.register(ModEntities.LOST_SOUL, LostSoulRenderer::new);
+        EntityRendererRegistry.register(ModEntities.VENT_FLUID_PROJECTILE, VentFluidProjectileRenderer::new);
 
         EntityModelLayerRegistry.registerModelLayer(LOST_SOUL_LAYER, LostSoulModel::getTexturedModelData);
 
@@ -73,6 +80,7 @@ public class ResonanceClient implements ClientModInitializer {
         BlockEntityRendererFactories.register(Resonance.BRITTLE_BLOCK_ENTITY, BrittleBlockEntityRenderer::new);
         
         ColorProviderRegistry.ITEM.register((stack, tintIndex) -> stack.contains(DataComponentTypes.DYED_COLOR) ? DyedColorComponent.getColor(stack, 16777215) : -1, Resonance.SCARF);
+        ColorProviderRegistry.ITEM.register((stack, tintIndex) -> tintIndex > 0 ? -1 : (stack.contains(DataComponentTypes.DYED_COLOR) ? DyedColorComponent.getColor(stack, 16777215) : -1), Resonance.VENT_FLUID_BOTTLE);
 
         DimensionRenderingRegistry.registerSkyRenderer(Resonance.DREAM_SWEET, new DreamSweetSkyRenderer());
     }

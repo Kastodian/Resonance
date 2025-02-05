@@ -1,6 +1,5 @@
 package net.moss.resonance.entity;
 
-import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.SculkSpreadManager;
@@ -37,36 +36,29 @@ public class SculkProjectileEntity extends ProjectileEntity {
 
     public SculkProjectileEntity(World world, LivingEntity owner, double directionX, double directionY, double directionZ) {
         super(ModEntities.SCULK_PROJECTILE, world);
+        this.setOwner(owner);
         this.spreadManager = SculkSpreadManager.create();
     }
 
     @Override
     protected void onCollision(HitResult hitResult) {
         super.onCollision(hitResult);
-        if (hitResult.getType() == HitResult.Type.ENTITY && this.isOwner(((EntityHitResult) hitResult).getEntity())) { return; }
-        World world = this.getWorld();
-        if (!world.isClient) { this.discard(); }
+        if (this.getWorld() instanceof ServerWorld world) {
+            Utils.entitiesInRadius(world, this.getPos(), this, 2, 2, Entity::isAlive).forEach(entity -> {
+                if (entity instanceof LivingEntity livingEntity) { livingEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.DARKNESS, 10 * 20)); }
+            });
+        }
+        if (!this.getWorld().isClient()) { this.discard(); }
     }
 
     @Override
     protected void onEntityHit(EntityHitResult entityHitResult) {
         Entity entity = entityHitResult.getEntity();
         if (entity instanceof LivingEntity livingEntity) { livingEntity.damage(this.getDamageSources().mobProjectile(this, null), 5); }
-        blindSurroundingEntities();
-    }
-
-    public void blindSurroundingEntities() {
-        if (this.getWorld() instanceof ServerWorld world) {
-            List<Entity> list = Utils.entitiesInRadius(world, this.getPos(), this, 2, 2, Entity::isAlive);
-            for (Entity entity : list) {
-                if (entity instanceof LivingEntity livingEntity) { livingEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.DARKNESS, 10 * 20)); }
-            }
-        }
     }
 
     @Override
     protected void onBlockHit(BlockHitResult blockHitResult) {
-        blindSurroundingEntities();
         BlockPos blockPos = blockHitResult.getBlockPos();
         World world = this.getWorld();
         if (world.getBlockState(blockPos).getBlock() == Blocks.BONE_BLOCK) {

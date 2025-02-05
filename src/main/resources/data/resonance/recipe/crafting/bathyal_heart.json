@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "vev",
+    "ehe",
+    "vev"
+  ],
+  "key": {
+    "e": {
+      "item": "minecraft:echo_shard"
+    },
+    "h": {
+      "item": "minecraft:heart_of_the_sea"
+    },
+    "v": {
+      "item": "resonance:bathyal_vent"
+    }
+  },
+  "result": {
+    "id": "resonance:bathyal_heart"
+  }
+}

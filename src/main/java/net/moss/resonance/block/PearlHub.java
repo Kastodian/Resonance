@@ -28,6 +28,7 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ItemActionResult;
@@ -39,7 +40,7 @@ import net.minecraft.util.math.random.Random;
 public class PearlHub extends HorizontalFacingBlock implements BlockEntityProvider {
     public static final BooleanProperty HAS_PEARL = BooleanProperty.of("has_pearl");
     public static final BooleanProperty EXPENDED = BooleanProperty.of("expended");
-    public static final BooleanProperty POWERED = BooleanProperty.of("powered");
+    public static final BooleanProperty POWERED = Properties.POWERED;
     public static final MapCodec<PearlHub> CODEC = PearlHub.createCodec(PearlHub::new);
     private int xIn;
     private int yIn;

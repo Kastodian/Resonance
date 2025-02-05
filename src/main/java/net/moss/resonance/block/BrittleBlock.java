@@ -22,6 +22,7 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ItemActionResult;
 import net.minecraft.util.hit.BlockHitResult;
@@ -40,7 +41,7 @@ import net.moss.resonance.block.entity.BrittleBlockEntity;
 
 public class BrittleBlock extends BlockWithEntity {
     public static final MapCodec<BrittleBlock> CODEC = createCodec(BrittleBlock::new);
-    public static final BooleanProperty CRACKED = BooleanProperty.of("cracked");
+    public static final BooleanProperty CRACKED = Properties.CRACKED;
 
     public BrittleBlock(Settings settings) {
         super(settings);

@@ -32,5 +32,17 @@
   "pearl_hub_use": {
     "subtitle": "resonance.pearl_hub.use",
     "sounds": [ "resonance:reverberation" ]
+  },
+  "bathyal_heart_ambient": {
+    "subtitle": "resonance.bathyal_heart.ambient",
+    "sounds": [
+      "minecraft:mob/guardian/elder_idle1",
+      "minecraft:mob/guardian/elder_idle2",
+      "minecraft:mob/guardian/elder_idle3",
+      "minecraft:mob/guardian/elder_idle4" ]
+  },
+  "bathyal_heart_pulse": {
+    "subtitle": "resonance.bathyal_heart.pulse",
+    "sounds": [ "minecraft:mob/guardian/elder_death" ]
   }
 }
