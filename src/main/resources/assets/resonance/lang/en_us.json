@@ -51,6 +51,8 @@
     "block.resonance.bathyal_vent": "Bathyal Vent",
     "item.resonance.vent_fluid_bottle": "Vent Fluid in a Bottle",
     "block.resonance.vent_fluid_bottle": "Vent Fluid in a Bottle",
+    "block.resonance.tube_worms": "Tube Worms",
+    "block.resonance.wall_tube_worms": "Tube Worms",
     "enchantment.resonance.sparking": "Sparking",
     "enchantment.resonance.recoiling_curse": "Curse of Recoiling",
     "itemGroup.resonance.resonance_group_id": "Resonance",
@@ -73,6 +75,8 @@
     "resonance.pearl_hub.use": "Pearl Hub activates",
     "resonance.bathyal_heart.ambient": "Creature follows",
     "resonance.bathyal_heart.pulse": "Bathyal Heart pulses",
+    "resonance.bathyal_vent.extinguish": "Vent extinguishes",
+    "resonance.bathyal_vent.ambient": "Vent plumes",
 
     "death.attack.reverberation": "%1$s got hit by a reverberation",
     "death.attack.reverberation.player": "%1$s got hit by a reverberation from %2$s",
@@ -82,6 +86,8 @@
     "death.attack.ground_pound.player": "%1$s got flattened by %2$s",
     "death.attack.icicle": "%1$s was impaled on an icicle",
     "death.attack.icicle.player": "%1$s was impaled on an icicle while fighting %2$s",
+    "death.attack.vent_plume": "%1$s got boiled",
+    "death.attack.vent_plume.player": "%1$s got boiled fighting %2$s",
     
     "effect.resonance.sparking": "Sparking",
     "item.minecraft.potion.effect.sparking_potion_1": "Potion of Sparking",

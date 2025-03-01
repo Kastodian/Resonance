@@ -2,7 +2,6 @@ package net.moss.resonance.entity;
 
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -22,7 +21,6 @@ import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
@@ -53,7 +51,6 @@ public class VentFluidProjectileEntity extends ProjectileEntity {
     protected void onCollision(HitResult hitResult) {
         super.onCollision(hitResult);
         if (this.getWorld() instanceof ServerWorld serverWorld) {
-            serverWorld.addImportantParticle(ParticleTypes.FLAME, true, this.getX(), this.getY(), this.getZ(), 0, 0, 0);
             Utils.entitiesInRadius(serverWorld, this.getPos(), this, 2, 2, Entity::isAlive).forEach(entity -> {
                 if (entity instanceof LivingEntity livingEntity) { livingEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 5 * 20)); }
             });

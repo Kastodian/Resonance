@@ -1,6 +1,6 @@
 {
   "type": "emi:world_interaction",
-  "left": "item:resonance:sculk_bottle",
-  "right": "item:minecraft:bone_block",
+  "left": "item:minecraft:bone_block",
+  "right": "item:resonance:sculk_bottle",
   "output": "item:minecraft:sculk_catalyst"
 }

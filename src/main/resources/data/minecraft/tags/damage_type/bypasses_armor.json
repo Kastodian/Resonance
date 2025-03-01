@@ -2,6 +2,7 @@
     "replace": false,
     "values": [
       "resonance:reverberation",
-      "resonance:sparking"
+      "resonance:sparking",
+      "resonance:vent_plume"
     ]
 }

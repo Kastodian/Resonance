@@ -7,6 +7,7 @@
     "minecraft:heavy_core",
     "minecraft:wind_charge",
     "resonance:jump_orb_normal",
-    "resonance:jump_orb_strong"
+    "resonance:jump_orb_strong",
+    "minecraft:pufferfish"
   ]
 }

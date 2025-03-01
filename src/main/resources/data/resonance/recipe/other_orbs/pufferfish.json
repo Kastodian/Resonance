@@ -1,0 +1,24 @@
+{
+  "type": "resonance:other_orb_effects",
+  "ingredient": { "item": "minecraft:pufferfish" },
+  "result": {
+    "id": "minecraft:pufferfish",
+    "components": {
+      "minecraft:potion_contents": {
+        "custom_effects": [
+          {
+            "id": "minecraft:poison",
+            "amplifier": 1,
+            "duration": 600
+          },
+          {
+            "id": "minecraft:nausea",
+            "duration": 300
+          }
+        ]
+      }
+    }
+  },
+  "texture": "resonance:textures/block/pufferfish_pearl",
+  "sound": { "sound_id": "minecraft:entity.puffer_fish.blow_up" }
+}

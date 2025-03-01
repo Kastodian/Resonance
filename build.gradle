@@ -45,6 +45,10 @@ dependencies {
 	modLocalRuntime "dev.emi:trinkets:${project.trinkets_version}"
 	modApi "dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cardinal_components_version}"
     modApi "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${project.cardinal_components_version}"
+
+	// modApi("com.terraformersmc:biolith-fabric:${biolith_version}")
+    // modApi "com.terraformersmc:biolith:${biolith_version}"
+    modApi "com.terraformersmc:biolith-fabric:${biolith_version}"
 }
 
 processResources {

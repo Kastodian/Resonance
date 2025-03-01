@@ -44,5 +44,13 @@
   "bathyal_heart_pulse": {
     "subtitle": "resonance.bathyal_heart.pulse",
     "sounds": [ "minecraft:mob/guardian/elder_death" ]
+  },
+  "bathyal_vent_extinguish": {
+    "subtitle": "resonance.bathyal_vent.extinguish",
+    "sounds": [ "resonance:vent_extinguish" ]
+  },
+  "bathyal_vent_ambient": {
+    "subtitle": "resonance.bathyal_vent.ambient",
+    "sounds": [ "resonance:vent_ambient" ]
   }
 }

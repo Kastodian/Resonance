@@ -1,7 +1,7 @@
 {
     "replace": false,
     "values": [
-      "resonance:bathyal_vent",
+      "resonance:bathyal_heart",
       "minecraft:magma_block",
       "minecraft:lava"
     ]

@@ -54,11 +54,9 @@ public class LightningStrikeRecipe implements Recipe<SingleStackRecipeInput> {
 
     public static class Type implements RecipeType<LightningStrikeRecipe> {
         public static final Type INSTANCE = new Type();
-        public static final String ID = "lightning_strike";
     }
 
     public static class Serializer implements RecipeSerializer<LightningStrikeRecipe> {
-        public static final String ID = "lightning_strike";
         public static final Serializer INSTANCE = new Serializer();
         public static final PacketCodec<RegistryByteBuf, LightningStrikeRecipe> PACKET_CODEC = PacketCodec.ofStatic(LightningStrikeRecipe.Serializer::write, LightningStrikeRecipe.Serializer::read);
         private final MapCodec<LightningStrikeRecipe> CODEC = RecordCodecBuilder.mapCodec((instance) -> { return instance.group(

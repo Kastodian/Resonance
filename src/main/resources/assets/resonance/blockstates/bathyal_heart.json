@@ -1,5 +1,6 @@
 {
   "variants": {
-    "": { "model": "resonance:block/bathyal_heart" }
+    "waterlogged=false": { "model": "resonance:block/bathyal_heart_dry" },
+    "waterlogged=true": { "model": "resonance:block/bathyal_heart" }
   }
 }

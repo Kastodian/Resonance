@@ -70,7 +70,8 @@ public class Utils {
     public static int[] IntListToArray(List<Integer> list) { return list.stream().mapToInt(Integer::intValue).toArray(); }
     public static List<Integer> ArrayToIntList(int[] array) { return Arrays.stream(array).boxed().collect(Collectors.toList()); }
 
-    public static LootPool lootPoolBuilder(float rolls, float conditionally, Item item, float countMin, float countMax) {
+    @SuppressWarnings("deprecation")
+	public static LootPool lootPoolBuilder(float rolls, float conditionally, Item item, float countMin, float countMax) {
         return LootPool.builder()
                 .rolls(ConstantLootNumberProvider.create(rolls))
                 .conditionally(RandomChanceLootCondition.builder(conditionally))
@@ -88,7 +89,8 @@ public class Utils {
 				.build();
     }
 
-    public static LootPool potionLootPoolBuilder(float rolls, float conditionally, Item item, float countMin, float countMax, RegistryEntry<Potion> potion) {
+    @SuppressWarnings("deprecation")
+	public static LootPool potionLootPoolBuilder(float rolls, float conditionally, Item item, float countMin, float countMax, RegistryEntry<Potion> potion) {
         return LootPool.builder()
                 .rolls(ConstantLootNumberProvider.create(rolls))
                 .conditionally(RandomChanceLootCondition.builder(conditionally))

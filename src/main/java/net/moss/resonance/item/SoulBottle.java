@@ -15,7 +15,7 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.moss.resonance.Resonance;
-import net.moss.resonance.block.LostSoulEcho;
+import net.moss.resonance.block.LostSoulBlock;
 import net.moss.resonance.util.Utils;
 
 public class SoulBottle extends TintedBottle {
@@ -36,7 +36,7 @@ public class SoulBottle extends TintedBottle {
             BlockState state = world.getBlockState(blockPos);
             if (state.isOf(Resonance.LOST_SOUL_ECHO) && !Utils.canMobSpawn(world, blockPos)) { world.removeBlock(blockPos, false); }
             if (state.isAir() && Utils.canMobSpawn(world, blockPos) && blockPos.isWithinDistance(pos, 12)) {
-                world.setBlockState(blockPos, Resonance.LOST_SOUL_ECHO.getDefaultState().with(LostSoulEcho.DURATION, 1), Block.NOTIFY_LISTENERS);
+                world.setBlockState(blockPos, Resonance.LOST_SOUL_ECHO.getDefaultState().with(LostSoulBlock.DURATION, 1), Block.NOTIFY_LISTENERS);
                 clearArea = false;
             }
         }

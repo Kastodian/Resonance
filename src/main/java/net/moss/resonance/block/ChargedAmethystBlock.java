@@ -35,7 +35,7 @@ public class ChargedAmethystBlock extends AmethystClusterBlock implements Discha
 	private final Dischargable.ChargeLevel chargeLevel;
 
     public ChargedAmethystBlock(Dischargable.ChargeLevel chargeLevel) {
-        super(STAGE_TO_HEIGHT[chargeLevel.getNumber()], STAGE_TO_XZOFFSET[chargeLevel.getNumber()], AbstractBlock.Settings.copy(Blocks.AMETHYST_CLUSTER).luminance(state -> 7 - 2 * chargeLevel.getNumber()));
+        super(STAGE_TO_HEIGHT[chargeLevel.getNumber()], STAGE_TO_XZOFFSET[chargeLevel.getNumber()], AbstractBlock.Settings.copy(Blocks.AMETHYST_CLUSTER).ticksRandomly().luminance(state -> 7 - 2 * chargeLevel.getNumber()));
         this.setDefaultState(this.getDefaultState().with(POWERED, false));
         this.chargeLevel = chargeLevel;
     }

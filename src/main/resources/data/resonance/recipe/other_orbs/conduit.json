@@ -19,5 +19,6 @@
         }
       }
     },
-    "texture": "resonance:textures/block/conduit_pearl"
+    "texture": "resonance:textures/block/conduit_pearl",
+    "sound": { "sound_id": "minecraft:block.conduit.attack.target" }
   }

@@ -8,8 +8,8 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.moss.resonance.util.Utils;
 
-public class LostSoulEcho extends EmptyLikeBlock {
-    public LostSoulEcho(Settings settings) {
+public class LostSoulBlock extends EmptyLikeBlock {
+    public LostSoulBlock(Settings settings) {
         super(settings);
     }
 

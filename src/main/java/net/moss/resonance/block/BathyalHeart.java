@@ -58,8 +58,8 @@ public class BathyalHeart extends Block implements Waterloggable {
 
     @Override
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        Utils.entitiesInRadius(world, pos.toCenterPos(), null, 10, 10, Entity::isAlive).forEach(entity -> {
-			if (entity instanceof LivingEntity livingEntity && livingEntity.isSubmergedInWater() && livingEntity.isAttackable()) { livingEntity.addStatusEffect(new StatusEffectInstance(Resonance.CRUSHING_WEIGHT, 200, 0, true, false)); }
+        Utils.entitiesInRadius(world, pos.toCenterPos(), null, 32, 32, Entity::isAlive).forEach(entity -> {
+			if (entity instanceof LivingEntity livingEntity && livingEntity.isSubmergedInWater() && livingEntity.isAttackable()) { livingEntity.addStatusEffect(new StatusEffectInstance(Resonance.CRUSHING_WEIGHT, 600, 0, true, false)); }
 		});
     }
 
@@ -70,7 +70,7 @@ public class BathyalHeart extends Block implements Waterloggable {
 		int k = pos.getZ();
 		world.addParticle(ParticleTypes.ASH, i + random.nextDouble(), j + 0.7, k + random.nextDouble(), 0, 0, 0);
 		if (!state.get(WATERLOGGED)) { return; }
-        if (random.nextInt(300) == 1) { world.playSound(pos.getX(), pos.getY(), pos.getZ(), Resonance.BATHYAL_HEART_AMBIENT_SOUND.value(), SoundCategory.AMBIENT, 0.125f, 0.5f + world.random.nextFloat() * 1.2f, false); }
+        if (random.nextInt(100) == 1) { world.playSound(pos.getX(), pos.getY(), pos.getZ(), Resonance.BATHYAL_HEART_AMBIENT_SOUND.value(), SoundCategory.AMBIENT, 0.2f, 0.5f + world.random.nextFloat() * 1.2f, false); }
 		BlockPos.Mutable mutable = new BlockPos.Mutable();
 		for (int l = 0; l < 64; l++) {
 			mutable.set(i + MathHelper.nextInt(random, -10, 10), j - MathHelper.nextInt(random, -10, 10), k + MathHelper.nextInt(random, -10, 10));
@@ -86,7 +86,7 @@ public class BathyalHeart extends Block implements Waterloggable {
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
         if (world.isClient) { return; }
         if (world.isReceivingRedstonePower(pos)) {
-        	if (!state.get(POWERED) && state.get(WATERLOGGED)) { world.playSound(pos.getX(), pos.getY(), pos.getZ(), Resonance.BATHYAL_HEART_PULSE_SOUND.value(), SoundCategory.AMBIENT, 0.125f, 0.5f + world.random.nextFloat() * 1.2f, false); }
+        	if (!state.get(POWERED) && state.get(WATERLOGGED)) { world.playSound(null, pos, Resonance.BATHYAL_HEART_PULSE_SOUND.value(), SoundCategory.AMBIENT, 0.2f, 0.5f + world.random.nextFloat() * 1.2f); }
             world.setBlockState(pos, state.with(POWERED, true).with(POWER, world.getReceivedRedstonePower(pos)), Block.NOTIFY_LISTENERS);
 			updateSignal(state, world, pos);
         } else if (state.get(POWERED)) {

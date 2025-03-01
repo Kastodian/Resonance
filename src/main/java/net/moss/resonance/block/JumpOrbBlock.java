@@ -38,7 +38,7 @@ public class JumpOrbBlock extends Block implements Waterloggable {
     public RegistryEntry<StatusEffect> statusEffect;
 
     public JumpOrbBlock(RegistryEntry<StatusEffect> statusEffect) {
-        super(AbstractBlock.Settings.copy(Blocks.AMETHYST_CLUSTER).noBlockBreakParticles().noCollision().luminance(state -> state.get(EXPENDED) ? 1 : 5));
+        super(AbstractBlock.Settings.copy(Blocks.AMETHYST_CLUSTER).ticksRandomly().noBlockBreakParticles().noCollision().luminance(state -> state.get(EXPENDED) ? 1 : 5));
         this.setDefaultState(this.getDefaultState().with(EXPENDED, false).with(WATERLOGGED, false));
         this.statusEffect = statusEffect;
     }

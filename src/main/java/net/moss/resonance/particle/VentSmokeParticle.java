@@ -36,7 +36,7 @@ public class VentSmokeParticle extends AbstractDustParticle<VentSmoke> {
 		if (this.age++ < this.maxAge && !(this.alpha <= 0.0F)) {
 			this.velocityX = this.velocityX + (double)(this.random.nextFloat() / 5000.0F * (float)(this.random.nextBoolean() ? 1 : -1));
 			this.velocityZ = this.velocityZ + (double)(this.random.nextFloat() / 5000.0F * (float)(this.random.nextBoolean() ? 1 : -1));
-			this.scale += 0.004;
+			this.scale += 0.003;
 			this.velocityY = this.velocityY - (double)this.gravityStrength;
 			this.move(this.velocityX, this.velocityY, this.velocityZ);
 			if (this.age >= this.maxAge - 60 && this.alpha > 0.02F) {

@@ -59,6 +59,7 @@ public class ResonanceClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(Resonance.BATHYAL_VENT, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(Resonance.VENT_FLUID_BOTTLE_BLOCK, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putBlock(Resonance.VENT_FLUID, RenderLayer.getTranslucent());
+        BlockRenderLayerMap.INSTANCE.putBlock(Resonance.TUBE_WORMS, RenderLayer.getCutout());
         
         ParticleFactoryRegistry.getInstance().register(ModParticles.SMALL_RING_PARTICLE, SmallRingParticle.Factory::new);
         ParticleFactoryRegistry.getInstance().register(ModParticles.MEDIUM_RING_PARTICLE, MediumRingParticle.Factory::new);

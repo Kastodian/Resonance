@@ -1,0 +1,107 @@
+{
+  "type": "minecraft:random_patch",
+  "config": {
+    "tries": 32,
+    "xz_spread": 8,
+    "y_spread": 0,
+    "feature": {
+      "feature": {
+        "type": "minecraft:block_column",
+        "config": {
+          "allowed_placement": {
+            "type": "minecraft:matching_blocks",
+            "blocks": "minecraft:water"
+          },
+          "direction": "up",
+          "layers": [
+            {
+              "height": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 0,
+                "max_inclusive": 1
+              },
+              "provider": {
+                "type": "minecraft:simple_state_provider",
+                "state": {
+                  "Name": "resonance:bathyal_vent",
+                  "Properties": {
+                    "thickness": "base",
+                    "waterlogged": "true"
+                  }
+                }
+              }
+            },
+            {
+              "height": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 0,
+                "max_inclusive": 2
+              },
+              "provider": {
+                "type": "minecraft:simple_state_provider",
+                "state": {
+                  "Name": "resonance:bathyal_vent",
+                  "Properties": {
+                    "thickness": "middle",
+                    "waterlogged": "true"
+                  }
+                }
+              }
+            },
+            {
+              "height": 1,
+              "provider": {
+                "type": "minecraft:weighted_state_provider",
+                "entries": [
+                  {
+                    "weight": 1,
+                    "data": {
+                      "Name": "resonance:bathyal_vent",
+                      "Properties": {
+                        "thickness": "frustrum",
+                        "lit": "false",
+                        "waterlogged": "true"
+                      }
+                    }
+                  },
+                  {
+                    "weight": 1,
+                    "data": {
+                      "Name": "resonance:bathyal_vent",
+                      "Properties": {
+                        "thickness": "frustrum",
+                        "lit": "true",
+                        "waterlogged": "true"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "prioritize_tip": true
+        }
+      },
+      "placement": [
+        {
+          "type": "minecraft:block_predicate_filter",
+          "predicate": {
+            "type": "minecraft:matching_blocks",
+            "offset": [
+              0,
+              -1,
+              0
+            ],
+            "blocks": [
+              "minecraft:basalt"
+            ]
+          }
+        },
+        {
+          "type": "minecraft:heightmap",
+          "heightmap": "OCEAN_FLOOR"
+        }
+      ]
+    }
+  }
+}

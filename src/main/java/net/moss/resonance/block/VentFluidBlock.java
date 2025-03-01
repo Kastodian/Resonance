@@ -31,11 +31,12 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 import net.moss.resonance.Resonance;
+import net.moss.resonance.util.Utils;
 
-public class VentFluid extends Block implements FluidDrainable {
+public class VentFluidBlock extends Block implements FluidDrainable {
 	public static final IntProperty DISTANCE = Properties.DISTANCE_1_7;
 
-    public VentFluid(Settings settings) {
+    public VentFluidBlock(Settings settings) {
         super(settings);
 		this.setDefaultState(this.stateManager.getDefaultState().with(DISTANCE, 1));
     }
@@ -79,9 +80,7 @@ public class VentFluid extends Block implements FluidDrainable {
 
 	@Override
 	protected void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-		// TODO: make it like powdered snow
-		// TODO: add new damage type
-		if (entity instanceof LivingEntity) { entity.damage(world.getDamageSources().hotFloor(), 1.0F); }
+		if (entity instanceof LivingEntity) { entity.damage(Utils.damageSource(world, Resonance.VENT_PLUME_DAMAGE), 1.0F); }
 		super.onEntityCollision(state, world, pos, entity);
 	}
 

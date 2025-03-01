@@ -1,0 +1,79 @@
+{
+  "type": "minecraft:random_selector",
+  "config": {
+    "features": [
+      {
+        "chance": 0.5,
+        "feature": {
+          "feature": {
+            "config": {
+              "targets": [
+                {
+                  "target": {
+                    "predicate_type": "minecraft:tag_match",
+                    "tag": "resonance:bathyal_floor_replaceables"
+                  },
+                  "state": {
+                    "Name": "minecraft:tuff"
+                  }
+                }
+              ],
+              "size": 48,
+              "discard_chance_on_air_exposure": 0
+            },
+            "type": "minecraft:ore"
+          },
+          "placement": []
+        }
+      },
+      {
+        "chance": 0.3,
+        "feature": {
+          "feature": {
+            "config": {
+              "targets": [
+                {
+                  "target": {
+                    "predicate_type": "minecraft:tag_match",
+                    "tag": "resonance:bathyal_floor_replaceables"
+                  },
+                  "state": {
+                    "Name": "minecraft:granite"
+                  }
+                }
+              ],
+              "size": 48,
+              "discard_chance_on_air_exposure": 0
+            },
+            "type": "minecraft:ore"
+          },
+          "placement": []
+        }
+      }
+    ],
+    "default": {
+      "feature": {
+        "config": {
+          "targets": [
+            {
+              "target": {
+                "predicate_type": "minecraft:tag_match",
+                "tag": "resonance:bathyal_floor_replaceables"
+              },
+              "state": {
+                "Name": "minecraft:basalt",
+                "Properties": {
+                  "axis": "y"
+                }
+              }
+            }
+          ],
+          "size": 64,
+          "discard_chance_on_air_exposure": 0
+        },
+        "type": "minecraft:ore"
+      },
+      "placement": []
+    }
+  }
+}

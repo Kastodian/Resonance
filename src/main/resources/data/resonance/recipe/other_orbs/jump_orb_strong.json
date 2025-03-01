@@ -15,5 +15,6 @@
         }
       }
     },
-    "texture": "resonance:textures/block/jump_orb_strong_pearl"
+    "texture": "resonance:textures/block/jump_orb_strong_pearl",
+    "sound": { "sound_id": "minecraft:block.amethyst_block.resonate" }
   }

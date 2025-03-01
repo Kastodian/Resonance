@@ -54,11 +54,9 @@ public class ReverberationRecipe implements Recipe<SingleStackRecipeInput> {
 
     public static class Type implements RecipeType<ReverberationRecipe> {
         public static final Type INSTANCE = new Type();
-        public static final String ID = "reverberation";
     }
 
     public static class Serializer implements RecipeSerializer<ReverberationRecipe> {
-        public static final String ID = "reverberation";
         public static final Serializer INSTANCE = new Serializer();
         public static final PacketCodec<RegistryByteBuf, ReverberationRecipe> PACKET_CODEC = PacketCodec.ofStatic(ReverberationRecipe.Serializer::write, ReverberationRecipe.Serializer::read);
         private final MapCodec<ReverberationRecipe> CODEC = RecordCodecBuilder.mapCodec((instance) -> { return instance.group(

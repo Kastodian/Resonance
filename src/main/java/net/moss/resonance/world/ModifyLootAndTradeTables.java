@@ -1,12 +1,16 @@
 package net.moss.resonance.world;
 
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
+import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.potion.Potions;
 import net.minecraft.registry.RegistryEntryLookup;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
+import net.minecraft.village.TradeOffer;
+import net.minecraft.village.TradedItem;
 import net.moss.resonance.Resonance;
 import net.moss.resonance.util.Utils;
 
@@ -22,6 +26,7 @@ public class ModifyLootAndTradeTables {
     private static final Identifier TRIAL_CHAMBER_INTERSECTION = Identifier.of("chests/trial_chambers/intersection");
     private static final Identifier JUNGLE_TEMPLE = Identifier.of("chests/jungle_temple");
 
+    @SuppressWarnings("deprecation")
     public static void modifyLootTables() {
         LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
             Identifier id = key.getValue();
@@ -49,6 +54,17 @@ public class ModifyLootAndTradeTables {
             } else if (SNOWY_TOWER_RARE.equals(id)) {
                 tableBuilder.pool(Utils.potionLootPoolBuilder(1, 1f, Resonance.PEARL, 1, 1, Potions.LONG_SLOW_FALLING));
             }
+        });
+
+        TradeOfferHelper.registerWanderingTraderOffers(1, factories -> {
+                factories.add((entity, random) -> new TradeOffer(
+                        new TradedItem(Items.EMERALD, 3),
+                        new ItemStack(Resonance.BATHYAL_VENT, 1),
+                        6, 12, 0.075f));
+                factories.add((entity, random) -> new TradeOffer(
+                    new TradedItem(Items.EMERALD, 3),
+                    new ItemStack(Resonance.BOOK_PILE, 1),
+                    2, 12, 0.075f));
         });
     }
 }

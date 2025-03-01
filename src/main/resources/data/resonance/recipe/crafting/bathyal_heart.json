@@ -7,15 +7,9 @@
     "vev"
   ],
   "key": {
-    "e": {
-      "item": "minecraft:echo_shard"
-    },
-    "h": {
-      "item": "minecraft:heart_of_the_sea"
-    },
-    "v": {
-      "item": "resonance:bathyal_vent"
-    }
+    "e": { "item": "resonance:bathyal_vent" },
+    "h": { "item": "minecraft:heart_of_the_sea" },
+    "v": { "item": "minecraft:basalt" }
   },
   "result": {
     "id": "resonance:bathyal_heart"

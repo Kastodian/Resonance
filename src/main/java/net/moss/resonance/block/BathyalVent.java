@@ -15,9 +15,13 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.DyeItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
@@ -43,6 +47,7 @@ import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.event.GameEvent;
 import net.moss.resonance.Resonance;
 import net.moss.resonance.particle.VentSmoke;
+import net.moss.resonance.util.Utils;
 import net.moss.resonance.util.VentThickness;
 import java.util.Optional;
 import java.util.function.BiPredicate;
@@ -76,8 +81,13 @@ public class BathyalVent extends Block implements Waterloggable {
         if ((Boolean)state.get(WATERLOGGED)) { world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world)); }
         world.scheduleBlockTick(pos, this, 1);
         if (direction == Direction.UP) {
-            VentThickness thickness = getThickness(world, pos, false);
-            return state.with(THICKNESS, thickness).with(LIT, state.get(LIT) && thickness == VentThickness.TIP);
+            BlockState blockState = world.getBlockState(pos.up());
+            VentThickness thickness = getThickness(world, pos);
+            DyeColor color = DyeColor.GRAY;
+            if (blockState.isOf(Resonance.BATHYAL_VENT)) {
+                color = blockState.get(COLOR);
+            }
+            return state.with(THICKNESS, thickness).with(LIT, state.get(LIT) && thickness == VentThickness.TIP).with(COLOR, color);
         }
         return state;
     }
@@ -87,7 +97,7 @@ public class BathyalVent extends Block implements Waterloggable {
         if (!this.canPlaceAt(state, world, pos)) { world.breakBlock(pos, true); }
         else if (state.get(THICKNESS) == VentThickness.TIP && state.get(LIT)) {
             for (Direction direction : Direction.values()) {
-                if (world.getBlockState(pos.offset(direction)).isOf(Blocks.WATER)) { VentFluid.update(world, pos.offset(direction), state); }
+                if (world.getBlockState(pos.offset(direction)).isOf(Blocks.WATER)) { VentFluidBlock.update(world, pos.offset(direction), state); }
             }
         }
     }
@@ -96,7 +106,7 @@ public class BathyalVent extends Block implements Waterloggable {
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         WorldAccess worldAccess = ctx.getWorld();
         BlockPos blockPos = ctx.getBlockPos();
-        VentThickness thickness = getThickness(worldAccess, blockPos, !ctx.shouldCancelInteraction());
+        VentThickness thickness = getThickness(worldAccess, blockPos);
         return thickness == null ? null : this.getDefaultState().with(THICKNESS, thickness).with(WATERLOGGED, worldAccess.getFluidState(blockPos).getFluid() == Fluids.WATER);
     }
 
@@ -127,12 +137,55 @@ public class BathyalVent extends Block implements Waterloggable {
 
     @Override
     protected ItemActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (stack.getItem() instanceof DyeItem dyeItem && dyeItem.getColor() != state.get(COLOR)) {
-            stack.decrement(1);
-            player.incrementStat(Stats.USED.getOrCreateStat(dyeItem));
-            world.emitGameEvent(player, GameEvent.FLUID_PICKUP, pos);
-            world.setBlockState(pos, state.with(COLOR, dyeItem.getColor()), Block.NOTIFY_ALL);
-			return ItemActionResult.success(world.isClient);
+        if (state.get(THICKNESS) == VentThickness.TIP) {
+            Item item = stack.getItem();
+            if (item instanceof DyeItem dyeItem && dyeItem.getColor() != state.get(COLOR)) {
+                stack.decrementUnlessCreative(1, player);
+                player.incrementStat(Stats.USED.getOrCreateStat(dyeItem));
+                world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+                world.setBlockState(pos, state.with(COLOR, dyeItem.getColor()), Block.NOTIFY_ALL);
+                world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ITEM_DYE_USE, SoundCategory.NEUTRAL, 0.2f, 0.4f / (world.getRandom().nextFloat() * 0.4f + 0.8f));
+                return ItemActionResult.success(world.isClient);
+            } else if (item == Items.BLAZE_POWDER) {
+                Optional<BlockPos> supportingPos = getSupportingPos(world, pos, state, 11);
+                if (supportingPos.isPresent()) {
+                    BlockPos blockPos = supportingPos.get();
+                    boolean heatSource = false;
+                    for (int i = 1; i < 5; i++) {
+                        if (world.getBlockState(blockPos.down(i)).isIn(Resonance.VENT_HEAT_SOURCE_BLOCKS_TAG)) {
+                            heatSource = true;
+                            break; 
+                        }
+                    }
+                    if (heatSource == state.get(LIT)) {
+                        return super.onUseWithItem(stack, state, world, pos, player, hand, hit);
+                    }
+                    world.setBlockState(pos, state.with(LIT, heatSource), Block.NOTIFY_ALL);
+                    if (heatSource) {
+                        world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.NEUTRAL, 0.2f, 0.4f / (world.getRandom().nextFloat() * 0.4f + 0.8f));
+                        world.scheduleBlockTick(pos, this, 1);
+                    } else {
+                        world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), Resonance.BATHYAL_VENT_EXTINGUISH_SOUND, SoundCategory.NEUTRAL, 1f, 0.4f / (world.getRandom().nextFloat() * 0.4f + 0.8f));
+                        if (state.get(WATERLOGGED)) {
+                            Vector3f colour = Vec3d.unpackRgb(state.get(COLOR).getFireworkColor()).toVector3f();
+                            Random random = world.getRandom();
+                            Vec3d vec3d = state.getModelOffset(world, pos);
+                            for (int i = 0; i < 5; i++) {
+                                world.addImportantParticle(
+                                        new VentSmoke(colour, 1.0F + random.nextFloat() * 2, false), true,
+                                        pos.getX() + 0.5 + vec3d.x + (random.nextDouble() - 0.5) / 5.0,
+                                        pos.getY() + 0.25 + random.nextDouble(),
+                                        pos.getZ() + 0.5 + vec3d.z + (random.nextDouble() - 0.5) / 5.0,
+                                        0.01 * random.nextBetween(-1, 1), 0.01 * (random.nextInt(3) - 1.5), 0.01 * random.nextBetween(-1, 1));
+                            }
+                        }
+                    }
+                    stack.decrementUnlessCreative(1, player);
+                    player.incrementStat(Stats.USED.getOrCreateStat(item));
+                    world.emitGameEvent(player, GameEvent.BLOCK_ACTIVATE, pos);
+                    return ItemActionResult.success(world.isClient);
+                }
+            }
         }
         return super.onUseWithItem(stack, state, world, pos, player, hand, hit);
     }
@@ -160,7 +213,7 @@ public class BathyalVent extends Block implements Waterloggable {
             if (light) {
                 world.setBlockState(pos, state.with(LIT, heatSource), Block.NOTIFY_ALL);
                 if (heatSource) { world.scheduleBlockTick(pos, this, 1); }
-            } else if (grow && heatSource && VentFluid.isStillWater(world.getBlockState(pos.up()))) {
+            } else if (grow && heatSource && VentFluidBlock.isStillWater(world.getBlockState(pos.up()))) {
                 DimensionType dim = world.getDimension();
                 int age = Math.min(state.get(AGE) + random.nextBetween(1, 3 + ((pos.getY() + dim.minY()) / (dim.height() + dim.minY())) * 3), 5);
                 world.setBlockState(pos.up(), Resonance.BATHYAL_VENT.getDefaultState().with(THICKNESS, VentThickness.TIP).with(AGE, age).with(WATERLOGGED, world.getFluidState(pos).getFluid() == Fluids.WATER), Block.NOTIFY_ALL);
@@ -170,9 +223,7 @@ public class BathyalVent extends Block implements Waterloggable {
 
 	@Override
 	protected void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-		// TODO: make it like powdered snow
-		// TODO: add new damage type
-		if (state.get(LIT) && state.get(WATERLOGGED) && entity instanceof LivingEntity) { entity.damage(world.getDamageSources().hotFloor(), 1.0F); }
+		if (state.get(LIT) && state.get(WATERLOGGED) && entity instanceof LivingEntity) { entity.damage(Utils.damageSource(world, Resonance.VENT_PLUME_DAMAGE), 1.0F); }
 		super.onEntityCollision(state, world, pos, entity);
 	}
 
@@ -180,6 +231,9 @@ public class BathyalVent extends Block implements Waterloggable {
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
         super.randomDisplayTick(state, world, pos, random);
         if (state.get(LIT) && state.get(WATERLOGGED)) {
+            if (random.nextInt(50) == 1) {
+                world.playSound(pos.getX(), pos.getY(), pos.getZ(), Resonance.BATHYAL_VENT_AMBIENT_SOUND.value(), SoundCategory.AMBIENT, 0.5f, 0.4f / (world.getRandom().nextFloat() * 0.4f + 0.8f), false);
+            }
             Vec3d vec3d = state.getModelOffset(world, pos);
             Vector3f colour = Vec3d.unpackRgb(state.get(COLOR).getFireworkColor()).toVector3f();
             for (int i = 0; i < random.nextInt(3) + 1; i++) {
@@ -193,7 +247,7 @@ public class BathyalVent extends Block implements Waterloggable {
         }
     }
 
-    private static VentThickness getThickness(WorldView world, BlockPos pos, boolean tryMerge) {
+    private static VentThickness getThickness(WorldView world, BlockPos pos) {
         BlockState blockState = world.getBlockState(pos.up());
         if (blockState.isOf(Resonance.BATHYAL_VENT)) {
             VentThickness thickness = blockState.get(THICKNESS);

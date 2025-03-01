@@ -125,7 +125,8 @@ public class PearlHubBlockEntity extends BlockEntity implements Inventory {
         }
         Optional<RecipeEntry<OtherOrbEffectsRecipe>> recipe = world.getServer().getRecipeManager().getFirstMatch(OtherOrbEffectsRecipe.Type.INSTANCE, new SingleStackRecipeInput(pearl), world);
         if (recipe.isPresent()) {
-            ItemStack item = recipe.get().value().getItem();
+            OtherOrbEffectsRecipe recipeValue = recipe.get().value();
+            ItemStack item = recipeValue.getItem();
             if (item.contains(DataComponentTypes.POTION_CONTENTS)) {
                 item.get(DataComponentTypes.POTION_CONTENTS).forEachEffect(effect -> {
                     StatusEffectInstance newEffect = new StatusEffectInstance(effect.getEffectType(), effect.getDuration(), effect.getAmplifier());
@@ -135,6 +136,9 @@ public class PearlHubBlockEntity extends BlockEntity implements Inventory {
                         }
                     }
                 });
+            }
+            if (!recipeValue.getSound().equals(Resonance.PEARL_HUB_USE_SOUND.value())) {
+                world.playSound(null, pos, recipeValue.getSound(), SoundCategory.BLOCKS);
             }
         }
 
