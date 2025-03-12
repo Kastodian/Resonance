@@ -12,9 +12,9 @@ import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.input.SingleStackRecipeInput;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.World.ExplosionSourceType;
-import net.moss.resonance.LightningStrikeRecipe;
 import net.moss.resonance.Resonance;
 import net.moss.resonance.particle.ModParticles;
+import net.moss.resonance.recipe.LightningStrikeRecipe;
 import java.util.Optional;
 
 @Mixin(Entity.class)

@@ -37,6 +37,12 @@ public class Registerizer {
         return Registry.register(Registries.BLOCK, id, block);
     }
 
+    public static Block block(String modId, String name, Block block, Settings itemSettings) {
+        Identifier id = Identifier.of(modId, name);
+        Registry.register(Registries.ITEM, id, new BlockItem(block, itemSettings));
+        return Registry.register(Registries.BLOCK, id, block);
+    }
+
     public static RegistryEntry<StatusEffect> effect(String modId, String name, StatusEffect effect) {
         return Registry.registerReference(Registries.STATUS_EFFECT, Identifier.of(modId, name), effect);
     }

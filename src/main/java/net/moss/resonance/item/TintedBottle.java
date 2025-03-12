@@ -12,7 +12,9 @@ import net.minecraft.block.SculkCatalystBlock;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.dispenser.DispenserBehavior;
 import net.minecraft.block.dispenser.FallibleItemDispenserBehavior;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.BlockStateComponent;
 import net.minecraft.component.type.DyedColorComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LightningEntity;
@@ -20,6 +22,7 @@ import net.minecraft.entity.Entity.RemovalReason;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.FireballEntity;
 import net.minecraft.entity.projectile.ShulkerBulletEntity;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
@@ -158,22 +161,32 @@ public class TintedBottle extends Item {
     }
 
     public ActionResult place(ItemPlacementContext context) {
-        if (!this.getBlock().isEnabled(context.getWorld().getEnabledFeatures())) { return ActionResult.FAIL; }
-        else if (!context.canPlace()) { return ActionResult.FAIL; }
-        else {
+        if (!this.getBlock().isEnabled(context.getWorld().getEnabledFeatures())) {
+            return ActionResult.FAIL;
+        } else if (!context.canPlace()) {
+            return ActionResult.FAIL;
+        } else {
             BlockState blockState = this.getPlacementState(context);
-            if (blockState == null) { return ActionResult.FAIL; }
-            else if (!this.place(context, blockState)) { return ActionResult.FAIL; }
-            else {
+            if (blockState == null) {
+                return ActionResult.FAIL;
+            } else if (!this.place(context, blockState)) {
+                return ActionResult.FAIL;
+            } else {
                 BlockPos blockPos = context.getBlockPos();
                 World world = context.getWorld();
                 PlayerEntity playerEntity = context.getPlayer();
                 ItemStack itemStack = context.getStack();
                 BlockState blockState2 = world.getBlockState(blockPos);
                 if (blockState2.isOf(blockState.getBlock())) {
+                    blockState2 = this.placeFromNbt(blockPos, world, itemStack, blockState2);
+                    BlockItem.writeNbtToBlockEntity(world, playerEntity, blockPos, itemStack);
+                    copyComponentsToBlockEntity(world, blockPos, itemStack);
                     blockState2.getBlock().onPlaced(world, blockPos, blockState2, playerEntity, itemStack);
-                    if (playerEntity instanceof ServerPlayerEntity serverPlayerEntity) { Criteria.PLACED_BLOCK.trigger(serverPlayerEntity, blockPos, itemStack); }
+                    if (playerEntity instanceof ServerPlayerEntity) {
+                    Criteria.PLACED_BLOCK.trigger((ServerPlayerEntity)playerEntity, blockPos, itemStack);
+                    }
                 }
+
                 BlockSoundGroup blockSoundGroup = blockState2.getSoundGroup();
                 world.playSound(playerEntity, blockPos, this.getPlaceSound(blockState2), SoundCategory.BLOCKS, (blockSoundGroup.getVolume() + 1.0F) / 2.0F, blockSoundGroup.getPitch() * 0.8F);
                 world.emitGameEvent(GameEvent.BLOCK_PLACE, blockPos, Emitter.of(playerEntity, blockState2));
@@ -181,6 +194,29 @@ public class TintedBottle extends Item {
                 return ActionResult.success(world.isClient);
             }
         }
+    }
+
+    private BlockState placeFromNbt(BlockPos pos, World world, ItemStack stack, BlockState state) {
+        BlockStateComponent blockStateComponent = (BlockStateComponent)stack.getOrDefault(DataComponentTypes.BLOCK_STATE, BlockStateComponent.DEFAULT);
+        if (blockStateComponent.isEmpty()) {
+            return state;
+        } else {
+            BlockState blockState = blockStateComponent.applyToState(state);
+            if (blockState != state) {
+                world.setBlockState(pos, blockState, 2);
+            }
+
+            return blockState;
+        }
+    }
+
+    private static void copyComponentsToBlockEntity(World world, BlockPos pos, ItemStack stack) {
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (blockEntity != null) {
+            blockEntity.readComponents(stack);
+            blockEntity.markDirty();
+        }
+
     }
 
     @Nullable

@@ -14,6 +14,7 @@ import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.DyedColorComponent;
 import net.minecraft.util.Identifier;
 import net.moss.resonance.block.renderer.RainChimeBlockRenderer;
+import net.moss.resonance.block.renderer.TintedBottleBlockEntityRenderer;
 import net.moss.resonance.block.renderer.BrittleBlockEntityRenderer;
 import net.moss.resonance.block.renderer.BuddingPearlIceBlockEntityRenderer;
 import net.moss.resonance.block.renderer.PearlHubBlockEntityRenderer;
@@ -22,6 +23,8 @@ import net.moss.resonance.entity.client.LostSoulModel;
 import net.moss.resonance.entity.client.LostSoulRenderer;
 import net.moss.resonance.entity.client.SculkProjectileRenderer;
 import net.moss.resonance.entity.client.VentFluidProjectileRenderer;
+import net.moss.resonance.entity.client.VolcanoSnailModel;
+import net.moss.resonance.entity.client.VolcanoSnailRenderer;
 import net.moss.resonance.entity.client.WhistlingArrowRenderer;
 import net.moss.resonance.particle.ModParticles;
 import net.moss.resonance.particle.SmallRingParticle;
@@ -32,6 +35,7 @@ import net.moss.resonance.particle.MediumRingParticle;
 
 public class ResonanceClient implements ClientModInitializer {
     public static final EntityModelLayer LOST_SOUL_LAYER = new EntityModelLayer(Identifier.of(Resonance.MOD_ID, "lost_soul"), "main");
+    public static final EntityModelLayer VOCANO_SNAIL_LAYER = new EntityModelLayer(Identifier.of(Resonance.MOD_ID, "volcano_snail"), "main");
 
     @Override
     public void onInitializeClient() {
@@ -60,6 +64,7 @@ public class ResonanceClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(Resonance.VENT_FLUID_BOTTLE_BLOCK, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putBlock(Resonance.VENT_FLUID, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putBlock(Resonance.TUBE_WORMS, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(Resonance.WALL_TUBE_WORMS, RenderLayer.getCutout());
         
         ParticleFactoryRegistry.getInstance().register(ModParticles.SMALL_RING_PARTICLE, SmallRingParticle.Factory::new);
         ParticleFactoryRegistry.getInstance().register(ModParticles.MEDIUM_RING_PARTICLE, MediumRingParticle.Factory::new);
@@ -72,13 +77,16 @@ public class ResonanceClient implements ClientModInitializer {
         EntityRendererRegistry.register(ModEntities.SCULK_PROJECTILE, SculkProjectileRenderer::new);
         EntityRendererRegistry.register(ModEntities.LOST_SOUL, LostSoulRenderer::new);
         EntityRendererRegistry.register(ModEntities.VENT_FLUID_PROJECTILE, VentFluidProjectileRenderer::new);
+        EntityRendererRegistry.register(ModEntities.VOLCANO_SNAIL, VolcanoSnailRenderer::new);
 
         EntityModelLayerRegistry.registerModelLayer(LOST_SOUL_LAYER, LostSoulModel::getTexturedModelData);
+        EntityModelLayerRegistry.registerModelLayer(VOCANO_SNAIL_LAYER, VolcanoSnailModel::getTexturedModelData);
 
         BlockEntityRendererFactories.register(Resonance.RAIN_CHIME_BLOCK_ENTITY, RainChimeBlockRenderer::new);
         BlockEntityRendererFactories.register(Resonance.PEARL_HUB_BLOCK_ENTITY, PearlHubBlockEntityRenderer::new);
         BlockEntityRendererFactories.register(Resonance.BUDDING_PEARL_ICE_BLOCK_ENTITY, BuddingPearlIceBlockEntityRenderer::new);
         BlockEntityRendererFactories.register(Resonance.BRITTLE_BLOCK_ENTITY, BrittleBlockEntityRenderer::new);
+        BlockEntityRendererFactories.register(Resonance.TINTED_BOTTLE_BLOCK_ENTITY, TintedBottleBlockEntityRenderer::new);
         
         ColorProviderRegistry.ITEM.register((stack, tintIndex) -> stack.contains(DataComponentTypes.DYED_COLOR) ? DyedColorComponent.getColor(stack, 16777215) : -1, Resonance.SCARF);
         ColorProviderRegistry.ITEM.register((stack, tintIndex) -> tintIndex > 0 ? -1 : (stack.contains(DataComponentTypes.DYED_COLOR) ? DyedColorComponent.getColor(stack, 16777215) : -1), Resonance.VENT_FLUID_BOTTLE);

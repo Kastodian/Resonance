@@ -125,7 +125,7 @@ public class Utils {
 	}
 
 	public static List<ItemStack> getAllEquipped(LivingEntity entity, boolean checkHands) {
-		List<ItemStack> items = new ArrayList<>();
+		List<ItemStack> items = new ArrayList<ItemStack>();
 		if (!checkHands) { entity.getAllArmorItems().forEach(item -> items.add(item)); }
 		else { entity.getEquippedItems().forEach(item -> items.add(item)); }
 		if (Resonance.isTrinketsInstalled) {

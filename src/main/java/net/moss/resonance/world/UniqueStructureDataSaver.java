@@ -16,8 +16,8 @@ import net.minecraft.world.World;
 import net.moss.resonance.Resonance;
 
 public class UniqueStructureDataSaver extends PersistentState {
-public List<String> name = new ArrayList<>();
-public List<BlockPos> pos = new ArrayList<>();
+public List<String> name = new ArrayList<String>();
+public List<BlockPos> pos = new ArrayList<BlockPos>();
 public boolean generated = false;
  
     @Override

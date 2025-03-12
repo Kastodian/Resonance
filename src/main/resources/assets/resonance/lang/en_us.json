@@ -53,6 +53,8 @@
     "block.resonance.vent_fluid_bottle": "Vent Fluid in a Bottle",
     "block.resonance.tube_worms": "Tube Worms",
     "block.resonance.wall_tube_worms": "Tube Worms",
+    "item.resonance.volcano_snail_spawn_egg": "Volcano Snail Spawn Egg",
+    "item.resonance.volcano_snail_bucket": "Bucket of Volcano Snail",
     "enchantment.resonance.sparking": "Sparking",
     "enchantment.resonance.recoiling_curse": "Curse of Recoiling",
     "itemGroup.resonance.resonance_group_id": "Resonance",
@@ -182,6 +184,7 @@
     "entity.resonance.whistling_arrow": "a Whistling Arrow",
     "entity.resonance.lost_soul": "Lost Soul",
     "entity.resonance.vent_fluid_projectile": "thrown Vent Fluid",
+    "entity.resonance.volcano_snail": "Volcano Snail",
 
     "advancement.resonance.root": "Resonance",
     "advancement.resonance.root.desc": "Alone at the edge of a universe humming a tune",
@@ -217,6 +220,7 @@
     "gamerule.cactiDestroyUniqueItems": "Cacti destroy items tagged as unique",
     "gamerule.jumpOrbRefreshDelay": "The ammount of ticks until a Jump Orb refreshes",
     "gamerule.pearlRefreshDelay": "The tick multiplier until a Pearl Hub refreshes",
+    "gamerule.ventFliudBottlePlacesWater": "Do Vent Fliud Bottles place Water when thrown",
     "catagory.resonance": "Resonance",
 
     "emi.category.resonance.reverberation": "Reverberation",
@@ -231,6 +235,7 @@
     "tag.item.resonance.render_on_back": "Renders on backs when equiped in a chest slot",
     "tag.item.resonance.dual_wield_render": "Renders in both hands",
     "tag.item.resonance.scarfs": "Scarfs or scarf like equipables",
+    "tag.item.resonance.vent_igniters": "Ignites or extinguishes Bathyal Vents",
     "tag.item.trinkets.chest.necklace": "Can be worn in the neck slot",
 
     "command.unique_structure.unique_structure_not_found": "No Unique Structure by that name found",

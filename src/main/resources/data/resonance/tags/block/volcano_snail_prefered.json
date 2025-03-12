@@ -1,0 +1,8 @@
+{
+    "replace": false,
+    "values": [
+      "minecraft:glow_lichen",
+      "resonance:tube_worms",
+      "minecraft:smooth_basalt"
+    ]
+  }

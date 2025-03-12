@@ -2,5 +2,8 @@
     "parent": "item/generated",
     "textures": {
         "layer0": "resonance:item/bifurcated_pearl"
-    }
+    },
+    "overrides": [
+		    { "predicate": { "shine": 1 }, "model": "resonance:item/bifurcated_pearl_shiny" }
+    ]
 }

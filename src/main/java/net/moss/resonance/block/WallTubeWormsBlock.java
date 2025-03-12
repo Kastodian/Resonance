@@ -42,7 +42,7 @@ public class WallTubeWormsBlock extends TubeWormsBlock {
     }
 
     protected BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        return !canGrowOn(world, direction, neighborPos) ? Blocks.AIR.getDefaultState() : state;
+        return !canGrowOn(world, state.get(HORIZONTAL_FACING), pos) ? Blocks.AIR.getDefaultState() : state;
     }
 
     @Override

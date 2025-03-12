@@ -34,9 +34,9 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
-import net.moss.resonance.OtherOrbEffectsRecipe;
 import net.moss.resonance.Resonance;
 import net.moss.resonance.block.PearlHub;
+import net.moss.resonance.recipe.OtherOrbEffectsRecipe;
 import net.moss.resonance.util.Utils;
 
 public class PearlHubBlockEntity extends BlockEntity implements Inventory {

@@ -30,6 +30,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.world.World;
+import net.moss.resonance.Resonance;
 import net.moss.resonance.particle.VentSmoke;
 import net.moss.resonance.util.Utils;
 
@@ -55,9 +56,11 @@ public class VentFluidProjectileEntity extends ProjectileEntity {
                 if (entity instanceof LivingEntity livingEntity) { livingEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 5 * 20)); }
             });
             serverWorld.spawnParticles(new VentSmoke(getColor(), 1.0F + random.nextFloat() * 2, true), this.getX(), this.getY(), this.getZ(), 200, 0.7, 0.7, 0.7, 0.05);
-            if (getBlockStateAtPos().isReplaceable()) { serverWorld.setBlockState(getBlockPos(), Blocks.WATER.getDefaultState().with(FluidBlock.LEVEL, 5), Block.NOTIFY_ALL); }
-            for (Direction direction : new Direction[]{Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST}) {
-                if (serverWorld.getBlockState(getBlockPos().offset(direction)).isReplaceable()) { serverWorld.setBlockState(getBlockPos().offset(direction), Blocks.WATER.getDefaultState().with(FluidBlock.LEVEL, 2), Block.NOTIFY_ALL); }
+            if (serverWorld.getGameRules().getBoolean(Resonance.VENT_FLUID_BOTTLES_PLACES_WATER)) {
+                if (getBlockStateAtPos().isReplaceable()) { serverWorld.setBlockState(getBlockPos(), Blocks.WATER.getDefaultState().with(FluidBlock.LEVEL, 5), Block.NOTIFY_ALL); }
+                for (Direction direction : new Direction[]{Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST}) {
+                    if (serverWorld.getBlockState(getBlockPos().offset(direction)).isReplaceable()) { serverWorld.setBlockState(getBlockPos().offset(direction), Blocks.WATER.getDefaultState().with(FluidBlock.LEVEL, 2), Block.NOTIFY_ALL); }
+                }
             }
             this.discard();
         }

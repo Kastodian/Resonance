@@ -15,6 +15,7 @@ import net.fabricmc.fabric.api.registry.CompostingChanceRegistry;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.fabricmc.fabric.api.registry.SculkSensorFrequencyRegistry;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.item.EntityBucketItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.Settings;
 import net.minecraft.item.ItemGroup;
@@ -42,10 +43,12 @@ import net.minecraft.world.biome.source.util.MultiNoiseUtil;
 import net.minecraft.world.event.GameEvent;
 import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.chunk.placement.StructurePlacementType;
+import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.PlacedFeature;
 import net.moss.resonance.advancement.*;
 import net.moss.resonance.block.*;
 import net.moss.resonance.block.entity.RainChimeBlockEntity;
+import net.moss.resonance.block.entity.TintedBottleBlockEntity;
 import net.moss.resonance.compat.trinkets.TrinketsCompat;
 import net.moss.resonance.block.entity.BrittleBlockEntity;
 import net.moss.resonance.block.entity.BuddingPearlIceBlockEntity;
@@ -62,10 +65,16 @@ import net.moss.resonance.potioneffects.CrushingWeightEffect;
 import net.moss.resonance.potioneffects.DoubleJumpEffect;
 import net.moss.resonance.potioneffects.SoulFatigueEffect;
 import net.moss.resonance.potioneffects.StaticEffect;
+import net.moss.resonance.recipe.LightningStrikeRecipe;
+import net.moss.resonance.recipe.OtherOrbEffectsRecipe;
+import net.moss.resonance.recipe.PearlDuplicationRecipe;
+import net.moss.resonance.recipe.ReverberationRecipe;
 import net.moss.resonance.util.Dischargable;
 import net.moss.resonance.util.Registerizer;
 import net.moss.resonance.util.StoredCritsPredicate;
 import net.moss.resonance.world.ModifyLootAndTradeTables;
+import net.moss.resonance.world.OnAWallFeature;
+import net.moss.resonance.world.OnAWallFeatureConfig;
 import net.moss.resonance.world.UniqueStructurePlacement;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.AbstractBlock;
@@ -82,6 +91,7 @@ import net.minecraft.component.type.AttributeModifierSlot;
 import net.minecraft.component.type.AttributeModifiersComponent;
 import net.minecraft.component.type.DyedColorComponent;
 import net.minecraft.component.type.FoodComponent;
+import net.minecraft.component.type.NbtComponent;
 import net.minecraft.component.type.PotionContentsComponent;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.effect.EnchantmentEffectEntry;
@@ -101,6 +111,7 @@ import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.HostileEntity;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
@@ -111,6 +122,7 @@ import net.minecraft.registry.tag.TagKey;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -118,7 +130,6 @@ import com.google.common.primitives.Ints;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.terraformersmc.biolith.api.biome.BiomePlacement;
-
 import java.util.List;
 
 public class Resonance implements ModInitializer {
@@ -131,12 +142,14 @@ public class Resonance implements ModInitializer {
 	public static final TagKey<EntityType<?>> SOUND_SENSITIVE_TAG = TagKey.of(RegistryKeys.ENTITY_TYPE, Identifier.of(MOD_ID, "sound_sensitive"));
     public static final TagKey<Block> CONDUCTIVE_BLOCKS_TAG = TagKey.of(RegistryKeys.BLOCK, Identifier.of(MOD_ID, "conductive_blocks"));
     public static final TagKey<Block> VENT_HEAT_SOURCE_BLOCKS_TAG = TagKey.of(RegistryKeys.BLOCK, Identifier.of(MOD_ID, "vent_heat_source"));
+    public static final TagKey<Block> VOLCANO_SNAIL_PREFERED_TAG = TagKey.of(RegistryKeys.BLOCK, Identifier.of(MOD_ID, "volcano_snail_prefered"));
 	public static final TagKey<Item> DUAL_WIELD_RENDER_TAG = TagKey.of(RegistryKeys.ITEM, Identifier.of(MOD_ID, "dual_wield_render"));
 	public static final TagKey<Item> CONDUCTIVE_ITEMS_TAG = TagKey.of(RegistryKeys.ITEM, Identifier.of(MOD_ID, "conductive_items"));
     public static final TagKey<Biome> IS_DREAM_SWEET_TAG = TagKey.of(RegistryKeys.BIOME, Identifier.of(MOD_ID, "is_dream_sweet"));
 	public static final TagKey<Item> RENDER_ON_BACK_TAG = TagKey.of(RegistryKeys.ITEM, Identifier.of(MOD_ID, "render_on_back"));
 	public static final TagKey<Item> UNIQUE_ITEMS_TAG = TagKey.of(RegistryKeys.ITEM, Identifier.of(MOD_ID, "unique_items"));
 	public static final TagKey<Item> PEARL_ITEMS_TAG = TagKey.of(RegistryKeys.ITEM, Identifier.of(MOD_ID, "alternate_pearl_items"));
+	public static final TagKey<Item> VENT_IGNITERS_TAG = TagKey.of(RegistryKeys.ITEM, Identifier.of(MOD_ID, "vent_igniters"));
 	// Advancement Criterion --------------------------------------------------------------------------------------------------------------------------------------------------------
     public static final CritCriterion CRIT_CRITERION = Criteria.register(MOD_ID + ":" + "crit", new CritCriterion());
     public static final ParryCriterion PARRY_CRITERION = Criteria.register(MOD_ID + ":" + "shield_parry", new ParryCriterion());
@@ -152,9 +165,10 @@ public class Resonance implements ModInitializer {
 	public static final RegistryKey<DamageType> ICICLE_DAMAGE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, Identifier.of(MOD_ID, "icicle"));
     // Gamerules --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	public static final CustomGameRuleCategory RESONANCE_GAMERULES = new CustomGameRuleCategory(Identifier.of(MOD_ID, "resonance_gamerules"), Text.translatable("catagory.resonance").formatted(Formatting.YELLOW, Formatting.BOLD));
-	public static final GameRules.Key<GameRules.IntRule> PEARL_REFRESH_DELAY_GAMERULE = GameRuleRegistry.register("pearlRefreshDelay", RESONANCE_GAMERULES, GameRuleFactory.createIntRule(1200, 1));
-	public static final GameRules.Key<GameRules.IntRule> JUMP_ORB_REFRESH_DELAY_GAMERULE = GameRuleRegistry.register("jumpOrbRefreshDelay", RESONANCE_GAMERULES, GameRuleFactory.createIntRule(100, 1));
     public static final GameRules.Key<GameRules.BooleanRule> CACTI_DESTROY_UNIQUE_ITEMS_GAMERULE = GameRuleRegistry.register("cactiDestroyUniqueItems", RESONANCE_GAMERULES, GameRuleFactory.createBooleanRule(false));
+	public static final GameRules.Key<GameRules.IntRule> JUMP_ORB_REFRESH_DELAY_GAMERULE = GameRuleRegistry.register("jumpOrbRefreshDelay", RESONANCE_GAMERULES, GameRuleFactory.createIntRule(100, 1));
+	public static final GameRules.Key<GameRules.IntRule> PEARL_REFRESH_DELAY_GAMERULE = GameRuleRegistry.register("pearlRefreshDelay", RESONANCE_GAMERULES, GameRuleFactory.createIntRule(1200, 1));
+    public static final GameRules.Key<GameRules.BooleanRule> VENT_FLUID_BOTTLES_PLACES_WATER = GameRuleRegistry.register("ventFliudBottlePlacesWater", RESONANCE_GAMERULES, GameRuleFactory.createBooleanRule(true));
     // Sounds -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
     public static final RegistryEntry.Reference<SoundEvent> REVERBERATION_SOUND = Registerizer.sound(MOD_ID, "reverberation");
     public static final RegistryEntry.Reference<SoundEvent> ELECTRIC_SPARK_SOUND = Registerizer.sound(MOD_ID, "sparks");
@@ -283,21 +297,25 @@ public class Resonance implements ModInitializer {
     public static final Block FIREBALL_BOTTLE_BLOCK = Registerizer.block(MOD_ID, "fireball_bottle", new TintedBottleBlock(AbstractBlock.Settings.create().mapColor(MapColor.GRAY).solid().blockVision(Blocks::never).breakInstantly().sounds(BlockSoundGroup.GLASS).nonOpaque().pistonBehavior(PistonBehavior.DESTROY), FIREBALL_BOTTLE), false);
     public static final Block LIGHTNING_BOTTLE_BLOCK = Registerizer.block(MOD_ID, "lightning_bottle", new TintedBottleBlock(AbstractBlock.Settings.create().mapColor(MapColor.GRAY).solid().blockVision(Blocks::never).breakInstantly().sounds(BlockSoundGroup.GLASS).nonOpaque().pistonBehavior(PistonBehavior.DESTROY), LIGHTNING_BOTTLE), false);
     public static final Block SHULKER_BOTTLE_BLOCK = Registerizer.block(MOD_ID, "shulker_bottle", new TintedBottleBlock(AbstractBlock.Settings.create().mapColor(MapColor.GRAY).solid().blockVision(Blocks::never).breakInstantly().sounds(BlockSoundGroup.GLASS).nonOpaque().pistonBehavior(PistonBehavior.DESTROY), SHULKER_BOTTLE), false);
-    public static final Block BATHYAL_HEART = Registerizer.block(MOD_ID, "bathyal_heart", new BathyalHeart(AbstractBlock.Settings.copy(Blocks.SMOOTH_BASALT).ticksRandomly().solidBlock(Blocks::never)), true);
+    public static final Block BATHYAL_HEART = Registerizer.block(MOD_ID, "bathyal_heart", new BathyalHeart(AbstractBlock.Settings.copy(Blocks.SMOOTH_BASALT).ticksRandomly().solidBlock(Blocks::never)), new Settings().rarity(Rarity.UNCOMMON));
     public static final Block BATHYAL_VENT = Registerizer.block(MOD_ID, "bathyal_vent", new BathyalVent(AbstractBlock.Settings.copy(Blocks.SMOOTH_BASALT).ticksRandomly().nonOpaque().dynamicBounds().pistonBehavior(PistonBehavior.DESTROY).solidBlock(Blocks::never)), true);
     public static final Item VENT_FLUID_BOTTLE = Registerizer.item(MOD_ID, "vent_fluid_bottle", new VentFluidBottle(new Settings().maxCount(16).recipeRemainder(TINTED_BOTTLE).component(DataComponentTypes.DYED_COLOR, new DyedColorComponent(4408131, true)).component(CATALYST_STATS, Ints.asList(1,-1,2,0))));
     public static final Block VENT_FLUID_BOTTLE_BLOCK = Registerizer.block(MOD_ID, "vent_fluid_bottle", new TintedBottleBlock(AbstractBlock.Settings.create().mapColor(MapColor.GRAY).solid().blockVision(Blocks::never).breakInstantly().sounds(BlockSoundGroup.GLASS).nonOpaque().pistonBehavior(PistonBehavior.DESTROY), VENT_FLUID_BOTTLE), false);
     public static final Block VENT_FLUID = Registerizer.block(MOD_ID, "vent_fluid", new VentFluidBlock(AbstractBlock.Settings.create().mapColor(MapColor.DARK_AQUA).replaceable().noCollision().dropsNothing().pistonBehavior(PistonBehavior.DESTROY).liquid().sounds(BlockSoundGroup.INTENTIONALLY_EMPTY)), false);
     public static final Block TUBE_WORMS = Registerizer.block(MOD_ID, "tube_worms", new TubeWormsBlock(AbstractBlock.Settings.create().mapColor(MapColor.DARK_RED).ticksRandomly().noCollision().pistonBehavior(PistonBehavior.DESTROY).offset(OffsetType.XZ).liquid().sounds(BlockSoundGroup.WART_BLOCK)), true);
     public static final Block WALL_TUBE_WORMS = Registerizer.block(MOD_ID, "wall_tube_worms", new WallTubeWormsBlock(AbstractBlock.Settings.create().mapColor(MapColor.DARK_RED).ticksRandomly().noCollision().pistonBehavior(PistonBehavior.DESTROY).liquid().sounds(BlockSoundGroup.WART_BLOCK)), false);
+    public static final Item VOLCANO_SNAIL_SPAWN_EGG = Registerizer.item(MOD_ID, "volcano_snail_spawn_egg", new SpawnEggItem(ModEntities.VOLCANO_SNAIL, 0x181210, 0xc07f8f, new Settings()));
+    public static final Item VOLCANO_SNAIL_BUCKET = Registerizer.item(MOD_ID, "volcano_snail_bucket", new EntityBucketItem(ModEntities.VOLCANO_SNAIL, Fluids.WATER, SoundEvents.ITEM_BUCKET_EMPTY, new Item.Settings().maxCount(1).component(DataComponentTypes.BUCKET_ENTITY_DATA, NbtComponent.DEFAULT)));
     // Block Entity -----------------------------------------------------------------------------------------------------------------------------------------------------------------
     public static BlockEntityType<RainChimeBlockEntity> RAIN_CHIME_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE, Identifier.of(MOD_ID, "rain_chime"), BlockEntityType.Builder.create(RainChimeBlockEntity::new, RAIN_CHIME).build());
     public static BlockEntityType<BuddingPearlIceBlockEntity> BUDDING_PEARL_ICE_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE, Identifier.of(MOD_ID, "budding_pearl_ice"), BlockEntityType.Builder.create(BuddingPearlIceBlockEntity::new, BUDDING_PEARL_ICE).build());
     public static BlockEntityType<PearlHubBlockEntity> PEARL_HUB_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE, Identifier.of(MOD_ID, "pearl_hub"), BlockEntityType.Builder.create(PearlHubBlockEntity::new, PEARL_HUB).build());
     public static BlockEntityType<BrittleBlockEntity> BRITTLE_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE, Identifier.of(MOD_ID, "brittle_block"), BlockEntityType.Builder.create(BrittleBlockEntity::new, BRITTLE_BLOCK).build());
+    public static BlockEntityType<TintedBottleBlockEntity> TINTED_BOTTLE_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE, Identifier.of(MOD_ID, "tinted_bottle"), BlockEntityType.Builder.create(TintedBottleBlockEntity::new, TINTED_BOTTLE_BLOCK, SCULK_BOTTLE_BLOCK, SOUL_BOTTLE_BLOCK, FIREBALL_BOTTLE_BLOCK, LIGHTNING_BOTTLE_BLOCK, SHULKER_BOTTLE_BLOCK, VENT_FLUID_BOTTLE_BLOCK).build());
     // World Gen --------------------------------------------------------------------------------------------------------------------------------------------------------------------
     public static final RegistryKey<World> DREAM_SWEET = RegistryKey.of(RegistryKeys.WORLD, Identifier.of(MOD_ID, "dream_sweet"));
     public static final StructurePlacementType<UniqueStructurePlacement> UNIQUE_PLACEMENT_TYPE = Registry.register(Registries.STRUCTURE_PLACEMENT, Identifier.of(MOD_ID, "unique"), () -> UniqueStructurePlacement.CODEC);
+    public static final Feature<OnAWallFeatureConfig> ON_A_WALL_FEATURE_TYPE = Registry.register(Registries.FEATURE, Identifier.of(MOD_ID, "on_a_wall"), new OnAWallFeature(OnAWallFeatureConfig.CODEC));
     public static final RegistryKey<PlacedFeature> ICICLE_DOWN_FEATURE = RegistryKey.of(RegistryKeys.PLACED_FEATURE, Identifier.of(MOD_ID, "icicle_down"));
 	public static final RegistryKey<PlacedFeature> PEARL_ICE_BLOB_FEATURE = RegistryKey.of(RegistryKeys.PLACED_FEATURE, Identifier.of(MOD_ID, "pearl_ice_blob"));
 	public static final RegistryKey<Biome> BATHYAL_ZONE = RegistryKey.of(RegistryKeys.BIOME, Identifier.of(MOD_ID, "bathyal_zone"));
@@ -374,6 +392,10 @@ public class Resonance implements ModInitializer {
         });
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.SPAWN_EGGS).register(entries -> {
             entries.addAfter(Items.LLAMA_SPAWN_EGG, LOST_SOUL_SPAWN_EGG);
+            entries.addAfter(Items.VINDICATOR_SPAWN_EGG, VOLCANO_SNAIL_SPAWN_EGG);
+        });
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(entries -> {
+            entries.addAfter(Items.TADPOLE_BUCKET, VOLCANO_SNAIL_BUCKET);
         });
 
         Registry.register(Registries.ITEM_SUB_PREDICATE_TYPE, Identifier.of(MOD_ID, "stored_crits"), new ItemSubPredicate.Type(StoredCritsPredicate.CODEC));

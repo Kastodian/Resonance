@@ -1,5 +1,5 @@
 // Source code is decompiled from a .class file using FernFlower decompiler.
-package net.moss.resonance;
+package net.moss.resonance.recipe;
 
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.ItemStack;
@@ -11,6 +11,7 @@ import net.minecraft.recipe.book.CraftingRecipeCategory;
 import net.minecraft.recipe.input.CraftingRecipeInput;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.world.World;
+import net.moss.resonance.Resonance;
 import net.moss.resonance.item.Pearl;
 
 public class PearlDuplicationRecipe extends SpecialCraftingRecipe {

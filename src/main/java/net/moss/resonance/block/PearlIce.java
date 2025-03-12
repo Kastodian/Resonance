@@ -57,6 +57,5 @@ public class PearlIce extends SnowyBlock {
                 }
             }
         }
-
     }
 }

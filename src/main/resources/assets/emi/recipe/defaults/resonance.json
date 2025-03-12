@@ -34,6 +34,8 @@
     "resonance:crafting/wither_rose",
     "resonance:stonecutting/large_amethyst_bud",
     "resonance:stonecutting/medium_amethyst_bud",
-    "resonance:stonecutting/small_amethyst_bud"
+    "resonance:stonecutting/small_amethyst_bud",
+    "emi:/generated/recipe/additions/vent_fluid_bottle.json",
+    "emi:/generated/recipe/additions/sculk_catalyst.json"
   ]
 }

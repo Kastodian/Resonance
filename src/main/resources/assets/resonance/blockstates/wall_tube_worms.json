@@ -1,0 +1,28 @@
+{
+  "variants": {
+    "facing=north,age=0": { "model": "resonance:block/wall_tube_worms" },
+    "facing=north,age=1": [
+      { "model": "resonance:block/wall_tube_worms" },
+      { "model": "resonance:block/wall_tube_worms_old" }
+    ],
+    "facing=north,age=2": { "model": "resonance:block/wall_tube_worms_old" },
+    "facing=east,age=0": { "model": "resonance:block/wall_tube_worms", "y": 90 },
+    "facing=east,age=1": [
+      { "model": "resonance:block/wall_tube_worms", "y": 90 },
+      { "model": "resonance:block/wall_tube_worms_old", "y": 90 }
+    ],
+    "facing=east,age=2": { "model": "resonance:block/wall_tube_worms_old", "y": 90 },
+    "facing=south,age=0": { "model": "resonance:block/wall_tube_worms", "y": 180 },
+    "facing=south,age=1": [
+      { "model": "resonance:block/wall_tube_worms", "y": 180 },
+      { "model": "resonance:block/wall_tube_worms_old", "y": 180 }
+    ],
+    "facing=south,age=2": { "model": "resonance:block/wall_tube_worms_old", "y": 180 },
+    "facing=west,age=0": { "model": "resonance:block/wall_tube_worms", "y": 270 },
+    "facing=west,age=1": [
+      { "model": "resonance:block/wall_tube_worms", "y": 270 },
+      { "model": "resonance:block/wall_tube_worms_old", "y": 270 }
+    ],
+    "facing=west,age=2": { "model": "resonance:block/wall_tube_worms_old", "y": 270 }
+  }
+}

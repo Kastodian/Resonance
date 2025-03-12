@@ -18,7 +18,6 @@ import net.minecraft.item.DyeItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -83,7 +82,7 @@ public class BathyalVent extends Block implements Waterloggable {
         if (direction == Direction.UP) {
             BlockState blockState = world.getBlockState(pos.up());
             VentThickness thickness = getThickness(world, pos);
-            DyeColor color = DyeColor.GRAY;
+            DyeColor color = state.get(COLOR);
             if (blockState.isOf(Resonance.BATHYAL_VENT)) {
                 color = blockState.get(COLOR);
             }
@@ -146,7 +145,7 @@ public class BathyalVent extends Block implements Waterloggable {
                 world.setBlockState(pos, state.with(COLOR, dyeItem.getColor()), Block.NOTIFY_ALL);
                 world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ITEM_DYE_USE, SoundCategory.NEUTRAL, 0.2f, 0.4f / (world.getRandom().nextFloat() * 0.4f + 0.8f));
                 return ItemActionResult.success(world.isClient);
-            } else if (item == Items.BLAZE_POWDER) {
+            } else if (stack.isIn(Resonance.VENT_IGNITERS_TAG)) {
                 Optional<BlockPos> supportingPos = getSupportingPos(world, pos, state, 11);
                 if (supportingPos.isPresent()) {
                     BlockPos blockPos = supportingPos.get();

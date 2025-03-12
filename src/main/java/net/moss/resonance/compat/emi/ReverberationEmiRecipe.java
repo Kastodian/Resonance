@@ -10,7 +10,7 @@ import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
 import net.minecraft.util.Identifier;
 import net.moss.resonance.Resonance;
-import net.moss.resonance.ReverberationRecipe;
+import net.moss.resonance.recipe.ReverberationRecipe;
 
 public class ReverberationEmiRecipe implements EmiRecipe {
     private final Identifier id;

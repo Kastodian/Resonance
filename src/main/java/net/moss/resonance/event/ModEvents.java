@@ -62,7 +62,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.moss.resonance.Resonance;
-import net.moss.resonance.ReverberationRecipe;
 import net.moss.resonance.block.BathyalHeart;
 import net.moss.resonance.block.BuddingPearlIce;
 import net.moss.resonance.block.JumpOrbBlock;
@@ -70,6 +69,7 @@ import net.moss.resonance.command.LocateUniqueStructureCommand;
 import net.moss.resonance.entity.ModEntities;
 import net.moss.resonance.mixin.MobSpawnerLogicAccessor;
 import net.moss.resonance.particle.ModParticles;
+import net.moss.resonance.recipe.ReverberationRecipe;
 import net.moss.resonance.util.EnchantUtils;
 import net.moss.resonance.util.Utils;
 import net.moss.resonance.util.Utils.CustomWindChargeBehavior;
@@ -162,13 +162,13 @@ public class ModEvents {
             int sizeMultiplier = 100;
             for (RegistryKey<World> WorldKey : server.getWorldRegistryKeys().stream().toList()) {
                 ServerWorld world = server.getWorld(WorldKey);
-                List<RegistryEntry<StructureSet>> structureSets = new ArrayList<>();
+                List<RegistryEntry<StructureSet>> structureSets = new ArrayList<RegistryEntry<StructureSet>>();
                 world.getChunkManager().getStructurePlacementCalculator().getStructureSets().forEach(structureSet -> {
                     if (structureSet.value().placement() instanceof UniqueStructurePlacement) { structureSets.add(structureSet); }
                 });
                 
                 for (int searchRadius = 1; searchRadius <= maxSearchRadius; searchRadius++) {
-                    List<Float> angles = new ArrayList<>();
+                    List<Float> angles = new ArrayList<Float>();
                     for (float i = 0; i < 2 * Math.PI; i += (1 / (float) (searchRadius))) { angles.add(i); }
                     Collections.shuffle(angles);
                     for (Float searchAngle : angles) {

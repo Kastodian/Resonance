@@ -1,4 +1,4 @@
-package net.moss.resonance;
+package net.moss.resonance.recipe;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
@@ -15,6 +15,7 @@ import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.RegistryWrapper.WrapperLookup;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.world.World;
+import net.moss.resonance.Resonance;
 
 public class OtherOrbEffectsRecipe implements Recipe<SingleStackRecipeInput> {
     protected final Ingredient ingredient;
