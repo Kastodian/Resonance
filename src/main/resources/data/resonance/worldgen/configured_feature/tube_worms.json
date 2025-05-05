@@ -4,6 +4,7 @@
     "height": 10,
     "reach": 3,
     "desired_wall_size": 30,
+    "allign_facing_to_wall": true,
     "wall_state": {
       "type": "minecraft:randomized_int_state_provider",
       "property": "age",
@@ -34,11 +35,9 @@
         }
       }
     },
-    "targets": {
-      "type": "minecraft:simple_state_provider",
-      "state": {
-        "Name": "minecraft:water"
-      }
+    "target": {
+      "type": "minecraft:matching_blocks",
+      "blocks": "minecraft:water"
     }
   }
 }

@@ -9,8 +9,8 @@
           "Name": "resonance:pearl_ice"
         },
         "target": {
-          "predicate_type": "minecraft:tag_match",
-          "tag": "minecraft:ice"
+          "predicate_type": "minecraft:block_match",
+          "block": "minecraft:packed_ice"
         }
       }
     ]

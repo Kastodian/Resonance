@@ -44,7 +44,7 @@ public class EnchantUtils {
 		if (EnchantmentHelper.hasAnyEnchantmentsWith(stack, Resonance.HAS_RECOIL) && entity.getWorld() instanceof ServerWorld world) {
 			Vec3d source = entity.getEyePos().add(entity.getRotationVec(1.0f));
 			if (damageSource == null) { damageSource = Utils.damageSource(world, DamageTypes.INDIRECT_MAGIC); }
-			if (modifyCheck) { strength += 0.2f * EnchantmentHelper.modifyKnockback(world, stack, entity, damageSource, (float) entity.getAttributeBaseValue(EntityAttributes.GENERIC_ATTACK_KNOCKBACK)); }
+			if (modifyCheck) { strength += 0.3f * EnchantmentHelper.modifyKnockback(world, stack, entity, damageSource, (float) entity.getAttributeBaseValue(EntityAttributes.GENERIC_ATTACK_KNOCKBACK)); }
 			Utils.customKnockbackClamp(entity, source, strength, clamp);
 		}
 	}
@@ -72,9 +72,7 @@ public class EnchantUtils {
 
 	public static void onStackUsed(ServerWorld world, ItemStack stack, LivingEntity user, EquipmentSlot slot, java.util.function.Consumer<Item> onBreak) {
         EnchantmentEffectContext enchantmentEffectContext = new EnchantmentEffectContext(stack, slot, user, onBreak);
-        forEachEnchantment(stack, EquipmentSlot.MAINHAND, user, (enchantment, level, context) -> {
-            postUse(enchantment.value(), world, level, enchantmentEffectContext, user);
-        });
+        forEachEnchantment(stack, EquipmentSlot.MAINHAND, user, (enchantment, level, context) -> { postUse(enchantment.value(), world, level, enchantmentEffectContext, user); });
 	}
 
 

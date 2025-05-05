@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.intprovider.IntProvider;
+import net.minecraft.world.gen.blockpredicate.BlockPredicate;
 import net.minecraft.world.gen.feature.FeatureConfig;
 import net.minecraft.world.gen.stateprovider.BlockStateProvider;
 import net.minecraft.world.gen.stateprovider.SimpleBlockStateProvider;
@@ -17,7 +18,7 @@ public class OnAWallFeatureConfig implements FeatureConfig {
                     BlockStateProvider.TYPE_CODEC.fieldOf("wall_state").forGetter(config -> config.wallStateProvider),
                     BlockStateProvider.TYPE_CODEC.optionalFieldOf("floor_state", SimpleBlockStateProvider.of(Blocks.AIR)).forGetter(config -> config.floorStateProvider),
 					Codec.BOOL.optionalFieldOf("allign_facing_to_wall", false).forGetter(config -> config.allignFacingToWall),
-					BlockStateProvider.TYPE_CODEC.fieldOf("targets").forGetter(config -> config.targets)
+					BlockPredicate.BASE_CODEC.fieldOf("target").forGetter(config -> config.target)
 				)
 				.apply(instance, OnAWallFeatureConfig::new)
 	);
@@ -27,16 +28,16 @@ public class OnAWallFeatureConfig implements FeatureConfig {
 	private final BlockStateProvider wallStateProvider;
 	private final BlockStateProvider floorStateProvider;
 	private final Boolean allignFacingToWall;
-	private final BlockStateProvider targets;
+	private final BlockPredicate target;
 
-	public OnAWallFeatureConfig(IntProvider reach, IntProvider height, IntProvider desiredWallSize, BlockStateProvider wallStateProvider, BlockStateProvider floorStateProvider, Boolean allignFacingToWall, BlockStateProvider targets) {
+	public OnAWallFeatureConfig(IntProvider reach, IntProvider height, IntProvider desiredWallSize, BlockStateProvider wallStateProvider, BlockStateProvider floorStateProvider, Boolean allignFacingToWall, BlockPredicate target) {
 		this.reach = reach;
 		this.height = height;
 		this.desiredWallSize = desiredWallSize;
 		this.wallStateProvider = wallStateProvider;
 		this.floorStateProvider = floorStateProvider;
 		this.allignFacingToWall = allignFacingToWall;
-		this.targets = targets;
+		this.target = target;
 	}
 
 	public IntProvider getReach() { return this.reach; }
@@ -45,5 +46,5 @@ public class OnAWallFeatureConfig implements FeatureConfig {
 	public BlockStateProvider getWallStateProvider() { return this.wallStateProvider; }
 	public BlockStateProvider getFloorStateProvider() { return this.floorStateProvider; }
 	public Boolean getAllignFacingToWall() { return this.allignFacingToWall; }
-	public BlockStateProvider getTargets() { return this.targets; }
+	public BlockPredicate getTarget() { return this.target; }
 }

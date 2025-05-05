@@ -1,0 +1,22 @@
+{
+    "type": "resonance:other_orb_effects",
+    "ingredient": { "item": "minecraft:dragon_egg" },
+    "result": {
+      "id": "minecraft:dragon_egg",
+      "components": {
+        "minecraft:potion_contents": {
+          "custom_effects": [
+            {
+              "id": "minecraft:strength",
+              "duration": 1000
+            },
+            {
+              "id": "minecraft:resistance",
+              "duration": 500
+            }
+          ]
+        }
+      }
+    },
+    "texture": "resonance:textures/block/dragon_egg_pearl"
+  }

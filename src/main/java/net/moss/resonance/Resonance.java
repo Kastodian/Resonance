@@ -45,6 +45,7 @@ import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.chunk.placement.StructurePlacementType;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.PlacedFeature;
+import net.minecraft.world.gen.structure.StructureType;
 import net.moss.resonance.advancement.*;
 import net.moss.resonance.block.*;
 import net.moss.resonance.block.entity.RainChimeBlockEntity;
@@ -72,9 +73,12 @@ import net.moss.resonance.recipe.ReverberationRecipe;
 import net.moss.resonance.util.Dischargable;
 import net.moss.resonance.util.Registerizer;
 import net.moss.resonance.util.StoredCritsPredicate;
+import net.moss.resonance.world.FixedStructureType;
 import net.moss.resonance.world.ModifyLootAndTradeTables;
 import net.moss.resonance.world.OnAWallFeature;
 import net.moss.resonance.world.OnAWallFeatureConfig;
+import net.moss.resonance.world.SpurFeature;
+import net.moss.resonance.world.SpurFeatureConfig;
 import net.moss.resonance.world.UniqueStructurePlacement;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.AbstractBlock;
@@ -315,9 +319,12 @@ public class Resonance implements ModInitializer {
     // World Gen --------------------------------------------------------------------------------------------------------------------------------------------------------------------
     public static final RegistryKey<World> DREAM_SWEET = RegistryKey.of(RegistryKeys.WORLD, Identifier.of(MOD_ID, "dream_sweet"));
     public static final StructurePlacementType<UniqueStructurePlacement> UNIQUE_PLACEMENT_TYPE = Registry.register(Registries.STRUCTURE_PLACEMENT, Identifier.of(MOD_ID, "unique"), () -> UniqueStructurePlacement.CODEC);
+    public static final StructureType<FixedStructureType> FIXED_STRUCTURE_TYPE = Registry.register(Registries.STRUCTURE_TYPE, Identifier.of(MOD_ID, "fixed"), () -> FixedStructureType.CODEC);
     public static final Feature<OnAWallFeatureConfig> ON_A_WALL_FEATURE_TYPE = Registry.register(Registries.FEATURE, Identifier.of(MOD_ID, "on_a_wall"), new OnAWallFeature(OnAWallFeatureConfig.CODEC));
+    public static final Feature<SpurFeatureConfig> SPUR_FEATURE_TYPE = Registry.register(Registries.FEATURE, Identifier.of(MOD_ID, "spur"), new SpurFeature(SpurFeatureConfig.CODEC));
     public static final RegistryKey<PlacedFeature> ICICLE_DOWN_FEATURE = RegistryKey.of(RegistryKeys.PLACED_FEATURE, Identifier.of(MOD_ID, "icicle_down"));
 	public static final RegistryKey<PlacedFeature> PEARL_ICE_BLOB_FEATURE = RegistryKey.of(RegistryKeys.PLACED_FEATURE, Identifier.of(MOD_ID, "pearl_ice_blob"));
+	public static final RegistryKey<PlacedFeature> PEARL_ICE_SPUR_FEATURE = RegistryKey.of(RegistryKeys.PLACED_FEATURE, Identifier.of(MOD_ID, "pearl_ice_spur"));
 	public static final RegistryKey<Biome> BATHYAL_ZONE = RegistryKey.of(RegistryKeys.BIOME, Identifier.of(MOD_ID, "bathyal_zone"));
     // Attribute --------------------------------------------------------------------------------------------------------------------------------------------------------------------
     public static final RegistryEntry<EntityAttribute> DOUBLE_JUMPS = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID, "double_jump"), new ClampedEntityAttribute("attribute." + MOD_ID + '.' + "double_jumps", 0, 0, 1024).setTracked(true));
@@ -404,6 +411,7 @@ public class Resonance implements ModInitializer {
 
         BiomeModifications.addFeature(BiomeSelectors.tag(BiomeTags.POLAR_BEARS_SPAWN_ON_ALTERNATE_BLOCKS), GenerationStep.Feature.VEGETAL_DECORATION, ICICLE_DOWN_FEATURE);
         BiomeModifications.addFeature(BiomeSelectors.tag(BiomeTags.POLAR_BEARS_SPAWN_ON_ALTERNATE_BLOCKS), GenerationStep.Feature.UNDERGROUND_DECORATION, PEARL_ICE_BLOB_FEATURE);
+        BiomeModifications.addFeature(BiomeSelectors.tag(BiomeTags.POLAR_BEARS_SPAWN_ON_ALTERNATE_BLOCKS), GenerationStep.Feature.UNDERGROUND_DECORATION, PEARL_ICE_SPUR_FEATURE);
 
         // temperature, humidity, continentalness, erosion, depth, weirdness, offset
         BiomePlacement.addOverworld(BATHYAL_ZONE,

@@ -61,9 +61,10 @@ public class WallTubeWormsBlock extends TubeWormsBlock {
     @Override
     @Nullable
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        Direction direction = ctx.getPlacementDirections()[0];
-        if (canGrowOn(ctx.getWorld(), direction, ctx.getBlockPos())) {
-            return this.getDefaultState().with(HORIZONTAL_FACING, direction);
+        for (Direction direction : ctx.getPlacementDirections()) {
+            if (canGrowOn(ctx.getWorld(), direction, ctx.getBlockPos())) {
+                return this.getDefaultState().with(HORIZONTAL_FACING, direction);
+            }
         }
         return null;
     }

@@ -1,0 +1,22 @@
+{
+    "criteria": {
+      "requirement": {
+        "trigger": "minecraft:inventory_changed",
+        "conditions": {
+          "items": [
+            {
+              "items": [
+                "resonance:bathyal_vent"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "rewards": {
+      "recipes": [
+        "resonance:crafting/bathyal_heart",
+        "resonance:crafting/bathyal_vent_to_basalt"
+      ]
+    }
+}  

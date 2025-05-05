@@ -84,7 +84,7 @@ public class PlayerEntityMixin implements PlayerEntityInterface {
         PlayerEntity player = (PlayerEntity) (Object) this;
         World world = player.getWorld();
         if (world.isClient) { return; }
-        EnchantUtils.recoilCheck(player, null, player.getMainHandStack(), 0.4f, 1f, false);
+        EnchantUtils.recoilCheck(player, null, player.getMainHandStack(), 0.5f, 1f, false);
         if (Utils.isAttackCritical(player, target) && (critTimer > 0 || critCount == 0) && world instanceof ServerWorld serverWorld) {
             critCount += 1;
             critTimer = 50;

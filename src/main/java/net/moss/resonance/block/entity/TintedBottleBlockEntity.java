@@ -24,7 +24,6 @@ public class TintedBottleBlockEntity extends BlockEntity implements Nameable {
     }
 
     public ItemStack getPickStack(ItemStack itemstack) {
-        System.out.println("get pick stack blockentity");
         itemstack.applyComponentsFrom(this.createComponentMap());
         return itemstack;
     }
@@ -35,11 +34,8 @@ public class TintedBottleBlockEntity extends BlockEntity implements Nameable {
 
     @Override
     protected void readComponents(ComponentsAccess components) {
-        System.out.println("readComponents blockentity");
         super.readComponents(components);
-        System.out.println((DyedColorComponent)components.getOrDefault(DataComponentTypes.DYED_COLOR, new DyedColorComponent(DyedColorComponent.DEFAULT_COLOR, true)) + " blockentity");
         this.color = ((DyedColorComponent)components.getOrDefault(DataComponentTypes.DYED_COLOR, new DyedColorComponent(DyedColorComponent.DEFAULT_COLOR, true))).rgb();
-        System.out.println(this.color + " color blockentity");
         this.customName = components.get(DataComponentTypes.CUSTOM_NAME);
     }
 

@@ -1,4 +1,4 @@
 accessWidener   v2  named
 
-accessible          class       net/minecraft/client/gui/hud/InGameHud$HeartType
-accessible          method      net/minecraft/block/BlockWithEntity validateTicker      (Lnet/minecraft/block/entity/BlockEntityType;Lnet/minecraft/block/entity/BlockEntityType;Lnet/minecraft/block/entity/BlockEntityTicker;)Lnet/minecraft/block/entity/BlockEntityTicker;
+accessible      class       net/minecraft/client/gui/hud/InGameHud$HeartType
+accessible      method      net/minecraft/block/BlockWithEntity                         validateTicker          (Lnet/minecraft/block/entity/BlockEntityType;Lnet/minecraft/block/entity/BlockEntityType;Lnet/minecraft/block/entity/BlockEntityTicker;)Lnet/minecraft/block/entity/BlockEntityTicker;

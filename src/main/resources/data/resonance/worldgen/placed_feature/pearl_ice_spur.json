@@ -1,0 +1,33 @@
+{
+  "feature": "resonance:pearl_ice_spur",
+  "placement": [
+    {
+      "type": "minecraft:rarity_filter",
+      "chance": 4
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:heightmap",
+      "heightmap": "MOTION_BLOCKING"
+    },
+    {
+      "type": "minecraft:biome"
+    },
+    {
+      "type": "minecraft:block_predicate_filter",
+      "predicate": {
+        "type": "minecraft:matching_blocks",
+        "offset": [
+          0,
+          -3,
+          0
+        ],
+        "blocks": [
+          "minecraft:packed_ice"
+        ]
+      }
+    }
+  ]
+}

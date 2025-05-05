@@ -217,10 +217,14 @@
     "advancement.resonance.portable_infection": "Portable Infection",
     "advancement.resonance.portable_infection.desc": "Use a Tinted Bottle on a Sculk Catalyst as it spreads",
 
-    "gamerule.cactiDestroyUniqueItems": "Cacti destroy items tagged as unique",
-    "gamerule.jumpOrbRefreshDelay": "The ammount of ticks until a Jump Orb refreshes",
-    "gamerule.pearlRefreshDelay": "The tick multiplier until a Pearl Hub refreshes",
-    "gamerule.ventFliudBottlePlacesWater": "Do Vent Fliud Bottles place Water when thrown",
+    "gamerule.cactiDestroyUniqueItems": "Cacti destroy Unique Items",
+    "gamerule.cactiDestroyUniqueItems.description": "Cacti destroy otherwise indestructible items tagged as 'Unique'",
+    "gamerule.jumpOrbRefreshDelay": "Jump Orb refresh delay",
+    "gamerule.jumpOrbRefreshDelay.description": "The ammount of ticks until a Jump Orb refreshes",
+    "gamerule.pearlRefreshDelay": "Pearl Hub refresh delay",
+    "gamerule.pearlRefreshDelay.description": "The tick multiplier until a Pearl Hub refreshes",
+    "gamerule.ventFluidBottlePlacesWater": "Vent Fluid Bottles place Water",
+    "gamerule.ventFluidBottlePlacesWater.description": "Do Vent Fluid Bottles place Water when thrown",
     "catagory.resonance": "Resonance",
 
     "emi.category.resonance.reverberation": "Reverberation",

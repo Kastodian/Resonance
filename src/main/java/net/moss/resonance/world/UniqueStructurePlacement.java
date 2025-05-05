@@ -26,8 +26,8 @@ public class UniqueStructurePlacement extends StructurePlacement {
     private final RegistryEntryList<Biome> biomes;
     private final int biomeDepth;
     private final int testHeight;
-    private int chunkX;
-    private int chunkZ;
+    private int chunkX = Integer.MAX_VALUE;
+    private int chunkZ = Integer.MAX_VALUE;
 
     @SuppressWarnings("deprecation")
     protected UniqueStructurePlacement(Vec3i locateOffset, FrequencyReductionMethod frequencyReductionMethod, float frequency, int salt, Optional<ExclusionZone> exclusionZone, int distance, RegistryEntryList<Biome> biomes, int biomeDepth, int testHeight) {

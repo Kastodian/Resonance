@@ -3,7 +3,9 @@ package net.moss.resonance.event;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
@@ -74,6 +76,7 @@ import net.moss.resonance.util.EnchantUtils;
 import net.moss.resonance.util.Utils;
 import net.moss.resonance.util.Utils.CustomWindChargeBehavior;
 import net.moss.resonance.util.interfaces.CritStoringInterface;
+import net.moss.resonance.world.FixedStructureType;
 import net.moss.resonance.world.UniqueStructureDataSaver;
 import net.moss.resonance.world.UniqueStructurePlacement;
 
@@ -147,6 +150,7 @@ public class ModEvents {
 	}
 
     public static void onServerStart(MinecraftServer server) {
+        if (!server.getSaveProperties().getGeneratorOptions().shouldGenerateStructures()) { return; }
         UniqueStructureDataSaver serverState = UniqueStructureDataSaver.getServerState(server);
         if (serverState.generated) {
             server.getOverworld().getChunkManager().getStructurePlacementCalculator().getStructureSets().forEach(structureSet -> {
@@ -158,45 +162,61 @@ public class ModEvents {
                 }
             });
         } else {
-            int maxSearchRadius = 200;
             int sizeMultiplier = 100;
+            int maxSearchRadius = 200 * sizeMultiplier;
             for (RegistryKey<World> WorldKey : server.getWorldRegistryKeys().stream().toList()) {
                 ServerWorld world = server.getWorld(WorldKey);
-                List<RegistryEntry<StructureSet>> structureSets = new ArrayList<RegistryEntry<StructureSet>>();
-                world.getChunkManager().getStructurePlacementCalculator().getStructureSets().forEach(structureSet -> {
-                    if (structureSet.value().placement() instanceof UniqueStructurePlacement) { structureSets.add(structureSet); }
+                Map<String, StructureSet> temp = world.getChunkManager().getStructurePlacementCalculator().getStructureSets().stream()
+                        .filter(structure -> structure.value().placement() instanceof UniqueStructurePlacement)
+                        .collect(Collectors.toMap(RegistryEntry<StructureSet>::getIdAsString, structure -> structure.value()));
+                if (temp.isEmpty()) { break; }
+                temp.forEach((id, structureSet) -> {
+                    if (structureSet.structures().getFirst().structure().value() instanceof FixedStructureType structureType) {
+                        UniqueStructurePlacement placement = (UniqueStructurePlacement) structureSet.placement();
+                        BlockPos blockPos;
+                        if (structureType.multipleOf) {
+                            int x = world.getRandom().nextInt(360);
+                            int z = (int) (Math.sin(x) * placement.getDistance());
+                            x = (int) (Math.cos(x) * placement.getDistance());
+                            blockPos = new BlockPos((x / structureType.x) * structureType.x, placement.getTestHeight(), (z / structureType.z) * structureType.z);
+                        } else {
+                            blockPos = new BlockPos(structureType.x, placement.getTestHeight(), structureType.z);
+                        }
+                        serverState.name.add(id);
+                        serverState.pos.add(blockPos);
+                        placement.setChunk(blockPos.getX() >> 4, blockPos.getZ() >> 4);
+                        Resonance.LOGGER.info("Fixed [" + id + "] To: " + blockPos);
+                    }
                 });
-                
-                for (int searchRadius = 1; searchRadius <= maxSearchRadius; searchRadius++) {
+                for (float searchRadius = sizeMultiplier; searchRadius <= maxSearchRadius; searchRadius += sizeMultiplier) {
                     List<Float> angles = new ArrayList<Float>();
-                    for (float i = 0; i < 2 * Math.PI; i += (1 / (float) (searchRadius))) { angles.add(i); }
+                    for (float i = 0; i < 2 * Math.PI; i += (sizeMultiplier / searchRadius)) { angles.add(i); }
                     Collections.shuffle(angles);
                     for (Float searchAngle : angles) {
-                        int x = (int) (Math.cos(searchAngle) * searchRadius * sizeMultiplier);
-                        int z = (int) (Math.sin(searchAngle) * searchRadius * sizeMultiplier);
-                        for (RegistryEntry<StructureSet> structureSet : structureSets) {
-                            if (structureSet.value().placement() instanceof UniqueStructurePlacement placement) {
-                                if (searchRadius * sizeMultiplier < placement.getDistance()) { break; }
-                                BlockPos pos = new BlockPos(x, placement.getTestHeight(), z);
-                                int depth = placement.getBiomeDepth();
-                                RegistryEntryList<Biome> biomes = placement.getBiomes();
-                                if (!biomes.contains(world.getBiome(pos.north(depth)))) { break; }
-                                if (!biomes.contains(world.getBiome(pos.south(depth)))) { break; }
-                                if (!biomes.contains(world.getBiome(pos.east(depth)))) { break; }
-                                if (!biomes.contains(world.getBiome(pos.west(depth)))) { break; }
-                                if (biomes.contains(world.getBiome(pos))) {
-                                    serverState.name.add(structureSet.getIdAsString());
-                                    serverState.pos.add(pos);
-                                    placement.setChunk(pos.getX() >> 4, pos.getZ() >> 4);
-                                    Resonance.LOGGER.info("Assigned [" + structureSet.getIdAsString() + "] To: " + pos);
-                                }
+                        int x = (int) (Math.cos(searchAngle) * searchRadius);
+                        int z = (int) (Math.sin(searchAngle) * searchRadius);
+                        for (Map.Entry<String, StructureSet> entry : temp.entrySet()) {
+                            if (entry.getValue().structures().getFirst().structure().value() instanceof FixedStructureType) {
+                                temp.remove(entry.getKey());
+                                break;
                             }
-                            structureSets.remove(structureSet);
+                            UniqueStructurePlacement placement = (UniqueStructurePlacement) entry.getValue().placement();
+                            if (searchRadius < placement.getDistance()) { continue; }
+                            BlockPos pos = new BlockPos(x, placement.getTestHeight(), z);
+                            int depth = placement.getBiomeDepth();
+                            RegistryEntryList<Biome> biomes = placement.getBiomes();
+                            if (depth > 0 && (!biomes.contains(world.getBiome(pos.north(depth))) || !biomes.contains(world.getBiome(pos.south(depth))) || !biomes.contains(world.getBiome(pos.east(depth))) || !biomes.contains(world.getBiome(pos.west(depth))))) { continue; }
+                            if (!biomes.contains(world.getBiome(pos))) { continue; }
+                            serverState.name.add(entry.getKey());
+                            serverState.pos.add(pos);
+                            placement.setChunk(x >> 4, z >> 4);
+                            Resonance.LOGGER.info("Assigned [" + entry.getKey() + "] To: " + pos);
+                            temp.remove(entry.getKey());
                             break;
                         }
-                        if (structureSets.isEmpty()) { break; }
+                        if (temp.isEmpty()) { break; }
                     }
-                    if (structureSets.isEmpty()) { break; }
+                    if (temp.isEmpty()) { break; }
                 }
             }
             serverState.generated = true;

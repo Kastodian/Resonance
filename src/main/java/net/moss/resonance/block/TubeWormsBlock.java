@@ -43,7 +43,7 @@ public class TubeWormsBlock extends Block implements FluidFillable {
     
     @Override
     protected BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if (!state.canPlaceAt(world, pos)) { return Blocks.AIR.getDefaultState(); }
+        if (!state.canPlaceAt(world, pos)) { return Blocks.WATER.getDefaultState(); }
         BlockState blockState = super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
         if (!blockState.isAir()) { world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world)); }
         return blockState;
@@ -57,12 +57,6 @@ public class TubeWormsBlock extends Block implements FluidFillable {
         if (!isWater(world, pos)) { return null; }
         else if (canPlaceAt(this.getDefaultState(), world, pos)) { return super.getPlacementState(ctx); }
         else { return Resonance.WALL_TUBE_WORMS.getPlacementState(ctx); }
-    }
-
-    @Override
-    protected boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-        BlockPos blockPos = pos.down();
-        return world.getBlockState(blockPos).isSideSolidFullSquare(world, blockPos, Direction.UP);
     }
 
     @Override
@@ -92,6 +86,7 @@ public class TubeWormsBlock extends Block implements FluidFillable {
         return fluidState.isIn(FluidTags.WATER) && fluidState.getLevel() == 8 && world.getBlockState(pos).isReplaceable();
     }
 
+    @Override protected float getMaxHorizontalModelOffset() { return 0.2F; }
     @Override public ItemStack getPickStack(WorldView world, BlockPos pos, BlockState state) { return Resonance.TUBE_WORMS.asItem().getDefaultStack(); }
 	@Override protected void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) { entity.slowMovement(state, new Vec3d(0.99, 0.99, 0.99)); }
     @Override protected VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) { return SHAPE; }
@@ -99,4 +94,5 @@ public class TubeWormsBlock extends Block implements FluidFillable {
     @Override public boolean tryFillWithFluid(WorldAccess world, BlockPos pos, BlockState state, FluidState fluidState) { return false; }
     @Override protected FluidState getFluidState(BlockState state) { return Fluids.WATER.getStill(false); }
 	@Override protected void appendProperties(StateManager.Builder<Block, BlockState> builder) { builder.add(AGE); }
+    @Override protected boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) { return canGrowOn(world, Direction.DOWN, pos); }
 }
