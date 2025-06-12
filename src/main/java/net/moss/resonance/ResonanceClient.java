@@ -1,5 +1,7 @@
 package net.moss.resonance;
 
+import java.util.Optional;
+
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
@@ -14,7 +16,7 @@ import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.DyedColorComponent;
 import net.minecraft.util.Identifier;
 import net.moss.resonance.block.renderer.RainChimeBlockRenderer;
-import net.moss.resonance.block.renderer.TintedBottleBlockEntityRenderer;
+import net.moss.resonance.block.entity.TintedBottleBlockEntity;
 import net.moss.resonance.block.renderer.BrittleBlockEntityRenderer;
 import net.moss.resonance.block.renderer.BuddingPearlIceBlockEntityRenderer;
 import net.moss.resonance.block.renderer.PearlHubBlockEntityRenderer;
@@ -86,11 +88,14 @@ public class ResonanceClient implements ClientModInitializer {
         BlockEntityRendererFactories.register(Resonance.PEARL_HUB_BLOCK_ENTITY, PearlHubBlockEntityRenderer::new);
         BlockEntityRendererFactories.register(Resonance.BUDDING_PEARL_ICE_BLOCK_ENTITY, BuddingPearlIceBlockEntityRenderer::new);
         BlockEntityRendererFactories.register(Resonance.BRITTLE_BLOCK_ENTITY, BrittleBlockEntityRenderer::new);
-        BlockEntityRendererFactories.register(Resonance.TINTED_BOTTLE_BLOCK_ENTITY, TintedBottleBlockEntityRenderer::new);
         
         ColorProviderRegistry.ITEM.register((stack, tintIndex) -> stack.contains(DataComponentTypes.DYED_COLOR) ? DyedColorComponent.getColor(stack, 16777215) : -1, Resonance.SCARF);
         ColorProviderRegistry.ITEM.register((stack, tintIndex) -> tintIndex > 0 ? -1 : (stack.contains(DataComponentTypes.DYED_COLOR) ? DyedColorComponent.getColor(stack, 16777215) : -1), Resonance.VENT_FLUID_BOTTLE);
-
+        ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> {
+            Optional<TintedBottleBlockEntity> blockEntity = world.getBlockEntity(pos, Resonance.TINTED_BOTTLE_BLOCK_ENTITY);
+            return blockEntity.isPresent() && tintIndex == 0 ? blockEntity.get().getColor() : -1;
+        }, Resonance.VENT_FLUID_BOTTLE_BLOCK);
+        
         DimensionRenderingRegistry.registerSkyRenderer(Resonance.DREAM_SWEET, new DreamSweetSkyRenderer());
     }
 }

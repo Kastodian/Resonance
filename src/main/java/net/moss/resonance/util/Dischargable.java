@@ -22,8 +22,14 @@ public interface Dischargable extends Degradable<Dischargable.ChargeLevel> {
 				.put(Resonance.SMALL_CHARGED_AMETHYST_BUD, Blocks.SMALL_AMETHYST_BUD)
 				.build()
 	);
-	Supplier<BiMap<Block, Block>> CHARGE_INCREASES = Suppliers.memoize(() -> CHARGE_DECREASES.get().inverse());
-
+	Supplier<BiMap<Block, Block>> CHARGE_INCREASES = Suppliers.memoize(
+		() -> ImmutableBiMap.<Block, Block>builder()
+				.put(Blocks.AMETHYST_CLUSTER, Resonance.CHARGED_AMETHYST_CLUSTER)
+				.put(Blocks.LARGE_AMETHYST_BUD, Resonance.LARGE_CHARGED_AMETHYST_BUD)
+				.put(Blocks.MEDIUM_AMETHYST_BUD, Resonance.MEDIUM_CHARGED_AMETHYST_BUD)
+				.put(Blocks.SMALL_AMETHYST_BUD, Resonance.SMALL_CHARGED_AMETHYST_BUD)
+				.build()
+	);
 
 	static Block getMaxChargedBlock(Block block) {
 		Block block2 = block;

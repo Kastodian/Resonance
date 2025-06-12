@@ -25,8 +25,8 @@ public class RangedWeaponItemMixin {
         if (projectile.getItem() instanceof ProjectileItem interface1) {
             ProjectileEntity projectileEntity = interface1.createEntity(world, shooter.getPos(), stack, Direction.NORTH);
             if (projectileEntity instanceof PersistentProjectileEntity persistentProjectileEntity) {
-                EnchantUtils.recoilCheck(shooter, projectileEntity.getDamageSources().arrow(persistentProjectileEntity, target), stack, 0.5f, 1f, true);
+                EnchantUtils.recoilCheck(shooter, projectileEntity.getDamageSources().arrow(persistentProjectileEntity, target), stack, 0.25f + speed / 8, 1f, true);
             }
-        } else { EnchantUtils.recoilCheck(shooter, null, stack, 0.6f, 1.2f, true); }
+        } else { EnchantUtils.recoilCheck(shooter, null, stack, 0.25f + speed / 8, 1.2f, true); }
     }
 }

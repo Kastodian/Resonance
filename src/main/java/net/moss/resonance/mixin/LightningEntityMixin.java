@@ -85,8 +85,7 @@ public class LightningEntityMixin {
 		LightningEntity Lightning = (LightningEntity)(Object) this;
         World world = Lightning.getWorld();
 		BlockState state = world.getBlockState(blockPos);
-		Block block = state.getBlock();
-		if (block instanceof AmethystClusterBlock) {
+		if (state.getBlock() instanceof AmethystClusterBlock) {
 			Optional<BlockState> blockstate = Dischargable.getIncreasedChargeState(state);
 			if (blockstate.isPresent()) {
 				world.setBlockState(blockPos, blockstate.get(), Block.NOTIFY_LISTENERS);

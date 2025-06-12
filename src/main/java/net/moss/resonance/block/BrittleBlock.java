@@ -88,9 +88,13 @@ public class BrittleBlock extends BlockWithEntity {
 
     @Override
     public void onLandedUpon(World world, BlockState state, BlockPos pos, Entity entity, float fallDistance) {
-        if (state.get(CRACKED)) { world.breakBlock(pos, true, entity); }
-        else if (world.getRandom().nextInt(3) == 0) { world.setBlockState(pos, state.with(CRACKED, true), Block.NOTIFY_LISTENERS); }
-        super.onLandedUpon(world, state, pos, entity, fallDistance);
+        if (world.isClient) { return; }
+        if (state.get(CRACKED)) {
+            world.breakBlock(pos, true, entity);
+            // super.onLandedUpon(world, state, pos, entity, fallDistance);
+        } else if (world.getRandom().nextInt(3) == 0) {
+            world.setBlockState(pos, state.with(CRACKED, true), Block.NOTIFY_ALL);
+        }
     }
 
     @Override

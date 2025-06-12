@@ -1,7 +1,6 @@
 package net.moss.resonance;
 
 import net.fabricmc.api.ModInitializer;
-import net.minecraft.util.Unit;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.gamerule.v1.CustomGameRuleCategory;
@@ -56,6 +55,7 @@ import net.moss.resonance.block.entity.BuddingPearlIceBlockEntity;
 import net.moss.resonance.block.entity.PearlHubBlockEntity;
 import net.moss.resonance.enchantment.CritCountLootCondition;
 import net.moss.resonance.enchantment.ReverberateEnchantmentEffect;
+import net.moss.resonance.enchantment.SetCooldownEnchantmentEffect;
 import net.moss.resonance.enchantment.SetCritCountEnchantmentEffect;
 import net.moss.resonance.entity.ModEntities;
 import net.moss.resonance.event.*;
@@ -145,15 +145,16 @@ public class Resonance implements ModInitializer {
 	// Tags -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	public static final TagKey<EntityType<?>> SOUND_SENSITIVE_TAG = TagKey.of(RegistryKeys.ENTITY_TYPE, Identifier.of(MOD_ID, "sound_sensitive"));
     public static final TagKey<Block> CONDUCTIVE_BLOCKS_TAG = TagKey.of(RegistryKeys.BLOCK, Identifier.of(MOD_ID, "conductive_blocks"));
-    public static final TagKey<Block> VENT_HEAT_SOURCE_BLOCKS_TAG = TagKey.of(RegistryKeys.BLOCK, Identifier.of(MOD_ID, "vent_heat_source"));
+    public static final TagKey<Block> REFLECTS_PROJECTILES_TAG = TagKey.of(RegistryKeys.BLOCK, Identifier.of(MOD_ID, "reflects_projectiles"));
     public static final TagKey<Block> VOLCANO_SNAIL_PREFERED_TAG = TagKey.of(RegistryKeys.BLOCK, Identifier.of(MOD_ID, "volcano_snail_prefered"));
+    public static final TagKey<Block> VENT_HEAT_SOURCE_BLOCKS_TAG = TagKey.of(RegistryKeys.BLOCK, Identifier.of(MOD_ID, "vent_heat_source"));
 	public static final TagKey<Item> DUAL_WIELD_RENDER_TAG = TagKey.of(RegistryKeys.ITEM, Identifier.of(MOD_ID, "dual_wield_render"));
 	public static final TagKey<Item> CONDUCTIVE_ITEMS_TAG = TagKey.of(RegistryKeys.ITEM, Identifier.of(MOD_ID, "conductive_items"));
     public static final TagKey<Biome> IS_DREAM_SWEET_TAG = TagKey.of(RegistryKeys.BIOME, Identifier.of(MOD_ID, "is_dream_sweet"));
 	public static final TagKey<Item> RENDER_ON_BACK_TAG = TagKey.of(RegistryKeys.ITEM, Identifier.of(MOD_ID, "render_on_back"));
+	public static final TagKey<Item> VENT_IGNITERS_TAG = TagKey.of(RegistryKeys.ITEM, Identifier.of(MOD_ID, "vent_igniters"));
 	public static final TagKey<Item> UNIQUE_ITEMS_TAG = TagKey.of(RegistryKeys.ITEM, Identifier.of(MOD_ID, "unique_items"));
 	public static final TagKey<Item> PEARL_ITEMS_TAG = TagKey.of(RegistryKeys.ITEM, Identifier.of(MOD_ID, "alternate_pearl_items"));
-	public static final TagKey<Item> VENT_IGNITERS_TAG = TagKey.of(RegistryKeys.ITEM, Identifier.of(MOD_ID, "vent_igniters"));
 	// Advancement Criterion --------------------------------------------------------------------------------------------------------------------------------------------------------
     public static final CritCriterion CRIT_CRITERION = Criteria.register(MOD_ID + ":" + "crit", new CritCriterion());
     public static final ParryCriterion PARRY_CRITERION = Criteria.register(MOD_ID + ":" + "shield_parry", new ParryCriterion());
@@ -198,9 +199,9 @@ public class Resonance implements ModInitializer {
     public static final ComponentType<List<Integer>> PEARL_STATS = Registry.register(Registries.DATA_COMPONENT_TYPE, Identifier.of(MOD_ID, "pearl_stats"), ComponentType.<List<Integer>>builder().codec(Codec.INT.listOf()).build());
     public static final ComponentType<List<Integer>> CATALYST_STATS = Registry.register(Registries.DATA_COMPONENT_TYPE, Identifier.of(MOD_ID, "catalyst_stats"), ComponentType.<List<Integer>>builder().codec(Codec.INT.listOf()).build());
     public static final ComponentType<Integer> STORED_CRITS = Registry.register(Registries.DATA_COMPONENT_TYPE, Identifier.of(MOD_ID, "stored_crits"), ComponentType.<Integer>builder().codec(Codec.INT).build());
-    public static final ComponentType<Unit> HAS_RECOIL = Registry.register(Registries.ENCHANTMENT_EFFECT_COMPONENT_TYPE, MOD_ID + ":" + "has_recoil", ComponentType.<Unit>builder().codec(Unit.CODEC).build());
-    public static final ComponentType<EnchantmentValueEffect> COOLDOWN_TIME = Registry.register(Registries.ENCHANTMENT_EFFECT_COMPONENT_TYPE, MOD_ID + ":" + "cooldown_time", ComponentType.<EnchantmentValueEffect>builder().codec(EnchantmentValueEffect.CODEC).build());
-    public static final ComponentType<EnchantmentValueEffect> WEIGHT_VALUE = Registry.register(Registries.ENCHANTMENT_EFFECT_COMPONENT_TYPE, MOD_ID + ":" + "weight_value", ComponentType.<EnchantmentValueEffect>builder().codec(EnchantmentValueEffect.CODEC).build());
+    public static final ComponentType<EnchantmentValueEffect> RECOIL = Registry.register(Registries.ENCHANTMENT_EFFECT_COMPONENT_TYPE, MOD_ID + ":" + "recoil", ComponentType.<EnchantmentValueEffect>builder().codec(EnchantmentValueEffect.CODEC).build());
+    public static final ComponentType<EnchantmentValueEffect> COOLDOWN = Registry.register(Registries.ENCHANTMENT_EFFECT_COMPONENT_TYPE, MOD_ID + ":" + "cooldown", ComponentType.<EnchantmentValueEffect>builder().codec(EnchantmentValueEffect.CODEC).build());
+    public static final ComponentType<EnchantmentValueEffect> WEIGHT = Registry.register(Registries.ENCHANTMENT_EFFECT_COMPONENT_TYPE, MOD_ID + ":" + "weight", ComponentType.<EnchantmentValueEffect>builder().codec(EnchantmentValueEffect.CODEC).build());
     public static final ComponentType<List<TargetedEnchantmentEffect<EnchantmentEntityEffect>>> POST_CRIT = Registry.register(Registries.ENCHANTMENT_EFFECT_COMPONENT_TYPE, Identifier.of(MOD_ID, "post_crit"), ComponentType.<List<TargetedEnchantmentEffect<EnchantmentEntityEffect>>>builder().codec(TargetedEnchantmentEffect.createPostAttackCodec(EnchantmentEntityEffect.CODEC, LootContextTypes.ENCHANTED_DAMAGE).listOf()).build());
     public static final ComponentType<List<EnchantmentEffectEntry<EnchantmentEntityEffect>>> POST_USE = Registry.register(Registries.ENCHANTMENT_EFFECT_COMPONENT_TYPE, Identifier.of(MOD_ID, "post_use"), ComponentType.<List<EnchantmentEffectEntry<EnchantmentEntityEffect>>>builder().codec(EnchantmentEffectEntry.createCodec(EnchantmentEntityEffect.CODEC, LootContextTypes.ENCHANTED_ITEM).listOf()).build());
     // Loot Condition Types ---------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -208,6 +209,7 @@ public class Resonance implements ModInitializer {
     // Enchantment Effects ----------------------------------------------------------------------------------------------------------------------------------------------------------
     public static final MapCodec<? extends EnchantmentEntityEffect> REVERBERATE_ENCHANTMENT_EFFECT = Registerizer.registerEnchantmentEffect(MOD_ID, "reverberate", ReverberateEnchantmentEffect.CODEC);
     public static final MapCodec<? extends EnchantmentEntityEffect> SET_STORED_CRITS_ENCHANTMENT_EFFECT = Registerizer.registerEnchantmentEffect(MOD_ID, "set_stored_crits", SetCritCountEnchantmentEffect.CODEC);
+    public static final MapCodec<? extends EnchantmentEntityEffect> SET_COOLDOWN_ENCHANTMENT_EFFECT = Registerizer.registerEnchantmentEffect(MOD_ID, "set_cooldown", SetCooldownEnchantmentEffect.CODEC);
     // Potions ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
     public static final RegistryEntry<StatusEffect> SPARKING = Registerizer.effect(Resonance.MOD_ID, "sparking", new StaticEffect());
     public static final RegistryEntry<StatusEffect> SOUL_FATIGUE = Registerizer.effect(Resonance.MOD_ID, "soul_fatigue", new SoulFatigueEffect()
@@ -323,7 +325,6 @@ public class Resonance implements ModInitializer {
     public static final Feature<OnAWallFeatureConfig> ON_A_WALL_FEATURE_TYPE = Registry.register(Registries.FEATURE, Identifier.of(MOD_ID, "on_a_wall"), new OnAWallFeature(OnAWallFeatureConfig.CODEC));
     public static final Feature<SpurFeatureConfig> SPUR_FEATURE_TYPE = Registry.register(Registries.FEATURE, Identifier.of(MOD_ID, "spur"), new SpurFeature(SpurFeatureConfig.CODEC));
     public static final RegistryKey<PlacedFeature> ICICLE_DOWN_FEATURE = RegistryKey.of(RegistryKeys.PLACED_FEATURE, Identifier.of(MOD_ID, "icicle_down"));
-	public static final RegistryKey<PlacedFeature> PEARL_ICE_BLOB_FEATURE = RegistryKey.of(RegistryKeys.PLACED_FEATURE, Identifier.of(MOD_ID, "pearl_ice_blob"));
 	public static final RegistryKey<PlacedFeature> PEARL_ICE_SPUR_FEATURE = RegistryKey.of(RegistryKeys.PLACED_FEATURE, Identifier.of(MOD_ID, "pearl_ice_spur"));
 	public static final RegistryKey<Biome> BATHYAL_ZONE = RegistryKey.of(RegistryKeys.BIOME, Identifier.of(MOD_ID, "bathyal_zone"));
     // Attribute --------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -410,7 +411,6 @@ public class Resonance implements ModInitializer {
         CauldronBehavior.WATER_CAULDRON_BEHAVIOR.map().putIfAbsent(SCARF, CauldronBehavior.CLEAN_DYEABLE_ITEM);
 
         BiomeModifications.addFeature(BiomeSelectors.tag(BiomeTags.POLAR_BEARS_SPAWN_ON_ALTERNATE_BLOCKS), GenerationStep.Feature.VEGETAL_DECORATION, ICICLE_DOWN_FEATURE);
-        BiomeModifications.addFeature(BiomeSelectors.tag(BiomeTags.POLAR_BEARS_SPAWN_ON_ALTERNATE_BLOCKS), GenerationStep.Feature.UNDERGROUND_DECORATION, PEARL_ICE_BLOB_FEATURE);
         BiomeModifications.addFeature(BiomeSelectors.tag(BiomeTags.POLAR_BEARS_SPAWN_ON_ALTERNATE_BLOCKS), GenerationStep.Feature.UNDERGROUND_DECORATION, PEARL_ICE_SPUR_FEATURE);
 
         // temperature, humidity, continentalness, erosion, depth, weirdness, offset

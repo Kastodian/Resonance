@@ -20,7 +20,8 @@
     "AbstractFurnaceBlockMixin",
     "AbstractFurnaceBlockEntityAccessor",
     "AbstractCauldronBlockAccessor",
-    "RedstoneViewMixin"
+    "RedstoneViewMixin",
+    "ProjectileEntityMixin"
   ],
   "client": [
     "ArmorRendererMixin",

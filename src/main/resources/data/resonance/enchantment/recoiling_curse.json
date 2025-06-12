@@ -18,6 +18,13 @@
     "any"
   ],
   "effects": {
-    "resonance:has_recoil": {}
+    "resonance:recoil": {
+      "type": "minecraft:multiply",
+      "factor": {
+        "type": "minecraft:linear",
+        "base": 1.01,
+        "per_level_above_first": 0.01
+      }
+    }
   }
 }

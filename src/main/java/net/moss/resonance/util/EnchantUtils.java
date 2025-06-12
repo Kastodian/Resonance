@@ -7,6 +7,7 @@ import java.util.function.Consumer;
 import org.apache.commons.lang3.mutable.MutableFloat;
 import org.jetbrains.annotations.Nullable;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import net.minecraft.component.ComponentType;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ItemEnchantmentsComponent;
 import net.minecraft.enchantment.Enchantment;
@@ -14,6 +15,7 @@ import net.minecraft.enchantment.EnchantmentEffectContext;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.effect.EnchantmentEffectEntry;
 import net.minecraft.enchantment.effect.EnchantmentEffectTarget;
+import net.minecraft.enchantment.effect.EnchantmentValueEffect;
 import net.minecraft.enchantment.effect.TargetedEnchantmentEffect;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
@@ -28,21 +30,19 @@ import net.minecraft.loot.context.LootContext;
 import net.minecraft.loot.context.LootContextParameterSet;
 import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.loot.context.LootContextTypes;
-import net.minecraft.registry.RegistryEntryLookup;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.World;
 import net.moss.resonance.Resonance;
 
 public class EnchantUtils {
 	public static void recoilCheck(LivingEntity entity, @Nullable DamageSource damageSource, ItemStack stack, float strength, @Nullable Float clamp, boolean modifyCheck) {
-		if (EnchantmentHelper.hasAnyEnchantmentsWith(stack, Resonance.HAS_RECOIL) && entity.getWorld() instanceof ServerWorld world) {
+		if (EnchantmentHelper.hasAnyEnchantmentsWith(stack, Resonance.RECOIL) && entity.getWorld() instanceof ServerWorld world) {
 			Vec3d source = entity.getEyePos().add(entity.getRotationVec(1.0f));
+            float value = getValue(Resonance.RECOIL, stack, entity, 1);
+            strength *= value;
+            clamp *= value;
 			if (damageSource == null) { damageSource = Utils.damageSource(world, DamageTypes.INDIRECT_MAGIC); }
 			if (modifyCheck) { strength += 0.3f * EnchantmentHelper.modifyKnockback(world, stack, entity, damageSource, (float) entity.getAttributeBaseValue(EntityAttributes.GENERIC_ATTACK_KNOCKBACK)); }
 			Utils.customKnockbackClamp(entity, source, strength, clamp);
@@ -50,22 +50,19 @@ public class EnchantUtils {
 	}
 
     public static void setCooldownTime(ItemStack stack, PlayerEntity user, float baseCooldown) {
-        MutableFloat mutableFloat = new MutableFloat(baseCooldown);
-        forEachEnchantment(user, (enchantment, level, context) -> modifyCooldownDuration(enchantment.value(), user.getRandom(), level, mutableFloat));
-        user.getItemCooldownManager().set(stack.getItem(), MathHelper.floor(Math.max(0.0F, mutableFloat.floatValue()) * 20.0F));
+        user.getItemCooldownManager().set(stack.getItem(), MathHelper.floor(Math.max(0.0F, getValue(Resonance.COOLDOWN, stack, user, baseCooldown)) * 20.0F));
     }
 
-    public static float getWeightValue(ItemStack stack, PlayerEntity user, float baseWeight) {
-        MutableFloat mutableFloat = new MutableFloat(baseWeight);
-        forEachEnchantment(user, (enchantment, level, context) -> modifyWeight(enchantment.value(), user.getRandom(), level, mutableFloat));
+    public static float getValue(ComponentType<EnchantmentValueEffect> component, ItemStack stack, LivingEntity user, float base) {
+        MutableFloat mutableFloat = new MutableFloat(base);
+        forEachEnchantment(user, (enchantment, level, context) -> enchantment.value().modifyValue(component, user.getRandom(), level, mutableFloat));
         return Math.max(0.0F, mutableFloat.floatValue());
     }
     
 	public static void onTargetCritDamaged(ServerWorld world, Entity target, DamageSource damageSource, @Nullable ItemStack weapon) {
         if (target instanceof LivingEntity livingEntity) {
             forEachEnchantment(livingEntity, (enchantment, level, context) -> postCrit(enchantment.value(), world, level, context, EnchantmentEffectTarget.VICTIM, target, damageSource));
-        }
-        if (weapon != null && damageSource.getAttacker() instanceof LivingEntity livingEntity) {
+        } if (weapon != null && damageSource.getAttacker() instanceof LivingEntity livingEntity) {
             forEachEnchantment(weapon, EquipmentSlot.MAINHAND, livingEntity, (enchantment, level, context) -> postCrit(enchantment.value(), world, level, context, EnchantmentEffectTarget.ATTACKER, target, damageSource));
         }
 	}
@@ -74,27 +71,9 @@ public class EnchantUtils {
         EnchantmentEffectContext enchantmentEffectContext = new EnchantmentEffectContext(stack, slot, user, onBreak);
         forEachEnchantment(stack, EquipmentSlot.MAINHAND, user, (enchantment, level, context) -> { postUse(enchantment.value(), world, level, enchantmentEffectContext, user); });
 	}
-
-
-
-    /**
-     * @deprecated This function needs to be removed or avoided at all costs
-     */
-    @Deprecated
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-	public static RegistryEntry<Enchantment> getEnchant(World world, RegistryKey<Enchantment> enchant) {
-		RegistryEntryLookup registryEntryLookup = world.getRegistryManager().createRegistryLookup().getOrThrow(RegistryKeys.ENCHANTMENT);
-		return registryEntryLookup.getOrThrow(enchant);
-	}
-
-
-
-
-
+    
     private static void forEachEnchantment(LivingEntity entity, ContextAwareConsumer contextAwareConsumer) {
-        for (EquipmentSlot equipmentSlot : EquipmentSlot.values()) {
-            forEachEnchantment(entity.getEquippedStack(equipmentSlot), equipmentSlot, entity, contextAwareConsumer);
-        }
+        for (EquipmentSlot equipmentSlot : EquipmentSlot.values()) { forEachEnchantment(entity.getEquippedStack(equipmentSlot), equipmentSlot, entity, contextAwareConsumer); }
     }
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -104,7 +83,7 @@ public class EnchantUtils {
         if (itemEnchantmentsComponent == null || itemEnchantmentsComponent.isEmpty()) { return; }
         EnchantmentEffectContext enchantmentEffectContext = new EnchantmentEffectContext(stack, slot, entity);
         for (Object2IntMap.Entry<RegistryEntry<Enchantment>> entry : itemEnchantmentsComponent.getEnchantmentEntries()) {
-            RegistryEntry registryEntry = (RegistryEntry)entry.getKey();
+            RegistryEntry registryEntry = entry.getKey();
             if (!((Enchantment)registryEntry.value()).slotMatches(slot)) continue;
             contextAwareConsumer.accept(registryEntry, entry.getIntValue(), enchantmentEffectContext);
         }
@@ -122,14 +101,6 @@ public class EnchantUtils {
         applyEffects(enchantment.getEffect(Resonance.POST_USE), createEnchantedEntityLootContext(world, level, user, user.getPos()), (effect) -> {
             effect.apply(world, level, context, user, user.getPos());
         });
-    }
-
-    private static void modifyCooldownDuration(Enchantment enchantment, Random random, int level, MutableFloat baseCooldown) {
-        enchantment.modifyValue(Resonance.COOLDOWN_TIME, random, level, baseCooldown);
-    }
-
-    private static void modifyWeight(Enchantment enchantment, Random random, int level, MutableFloat baseCooldown) {
-        enchantment.modifyValue(Resonance.WEIGHT_VALUE, random, level, baseCooldown);
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })

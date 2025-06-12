@@ -44,6 +44,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
 import net.minecraft.world.event.GameEvent;
 import net.moss.resonance.Resonance;
+import net.moss.resonance.util.EnchantUtils;
 
 public class VolcanoSnailEntity extends WaterCreatureEntity implements Bucketable {
 	private static final TrackedData<String> TYPE = DataTracker.registerData(VolcanoSnailEntity.class, TrackedDataHandlerRegistry.STRING);
@@ -112,7 +113,7 @@ public class VolcanoSnailEntity extends WaterCreatureEntity implements Bucketabl
             this.dropStack(this.getVariant().getMetalState().copy());
 			this.emitGameEvent(GameEvent.ENTITY_INTERACT);
 			itemStack.damage(2, player, getSlotForHand(hand));
-            player.getItemCooldownManager().set(item, 50);
+            EnchantUtils.setCooldownTime(itemStack, player, 50);
             // TODO : Sound Effects...
 			return ActionResult.success(this.getWorld().isClient);
 		} else {

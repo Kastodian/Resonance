@@ -6,7 +6,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
@@ -66,7 +65,7 @@ public class PlayerEntityMixin implements PlayerEntityInterface {
             float f = 0.25F;
             if (player.isSprinting()) { f += 0.75F; }
             if (player.getRandom().nextFloat() < f) {
-                player.getItemCooldownManager().set((Item) shield, shield.getCoolDownTicks());
+                EnchantUtils.setCooldownTime(activeItemStack, player, shield.getCoolDownTicks());
                 player.clearActiveItem();
                 player.getWorld().sendEntityStatus(player, (byte) 30);
                 callbackInfo.cancel();
@@ -87,7 +86,7 @@ public class PlayerEntityMixin implements PlayerEntityInterface {
         EnchantUtils.recoilCheck(player, null, player.getMainHandStack(), 0.5f, 1f, false);
         if (Utils.isAttackCritical(player, target) && (critTimer > 0 || critCount == 0) && world instanceof ServerWorld serverWorld) {
             critCount += 1;
-            critTimer = 50;
+            critTimer = 60;
             EnchantUtils.onTargetCritDamaged(serverWorld, target, Utils.damageSource(serverWorld, DamageTypes.PLAYER_ATTACK, player), player.getMainHandStack());
             PlayerCritEvent.CRIT_EVENT.invoker().critStreak(player, target, critCount, player.getActiveHand(), player.getMainHandStack());
         } else {
