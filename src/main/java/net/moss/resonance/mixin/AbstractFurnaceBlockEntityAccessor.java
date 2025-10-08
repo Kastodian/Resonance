@@ -6,6 +6,6 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(AbstractFurnaceBlockEntity.class)
 public interface AbstractFurnaceBlockEntityAccessor {
-    @Accessor("burnTime") public void setBurnTime(int burnTime);
+	@Accessor("burnTime") public void setBurnTime(int burnTime);
 	@Accessor public int getBurnTime();
 }

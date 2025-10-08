@@ -1,6 +1,6 @@
 {
-  "variants": {
-    "hanging=false": { "model": "resonance:block/tinted_bottles/fireball_bottle" },
-    "hanging=true": { "model": "resonance:block/tinted_bottles/fireball_bottle_hanging" }
-  }
+	"variants": {
+		"hanging=false": { "model": "resonance:block/tinted_bottles/fireball_bottle" },
+		"hanging=true": { "model": "resonance:block/tinted_bottles/fireball_bottle_hanging" }
+	}
 }

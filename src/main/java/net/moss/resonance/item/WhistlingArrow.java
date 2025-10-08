@@ -19,37 +19,37 @@ import net.moss.resonance.entity.WhistlingArrowEntity;
 
 public class WhistlingArrow
 extends ArrowItem {
-    public static final DispenserBehavior WHISTLING_ARROW_BEHAVIOR = new ItemDispenserBehavior(){
-        @Override
-        public ItemStack dispenseSilently(BlockPointer pointer, ItemStack stack) {
-            if (stack.getItem() instanceof WhistlingArrow item) {
-                ServerWorld world = pointer.world();
-                Direction direction = pointer.state().get(DispenserBlock.FACING);
-                ProjectileItem.Settings settings = item.getProjectileSettings();
-                Position position = settings.positionFunction().getDispensePosition(pointer, direction);
-                ProjectileEntity projectileEntity = item.createEntity(world, position, stack, direction);
-                item.initializeProjectile(projectileEntity, direction.getOffsetX(), direction.getOffsetY(), direction.getOffsetZ(), settings.power(), settings.uncertainty());
-                world.spawnEntity(projectileEntity);
-                stack.decrement(1);
-            }
-            return stack;
-        }
-    };
-    
-    public WhistlingArrow(Item.Settings settings) {
-        super(settings);
-        DispenserBlock.registerBehavior(this, WHISTLING_ARROW_BEHAVIOR);
-    }
+	public static final DispenserBehavior WHISTLING_ARROW_BEHAVIOR = new ItemDispenserBehavior(){
+		@Override
+		public ItemStack dispenseSilently(BlockPointer pointer, ItemStack stack) {
+			if (stack.getItem() instanceof WhistlingArrow item) {
+				ServerWorld world = pointer.world();
+				Direction direction = pointer.state().get(DispenserBlock.FACING);
+				ProjectileItem.Settings settings = item.getProjectileSettings();
+				Position position = settings.positionFunction().getDispensePosition(pointer, direction);
+				ProjectileEntity projectileEntity = item.createEntity(world, position, stack, direction);
+				item.initializeProjectile(projectileEntity, direction.getOffsetX(), direction.getOffsetY(), direction.getOffsetZ(), settings.power(), settings.uncertainty());
+				world.spawnEntity(projectileEntity);
+				stack.decrement(1);
+			}
+			return stack;
+		}
+	};
 
-    @Override
-    public PersistentProjectileEntity createArrow(World world, ItemStack stack, LivingEntity shooter, ItemStack shotFrom) {
-        return new WhistlingArrowEntity(world, shooter, stack.copyWithCount(1), shotFrom);
-    }
-    
-    @Override
-    public ProjectileEntity createEntity(World world, Position pos, ItemStack stack, Direction direction) {
-        WhistlingArrowEntity arrowEntity = new WhistlingArrowEntity(world, pos.getX(), pos.getY(), pos.getZ(), stack.copyWithCount(1), (ItemStack)null);
-        arrowEntity.pickupType = PersistentProjectileEntity.PickupPermission.ALLOWED;
-        return arrowEntity;
-    }
+	public WhistlingArrow(Item.Settings settings) {
+		super(settings);
+		DispenserBlock.registerBehavior(this, WHISTLING_ARROW_BEHAVIOR);
+	}
+
+	@Override
+	public PersistentProjectileEntity createArrow(World world, ItemStack stack, LivingEntity shooter, ItemStack shotFrom) {
+		return new WhistlingArrowEntity(world, shooter, stack.copyWithCount(1), shotFrom);
+	}
+
+	@Override
+	public ProjectileEntity createEntity(World world, Position pos, ItemStack stack, Direction direction) {
+		WhistlingArrowEntity arrowEntity = new WhistlingArrowEntity(world, pos.getX(), pos.getY(), pos.getZ(), stack.copyWithCount(1), (ItemStack)null);
+		arrowEntity.pickupType = PersistentProjectileEntity.PickupPermission.ALLOWED;
+		return arrowEntity;
+	}
 }

@@ -1,16 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "category": "building",
-  "pattern": [
-    "ss",
-    "ss"
-  ],
-  "key": {
-    "s": {
-      "item": "resonance:bathyal_vent"
-    }
-  },
-  "result": {
-    "id": "minecraft:basalt"
-  }
+	"type": "minecraft:crafting_shaped",
+	"category": "building",
+	"pattern": [
+		"ss",
+		"ss"
+	],
+	"key": {
+		"s": {
+			"item": "resonance:bathyal_vent"
+		}
+	},
+	"result": {
+		"id": "minecraft:basalt"
+	}
 }

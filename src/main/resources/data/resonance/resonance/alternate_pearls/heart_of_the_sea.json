@@ -1,0 +1,9 @@
+{
+	"ingredient": { "item": "minecraft:heart_of_the_sea" },
+	"effects": [
+		{
+			"id": "minecraft:conduit_power",
+			"duration": 1000
+		}
+	]
+}

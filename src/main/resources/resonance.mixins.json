@@ -1,39 +1,39 @@
 {
-  "required": true,
-  "minVersion": "0.8",
-  "package": "net.moss.resonance.mixin",
-  "compatibilityLevel": "JAVA_17",
-  "mixins": [
-    "LightningEntityMixin",
-    "AmethystBlockMixin",
-    "LivingEntityMixin",
-    "PlayerEntityMixin",
-    "BlockMixin",
-    "MobSpawnerLogicAccessor",
-    "ServerWorldAccessor",
-    "ItemEntityMixin",
-    "EntityMixin",
-    "BrewingRecipeMixin",
-    "RangedWeaponItemMixin",
-    "BrushItemMixin",
-    "TridentItemMixin",
-    "AbstractFurnaceBlockMixin",
-    "AbstractFurnaceBlockEntityAccessor",
-    "AbstractCauldronBlockAccessor",
-    "RedstoneViewMixin",
-    "ProjectileEntityMixin"
-  ],
-  "client": [
-    "ArmorRendererMixin",
-    "HeldItemRendereryMixin",
-    "PlayerEntityRendererMixin",
-    "EntityRendererMixin",
-    "InGameHudMixin",
-    "ClientPlayerEntityMixin"
-  ],
-  "server": [
-  ],
-  "injectors": {
-    "defaultRequire": 1
-  }
+	"required": true,
+	"minVersion": "0.8",
+	"package": "net.moss.resonance.mixin",
+	"compatibilityLevel": "JAVA_17",
+	"mixins": [
+		"LightningEntityMixin",
+		"AmethystBlockMixin",
+		"LivingEntityMixin",
+		"PlayerEntityMixin",
+		"BlockMixin",
+		"MobSpawnerLogicAccessor",
+		"ServerWorldAccessor",
+		"ItemEntityMixin",
+		"EntityMixin",
+		"BrewingRecipeMixin",
+		"RangedWeaponItemMixin",
+		"BrushItemMixin",
+		"TridentItemMixin",
+		"AbstractFurnaceBlockMixin",
+		"AbstractFurnaceBlockEntityAccessor",
+		"AbstractCauldronBlockAccessor",
+		"RedstoneViewMixin",
+		"ProjectileEntityMixin"
+	],
+	"client": [
+		"ArmorRendererMixin",
+		"HeldItemRendereryMixin",
+		"PlayerEntityRendererMixin",
+		"EntityRendererMixin",
+		"InGameHudMixin",
+		"ClientPlayerEntityMixin"
+	],
+	"server": [
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
 }

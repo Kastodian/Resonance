@@ -1,7 +1,7 @@
 {
-    "replace": false,
-    "values": [
-      "resonance:recoiling_curse",
-      "resonance:sparking"
-    ]
+	"replace": false,
+	"values": [
+		"resonance:recoiling_curse",
+		"resonance:sparking"
+	]
 }

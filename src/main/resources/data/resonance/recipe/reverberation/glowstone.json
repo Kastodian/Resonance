@@ -1,12 +1,12 @@
 {
-  "type": "resonance:reverberation",
-  "ingredient": {
-    "item": "minecraft:glowstone"
-  },
-  "results": [
-    {
-      "id": "minecraft:glowstone_dust",
-      "count": 4
-    }
-  ]
+	"type": "resonance:reverberation",
+	"ingredient": {
+		"item": "minecraft:glowstone"
+	},
+	"results": [
+		{
+			"id": "minecraft:glowstone_dust",
+			"count": 4
+		}
+	]
 }

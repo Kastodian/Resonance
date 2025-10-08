@@ -1,11 +1,11 @@
 {
-    "replace": false,
-    "values": [
-      "resonance:charged_amethyst_cluster",
-      "resonance:large_charged_amethyst_bud",
-      "resonance:medium_charged_amethyst_bud",
-      "resonance:small_charged_amethyst_bud",
-      "minecraft:budding_amethyst",
-      "#minecraft:crystal_sound_blocks"
-    ]
-  }
+	"replace": false,
+	"values": [
+		"resonance:charged_amethyst_cluster",
+		"resonance:large_charged_amethyst_bud",
+		"resonance:medium_charged_amethyst_bud",
+		"resonance:small_charged_amethyst_bud",
+		"minecraft:budding_amethyst",
+		"#minecraft:crystal_sound_blocks"
+	]
+}

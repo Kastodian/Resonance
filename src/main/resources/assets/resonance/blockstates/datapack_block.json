@@ -1,5 +1,5 @@
 {
-    "variants": {
-      "": { "model": "resonance:block/datapack_block" }
-    }
+	"variants": {
+		"": { "model": "resonance:block/datapack_block" }
+	}
 }

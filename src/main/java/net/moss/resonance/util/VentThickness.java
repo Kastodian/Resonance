@@ -14,10 +14,6 @@ public enum VentThickness implements StringIdentifiable {
 		this.name = name;
 	}
 
-	public String toString() {
-		return this.name;
-	}
-
 	@Override
 	public String asString() {
 		return this.name;

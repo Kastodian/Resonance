@@ -1,7 +1,6 @@
 package net.moss.resonance;
 
 import java.util.Optional;
-
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
@@ -11,6 +10,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
+import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.DyedColorComponent;
@@ -36,66 +36,66 @@ import net.moss.resonance.particle.CustomGlowParticle;
 import net.moss.resonance.particle.MediumRingParticle;
 
 public class ResonanceClient implements ClientModInitializer {
-    public static final EntityModelLayer LOST_SOUL_LAYER = new EntityModelLayer(Identifier.of(Resonance.MOD_ID, "lost_soul"), "main");
-    public static final EntityModelLayer VOCANO_SNAIL_LAYER = new EntityModelLayer(Identifier.of(Resonance.MOD_ID, "volcano_snail"), "main");
+	public static final EntityModelLayer LOST_SOUL_LAYER = new EntityModelLayer(Identifier.of(Resonance.MOD_ID, "lost_soul"), "main");
+	public static final EntityModelLayer VOCANO_SNAIL_LAYER = new EntityModelLayer(Identifier.of(Resonance.MOD_ID, "volcano_snail"), "main");
 
-    @Override
-    public void onInitializeClient() {
-        BlockRenderLayerMap.INSTANCE.putBlock(Resonance.CHARGED_AMETHYST_CLUSTER, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(Resonance.LARGE_CHARGED_AMETHYST_BUD, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(Resonance.MEDIUM_CHARGED_AMETHYST_BUD, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(Resonance.SMALL_CHARGED_AMETHYST_BUD, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(Resonance.TREASURE_HOARD, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(Resonance.BOOK_PILE, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(Resonance.COMPOST_HEAP, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(Resonance.DATAPACK_BLOCK, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(Resonance.JUMP_ORB_NORMAL, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(Resonance.JUMP_ORB_STRONG, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(Resonance.PEARL_HUB, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(Resonance.ICICLE, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(Resonance.ICE_FUR, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(Resonance.TINTED_BOTTLE_BLOCK, RenderLayer.getTranslucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(Resonance.SCULK_BOTTLE_BLOCK, RenderLayer.getTranslucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(Resonance.SOUL_BOTTLE_BLOCK, RenderLayer.getTranslucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(Resonance.FIREBALL_BOTTLE_BLOCK, RenderLayer.getTranslucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(Resonance.LIGHTNING_BOTTLE_BLOCK, RenderLayer.getTranslucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(Resonance.SHULKER_BOTTLE_BLOCK, RenderLayer.getTranslucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(Resonance.BUDDING_PEARL_ICE, RenderLayer.getTranslucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(Resonance.BRITTLE_BLOCK, RenderLayer.getTranslucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(Resonance.BATHYAL_VENT, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(Resonance.VENT_FLUID_BOTTLE_BLOCK, RenderLayer.getTranslucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(Resonance.VENT_FLUID, RenderLayer.getTranslucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(Resonance.TUBE_WORMS, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(Resonance.WALL_TUBE_WORMS, RenderLayer.getCutout());
-        
-        ParticleFactoryRegistry.getInstance().register(ModParticles.SMALL_RING_PARTICLE, SmallRingParticle.Factory::new);
-        ParticleFactoryRegistry.getInstance().register(ModParticles.MEDIUM_RING_PARTICLE, MediumRingParticle.Factory::new);
-        ParticleFactoryRegistry.getInstance().register(ModParticles.SPARK_PARTICLE, CustomGlowParticle.SparkFactory::new);
-        ParticleFactoryRegistry.getInstance().register(ModParticles.AMETHYST_PARTICLE, CustomGlowParticle.AmethystFactory::new);
-        ParticleFactoryRegistry.getInstance().register(ModParticles.GOLDEN_GLITTER, CustomGlowParticle.GoldenGlitter::new);
-        ParticleFactoryRegistry.getInstance().register(ModParticles.VENT_SMOKE, VentSmokeParticle.Factory::new);
+	@Override
+	public void onInitializeClient() {
+		BlockRenderLayerMap.INSTANCE.putBlock(Resonance.SMALL_CHARGED_AMETHYST_BUD, RenderLayer.getCutout());
+		BlockRenderLayerMap.INSTANCE.putBlock(Resonance.MEDIUM_CHARGED_AMETHYST_BUD, RenderLayer.getCutout());
+		BlockRenderLayerMap.INSTANCE.putBlock(Resonance.LARGE_CHARGED_AMETHYST_BUD, RenderLayer.getCutout());
+		BlockRenderLayerMap.INSTANCE.putBlock(Resonance.CHARGED_AMETHYST_CLUSTER, RenderLayer.getCutout());
+		BlockRenderLayerMap.INSTANCE.putBlock(Resonance.TREASURE_HOARD, RenderLayer.getCutout());
+		BlockRenderLayerMap.INSTANCE.putBlock(Resonance.BOOK_PILE, RenderLayer.getCutout());
+		BlockRenderLayerMap.INSTANCE.putBlock(Resonance.COMPOST_HEAP, RenderLayer.getCutout());
+		BlockRenderLayerMap.INSTANCE.putBlock(Resonance.TINTED_BOTTLE_BLOCK, RenderLayer.getTranslucent());
+		BlockRenderLayerMap.INSTANCE.putBlock(Resonance.SCULK_BOTTLE_BLOCK, RenderLayer.getTranslucent());
+		BlockRenderLayerMap.INSTANCE.putBlock(Resonance.SOUL_BOTTLE_BLOCK, RenderLayer.getTranslucent());
+		BlockRenderLayerMap.INSTANCE.putBlock(Resonance.FIREBALL_BOTTLE_BLOCK, RenderLayer.getTranslucent());
+		BlockRenderLayerMap.INSTANCE.putBlock(Resonance.LIGHTNING_BOTTLE_BLOCK, RenderLayer.getTranslucent());
+		BlockRenderLayerMap.INSTANCE.putBlock(Resonance.SHULKER_BOTTLE_BLOCK, RenderLayer.getTranslucent());
+		BlockRenderLayerMap.INSTANCE.putBlock(Resonance.VENT_FLUID_BOTTLE_BLOCK, RenderLayer.getTranslucent());
+		BlockRenderLayerMap.INSTANCE.putBlock(Resonance.JUMP_ORB_NORMAL, RenderLayer.getCutout());
+		BlockRenderLayerMap.INSTANCE.putBlock(Resonance.JUMP_ORB_STRONG, RenderLayer.getCutout());
+		BlockRenderLayerMap.INSTANCE.putBlock(Resonance.PEARL_HUB, RenderLayer.getCutout());
+		BlockRenderLayerMap.INSTANCE.putBlock(Resonance.BUDDING_PEARL_ICE, RenderLayer.getTranslucent());
+		BlockRenderLayerMap.INSTANCE.putBlock(Resonance.ICICLE, RenderLayer.getCutout());
+		BlockRenderLayerMap.INSTANCE.putBlock(Resonance.ICE_FUR, RenderLayer.getCutout());
+		BlockRenderLayerMap.INSTANCE.putBlock(Resonance.BRITTLE_BLOCK, RenderLayer.getTranslucent());
+		BlockRenderLayerMap.INSTANCE.putBlock(Resonance.BATHYAL_VENT, RenderLayer.getCutout());
+		BlockRenderLayerMap.INSTANCE.putBlock(Resonance.VENT_FLUID, RenderLayer.getTranslucent());
+		BlockRenderLayerMap.INSTANCE.putBlock(Resonance.TUBE_WORMS, RenderLayer.getCutout());
+		BlockRenderLayerMap.INSTANCE.putBlock(Resonance.WALL_TUBE_WORMS, RenderLayer.getCutout());
+		BlockRenderLayerMap.INSTANCE.putBlock(Resonance.DATAPACK_BLOCK, RenderLayer.getCutout());
 
-        EntityRendererRegistry.register(ModEntities.WHISTLING_ARROW, WhistlingArrowRenderer::new);
-        EntityRendererRegistry.register(ModEntities.SCULK_PROJECTILE, SculkProjectileRenderer::new);
-        EntityRendererRegistry.register(ModEntities.LOST_SOUL, LostSoulRenderer::new);
-        EntityRendererRegistry.register(ModEntities.VENT_FLUID_PROJECTILE, VentFluidProjectileRenderer::new);
-        EntityRendererRegistry.register(ModEntities.VOLCANO_SNAIL, VolcanoSnailRenderer::new);
+		ParticleFactoryRegistry.getInstance().register(ModParticles.SMALL_RING_PARTICLE, SmallRingParticle.Factory::new);
+		ParticleFactoryRegistry.getInstance().register(ModParticles.MEDIUM_RING_PARTICLE, MediumRingParticle.Factory::new);
+		ParticleFactoryRegistry.getInstance().register(ModParticles.SPARK_PARTICLE, CustomGlowParticle.SparkFactory::new);
+		ParticleFactoryRegistry.getInstance().register(ModParticles.AMETHYST_PARTICLE, CustomGlowParticle.AmethystFactory::new);
+		ParticleFactoryRegistry.getInstance().register(ModParticles.GOLDEN_GLITTER, CustomGlowParticle.GoldenGlitter::new);
+		ParticleFactoryRegistry.getInstance().register(ModParticles.VENT_SMOKE, VentSmokeParticle.Factory::new);
 
-        EntityModelLayerRegistry.registerModelLayer(LOST_SOUL_LAYER, LostSoulModel::getTexturedModelData);
-        EntityModelLayerRegistry.registerModelLayer(VOCANO_SNAIL_LAYER, VolcanoSnailModel::getTexturedModelData);
+		EntityRendererRegistry.register(ModEntities.WHISTLING_ARROW, WhistlingArrowRenderer::new);
+		EntityRendererRegistry.register(ModEntities.SCULK_PROJECTILE, SculkProjectileRenderer::new);
+		EntityRendererRegistry.register(ModEntities.LOST_SOUL, LostSoulRenderer::new);
+		EntityRendererRegistry.register(ModEntities.PEARL_PROJECTILE, FlyingItemEntityRenderer::new);
+		EntityRendererRegistry.register(ModEntities.VENT_FLUID_PROJECTILE, VentFluidProjectileRenderer::new);
+		EntityRendererRegistry.register(ModEntities.VOLCANO_SNAIL, VolcanoSnailRenderer::new);
 
-        BlockEntityRendererFactories.register(Resonance.RAIN_CHIME_BLOCK_ENTITY, RainChimeBlockRenderer::new);
-        BlockEntityRendererFactories.register(Resonance.PEARL_HUB_BLOCK_ENTITY, PearlHubBlockEntityRenderer::new);
-        BlockEntityRendererFactories.register(Resonance.BUDDING_PEARL_ICE_BLOCK_ENTITY, BuddingPearlIceBlockEntityRenderer::new);
-        BlockEntityRendererFactories.register(Resonance.BRITTLE_BLOCK_ENTITY, BrittleBlockEntityRenderer::new);
-        
-        ColorProviderRegistry.ITEM.register((stack, tintIndex) -> stack.contains(DataComponentTypes.DYED_COLOR) ? DyedColorComponent.getColor(stack, 16777215) : -1, Resonance.SCARF);
-        ColorProviderRegistry.ITEM.register((stack, tintIndex) -> tintIndex > 0 ? -1 : (stack.contains(DataComponentTypes.DYED_COLOR) ? DyedColorComponent.getColor(stack, 16777215) : -1), Resonance.VENT_FLUID_BOTTLE);
-        ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> {
-            Optional<TintedBottleBlockEntity> blockEntity = world.getBlockEntity(pos, Resonance.TINTED_BOTTLE_BLOCK_ENTITY);
-            return blockEntity.isPresent() && tintIndex == 0 ? blockEntity.get().getColor() : -1;
-        }, Resonance.VENT_FLUID_BOTTLE_BLOCK);
-        
-        DimensionRenderingRegistry.registerSkyRenderer(Resonance.DREAM_SWEET, new DreamSweetSkyRenderer());
-    }
+		EntityModelLayerRegistry.registerModelLayer(LOST_SOUL_LAYER, LostSoulModel::getTexturedModelData);
+		EntityModelLayerRegistry.registerModelLayer(VOCANO_SNAIL_LAYER, VolcanoSnailModel::getTexturedModelData);
+
+		BlockEntityRendererFactories.register(Resonance.RAIN_CHIME_BLOCK_ENTITY, RainChimeBlockRenderer::new);
+		BlockEntityRendererFactories.register(Resonance.PEARL_HUB_BLOCK_ENTITY, PearlHubBlockEntityRenderer::new);
+		BlockEntityRendererFactories.register(Resonance.BUDDING_PEARL_ICE_BLOCK_ENTITY, BuddingPearlIceBlockEntityRenderer::new);
+		BlockEntityRendererFactories.register(Resonance.BRITTLE_BLOCK_ENTITY, BrittleBlockEntityRenderer::new);
+
+		ColorProviderRegistry.ITEM.register((stack, tintIndex) -> tintIndex > 0 ? -1 : (stack.contains(DataComponentTypes.DYED_COLOR) ? DyedColorComponent.getColor(stack, 16777215) : -1), Resonance.SCARF, Resonance.VENT_FLUID_BOTTLE);
+		ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> {
+			Optional<TintedBottleBlockEntity> blockEntity = world.getBlockEntity(pos, Resonance.TINTED_BOTTLE_BLOCK_ENTITY);
+			return blockEntity.isPresent() && tintIndex == 0 ? blockEntity.get().getColor() : -1;
+		}, Resonance.VENT_FLUID_BOTTLE_BLOCK);
+
+		DimensionRenderingRegistry.registerSkyRenderer(Resonance.DREAM_SWEET, new DreamSweetSkyRenderer());
+	}
 }

@@ -1,26 +1,26 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "category": "equipment",
-  "pattern": [
-    " s ",
-    "sas",
-    " s "
-  ],
-  "key": {
-    "s": [
-      {
-        "item": "resonance:charged_amethyst_shard"
-      },
-      {
-        "item": "minecraft:amethyst_shard"
-      }
-    ],
-    "a": {
-      "item": "minecraft:arrow"
-    }
-  },
-  "result": {
-    "id": "resonance:whistling_arrow",
-    "count": 2
-  }
+	"type": "minecraft:crafting_shaped",
+	"category": "equipment",
+	"pattern": [
+		" s ",
+		"sas",
+		" s "
+	],
+	"key": {
+		"s": [
+			{
+				"item": "resonance:charged_amethyst_shard"
+			},
+			{
+				"item": "minecraft:amethyst_shard"
+			}
+		],
+		"a": {
+			"item": "minecraft:arrow"
+		}
+	},
+	"result": {
+		"id": "resonance:whistling_arrow",
+		"count": 2
+	}
 }

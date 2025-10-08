@@ -1,5 +1,5 @@
 {
-  "variants": {
-    "": { "model": "resonance:block/rain_chime" }
-  }
+	"variants": {
+		"": { "model": "resonance:block/rain_chime" }
+	}
 }

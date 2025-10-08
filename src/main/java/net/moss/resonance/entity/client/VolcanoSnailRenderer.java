@@ -11,17 +11,18 @@ import net.moss.resonance.ResonanceClient;
 import net.moss.resonance.entity.VolcanoSnailEntity;
 
 public class VolcanoSnailRenderer extends MobEntityRenderer<VolcanoSnailEntity, VolcanoSnailModel<VolcanoSnailEntity>> {
-	private static final Map<VolcanoSnailEntity.Type, Identifier> TEXTURES = Util.make(Maps.<VolcanoSnailEntity.Type, Identifier>newHashMap(), map -> {
-		map.put(VolcanoSnailEntity.Type.IRON, Identifier.of(Resonance.MOD_ID, "textures/entity/volcano_snail_iron.png"));
-		map.put(VolcanoSnailEntity.Type.COPPER, Identifier.of(Resonance.MOD_ID, "textures/entity/volcano_snail_copper.png"));
+	private static final Map<VolcanoSnailEntity.Type, Identifier> TEXTURES = Util.make(Maps.<VolcanoSnailEntity.Type, Identifier>newHashMap(), (map) -> {
+		map.put(VolcanoSnailEntity.Type.IRON, Identifier.of(Resonance.MOD_ID, "textures/entity/volcano_snail/iron.png"));
+		map.put(VolcanoSnailEntity.Type.COPPER, Identifier.of(Resonance.MOD_ID, "textures/entity/volcano_snail/copper.png"));
 	});
-    
-    public VolcanoSnailRenderer(Context context) {
-        super(context, new VolcanoSnailModel<>(context.getPart(ResonanceClient.VOCANO_SNAIL_LAYER)), 0.2f);
-    }
 
-    @Override
-    public Identifier getTexture(VolcanoSnailEntity entity) {
-		return (Identifier)TEXTURES.get(entity.getVariant());
-    }
+	public VolcanoSnailRenderer(Context context) {
+		super(context, new VolcanoSnailModel<>(context.getPart(ResonanceClient.VOCANO_SNAIL_LAYER)), 0.2f);
+		this.addFeature(new VolcanoSnailDyeFeatureRenderer(this));
+	}
+
+	@Override
+	public Identifier getTexture(VolcanoSnailEntity entity) {
+		return TEXTURES.get(entity.getVariant());
+	}
 }

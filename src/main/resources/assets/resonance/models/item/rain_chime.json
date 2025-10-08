@@ -1,6 +1,6 @@
 {
-    "parent": "item/generated",
-    "textures": {
-        "layer0": "resonance:item/rain_chime"
-    }
+	"parent": "item/generated",
+	"textures": {
+		"layer0": "resonance:item/rain_chime"
+	}
 }

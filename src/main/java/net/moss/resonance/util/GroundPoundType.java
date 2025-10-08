@@ -57,7 +57,7 @@ public class GroundPoundType {
     }
 
     public void tick(ServerWorld world, PlayerEntity user) {}
-    
+
     public void end(ServerWorld world, PlayerEntity user, @Nullable Entity target) {
         user.getAttributeInstance(EntityAttributes.GENERIC_GRAVITY).removeModifier(gravity.id());
         float fallDistance = user.fallDistance + 2;

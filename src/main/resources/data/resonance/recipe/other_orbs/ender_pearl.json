@@ -1,6 +1,0 @@
-{
-    "type": "resonance:other_orb_effects",
-    "ingredient": { "item": "minecraft:ender_pearl" },
-    "result": { "id": "minecraft:ender_pearl" },
-    "texture": "resonance:textures/block/ender_pearl"
-  }

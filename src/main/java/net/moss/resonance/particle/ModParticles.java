@@ -9,15 +9,14 @@ import net.minecraft.util.Identifier;
 import net.moss.resonance.Resonance;
 
 public class ModParticles {
-
-	public static final SimpleParticleType SMALL_RING_PARTICLE = FabricParticleTypes.simple();
+	public static final ParticleType<SmallRing> SMALL_RING_PARTICLE = FabricParticleTypes.complex(SmallRing.CODEC, SmallRing.PACKET_CODEC);
 	public static final SimpleParticleType MEDIUM_RING_PARTICLE = FabricParticleTypes.simple();
 	public static final SimpleParticleType SPARK_PARTICLE = FabricParticleTypes.simple();
 	public static final SimpleParticleType AMETHYST_PARTICLE = FabricParticleTypes.simple();
-    public static final SimpleParticleType GOLDEN_GLITTER = FabricParticleTypes.simple();
-    public static final ParticleType<VentSmoke> VENT_SMOKE = FabricParticleTypes.complex(VentSmoke.CODEC, VentSmoke.PACKET_CODEC);
+	public static final SimpleParticleType GOLDEN_GLITTER = FabricParticleTypes.simple();
+	public static final ParticleType<VentSmoke> VENT_SMOKE = FabricParticleTypes.complex(VentSmoke.CODEC, VentSmoke.PACKET_CODEC);
 
-    public static void registerModParticles() {
+	public static void registerModParticles() {
 		Registry.register(Registries.PARTICLE_TYPE, Identifier.of(Resonance.MOD_ID, "small_ring_particle"), SMALL_RING_PARTICLE);
 		Registry.register(Registries.PARTICLE_TYPE, Identifier.of(Resonance.MOD_ID, "medium_ring_particle"), MEDIUM_RING_PARTICLE);
 		Registry.register(Registries.PARTICLE_TYPE, Identifier.of(Resonance.MOD_ID, "spark_particle"), SPARK_PARTICLE);

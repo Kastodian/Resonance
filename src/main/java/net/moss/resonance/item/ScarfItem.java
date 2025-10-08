@@ -12,14 +12,14 @@ import net.moss.resonance.util.Utils;
 import net.moss.resonance.util.interfaces.ScarfInterface;
 
 public class ScarfItem extends Item implements Equipment, ScarfInterface {
-    public String TEXTURE;
+	public String TEXTURE;
 
-    public ScarfItem(Settings settings, String modId, String texture) {
-        super(settings.maxCount(1));
-        TEXTURE = modId + ":textures/models/armor/" + texture;
-    }
+	public ScarfItem(Settings settings, String modId, String texture) {
+		super(settings.maxCount(1));
+		TEXTURE = modId + ":textures/models/armor/" + texture;
+	}
 
-    @Override public EquipmentSlot getSlotType() { return EquipmentSlot.CHEST; }
-    @Override public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) { return Utils.trinketHotswap(world, user, hand, this); }
-    @Override public String getTexture() { return TEXTURE; }
+	@Override public EquipmentSlot getSlotType() { return EquipmentSlot.CHEST; }
+	@Override public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) { return Utils.trinketHotswap(world, user, hand, this); }
+	@Override public String getTexture() { return TEXTURE; }
 }

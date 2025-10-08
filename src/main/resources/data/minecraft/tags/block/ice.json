@@ -1,9 +1,9 @@
 {
-    "replace": false,
-    "values": [
-      "resonance:budding_pearl_ice",
-      "resonance:pearl_ice",
-      "resonance:icicle",
-      "resonance:brittle_block"
-    ]
-  }
+	"replace": false,
+	"values": [
+		"resonance:budding_pearl_ice",
+		"resonance:pearl_ice",
+		"resonance:icicle",
+		"resonance:brittle_block"
+	]
+}

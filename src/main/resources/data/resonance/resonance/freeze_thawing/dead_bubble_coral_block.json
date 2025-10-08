@@ -1,0 +1,12 @@
+{
+	"input": [
+		"minecraft:stone_bricks",
+		"minecraft:bubble_coral_block"
+	],
+	"output": {
+		"type": "minecraft:simple_state_provider",
+		"state": {
+			"Name": "minecraft:dead_bubble_coral_block"
+		}
+	}
+}

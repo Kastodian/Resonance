@@ -7,14 +7,14 @@ import net.minecraft.server.world.ServerWorld;
 import net.moss.resonance.util.GroundPoundType;
 
 public interface PlayerEntityInterface {
-    int getCritCount();
-    int getCritTimer();
-    void setCritCount(int value);
-    void setCritTimer(int value);
+	int getCritCount();
+	int getCritTimer();
+	void setCritCount(int value);
+	void setCritTimer(int value);
 
-    boolean isGroundPounding();
-    GroundPoundType getGroundPoundType();
-    void startGroundPound(ServerWorld world, PlayerEntity user, GroundPoundType groundPoundType);
-    void endGroundPound(ServerWorld world, PlayerEntity user, @Nullable Entity target);
-    void cancelGroundPound(PlayerEntity user);
+	boolean isGroundPounding();
+	GroundPoundType getGroundPoundType();
+	void startGroundPound(ServerWorld world, PlayerEntity user, GroundPoundType groundPoundType);
+	void endGroundPound(ServerWorld world, PlayerEntity user, @Nullable Entity target);
+	void cancelGroundPound(PlayerEntity user);
 }

@@ -1,7 +1,7 @@
 {
-  "name": "resonance:snowy_tower",
-  "fallback": "minecraft:empty",
-  "elements": [
-    {"weight": 25, "element": {"location": "resonance:snowy_tower", "processors": "resonance:snowy_tower", "projection": "rigid", "element_type": "minecraft:single_pool_element"}}
-  ]
+	"name": "resonance:snowy_tower",
+	"fallback": "minecraft:empty",
+	"elements": [
+		{"weight": 25, "element": {"location": "resonance:snowy_tower", "processors": "resonance:snowy_tower", "projection": "rigid", "element_type": "minecraft:single_pool_element"}}
+	]
 }

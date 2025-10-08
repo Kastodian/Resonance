@@ -1,10 +1,10 @@
 {
-  "type": "resonance:lightning_strike",
-  "ingredient": {
-    "item": "minecraft:amethyst_cluster"
-  },
-  "results": [
-    { "id": "resonance:charged_amethyst_cluster" }
-  ],
-  "resonates": true
+	"type": "resonance:lightning_strike",
+	"ingredient": {
+		"item": "minecraft:amethyst_cluster"
+	},
+	"results": [
+		{ "id": "resonance:charged_amethyst_cluster" }
+	],
+	"resonates": true
 }

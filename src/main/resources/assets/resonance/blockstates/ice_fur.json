@@ -1,112 +1,58 @@
 {
-  "multipart": [
-    {
-      "apply": [
-        { "model": "resonance:block/ice_fur_0" },
-        { "model": "resonance:block/ice_fur_90" },
-        { "model": "resonance:block/ice_fur_180" },
-        { "model": "resonance:block/ice_fur_270" }
-      ],
-      "when": { "north": "true" }
-    },
-    {
-      "apply": [
-        { "model": "resonance:block/ice_fur_0" },
-        { "model": "resonance:block/ice_fur_90" },
-        { "model": "resonance:block/ice_fur_180" },
-        { "model": "resonance:block/ice_fur_270" }
-      ],
-      "when": { "down": "false", "east": "false", "north": "false", "south": "false", "up": "false", "west": "false" }
-    },
-    {
-      "apply": [
-        { "model": "resonance:block/ice_fur_0", "y": 90 },
-        { "model": "resonance:block/ice_fur_90", "y": 90 },
-        { "model": "resonance:block/ice_fur_180", "y": 90 },
-        { "model": "resonance:block/ice_fur_270", "y": 90 }
-      ],
-      "when": { "east": "true" }
-    },
-    {
-      "apply": [
-        { "model": "resonance:block/ice_fur_0", "y": 90 },
-        { "model": "resonance:block/ice_fur_90", "y": 90 },
-        { "model": "resonance:block/ice_fur_180", "y": 90 },
-        { "model": "resonance:block/ice_fur_270", "y": 90 }
-      ],
-      "when": { "down": "false", "east": "false", "north": "false", "south": "false", "up": "false", "west": "false" }
-    },
-    {
-      "apply": [
-        { "model": "resonance:block/ice_fur_0", "y": 180 },
-        { "model": "resonance:block/ice_fur_90", "y": 180 },
-        { "model": "resonance:block/ice_fur_180", "y": 180 },
-        { "model": "resonance:block/ice_fur_270", "y": 180 }
-      ],
-      "when": { "south": "true" }
-    },
-    {
-      "apply": [
-        { "model": "resonance:block/ice_fur_0", "y": 180 },
-        { "model": "resonance:block/ice_fur_90", "y": 180 },
-        { "model": "resonance:block/ice_fur_180", "y": 180 },
-        { "model": "resonance:block/ice_fur_270", "y": 180 }
-      ],
-      "when": { "down": "false", "east": "false", "north": "false", "south": "false", "up": "false", "west": "false" }
-    },
-    {
-      "apply": [
-        { "model": "resonance:block/ice_fur_0", "y": 270 },
-        { "model": "resonance:block/ice_fur_90", "y": 270 },
-        { "model": "resonance:block/ice_fur_180", "y": 270 },
-        { "model": "resonance:block/ice_fur_270", "y": 270 }
-      ],
-      "when": { "west": "true" }
-    },
-    {
-      "apply": [
-        { "model": "resonance:block/ice_fur_0", "y": 270 },
-        { "model": "resonance:block/ice_fur_90", "y": 270 },
-        { "model": "resonance:block/ice_fur_180", "y": 270 },
-        { "model": "resonance:block/ice_fur_270", "y": 270 }
-      ],
-      "when": { "down": "false", "east": "false", "north": "false", "south": "false", "up": "false", "west": "false" }
-    },
-    {
-      "apply": [
-        { "model": "resonance:block/ice_fur_0", "x": 270 },
-        { "model": "resonance:block/ice_fur_90", "x": 270 },
-        { "model": "resonance:block/ice_fur_180", "x": 270 },
-        { "model": "resonance:block/ice_fur_270", "x": 270 }
-      ],
-      "when": { "up": "true" }
-    },
-    {
-      "apply": [
-        { "model": "resonance:block/ice_fur_0", "x": 270 },
-        { "model": "resonance:block/ice_fur_90", "x": 270 },
-        { "model": "resonance:block/ice_fur_180", "x": 270 },
-        { "model": "resonance:block/ice_fur_270", "x": 270 }
-      ],
-      "when": { "down": "false", "east": "false", "north": "false", "south": "false", "up": "false", "west": "false" }
-    },
-    {
-      "apply": [
-        { "model": "resonance:block/ice_fur_0", "x": 90 },
-        { "model": "resonance:block/ice_fur_90", "x": 90 },
-        { "model": "resonance:block/ice_fur_180", "x": 90 },
-        { "model": "resonance:block/ice_fur_270", "x": 90 }
-      ],
-      "when": { "down": "true" }
-    },
-    {
-      "apply": [
-        { "model": "resonance:block/ice_fur_0", "x": 90 },
-        { "model": "resonance:block/ice_fur_90", "x": 90 },
-        { "model": "resonance:block/ice_fur_180", "x": 90 },
-        { "model": "resonance:block/ice_fur_270", "x": 90 }
-      ],
-      "when": { "down": "false", "east": "false", "north": "false", "south": "false", "up": "false", "west": "false" }
-    }
-  ]
+	"multipart": [
+		{
+			"apply": [
+				{ "model": "resonance:block/ice_fur_0" },
+				{ "model": "resonance:block/ice_fur_90" },
+				{ "model": "resonance:block/ice_fur_180" },
+				{ "model": "resonance:block/ice_fur_270" }
+			],
+			"when": { "north": "true" }
+		},
+		{
+			"apply": [
+				{ "model": "resonance:block/ice_fur_0", "y": 90 },
+				{ "model": "resonance:block/ice_fur_90", "y": 90 },
+				{ "model": "resonance:block/ice_fur_180", "y": 90 },
+				{ "model": "resonance:block/ice_fur_270", "y": 90 }
+			],
+			"when": { "east": "true" }
+		},
+		{
+			"apply": [
+				{ "model": "resonance:block/ice_fur_0", "y": 180 },
+				{ "model": "resonance:block/ice_fur_90", "y": 180 },
+				{ "model": "resonance:block/ice_fur_180", "y": 180 },
+				{ "model": "resonance:block/ice_fur_270", "y": 180 }
+			],
+			"when": { "south": "true" }
+		},
+		{
+			"apply": [
+				{ "model": "resonance:block/ice_fur_0", "y": 270 },
+				{ "model": "resonance:block/ice_fur_90", "y": 270 },
+				{ "model": "resonance:block/ice_fur_180", "y": 270 },
+				{ "model": "resonance:block/ice_fur_270", "y": 270 }
+			],
+			"when": { "west": "true" }
+		},
+		{
+			"apply": [
+				{ "model": "resonance:block/ice_fur_0", "x": 270 },
+				{ "model": "resonance:block/ice_fur_90", "x": 270 },
+				{ "model": "resonance:block/ice_fur_180", "x": 270 },
+				{ "model": "resonance:block/ice_fur_270", "x": 270 }
+			],
+			"when": { "up": "true" }
+		},
+		{
+			"apply": [
+				{ "model": "resonance:block/ice_fur_0", "x": 90 },
+				{ "model": "resonance:block/ice_fur_90", "x": 90 },
+				{ "model": "resonance:block/ice_fur_180", "x": 90 },
+				{ "model": "resonance:block/ice_fur_270", "x": 90 }
+			],
+			"when": { "down": "true" }
+		}
+	]
 }

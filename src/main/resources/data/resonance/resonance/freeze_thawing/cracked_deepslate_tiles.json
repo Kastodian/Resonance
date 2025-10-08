@@ -1,0 +1,11 @@
+{
+	"input": [
+		"minecraft:deepslate_tiles"
+	],
+	"output": {
+		"type": "minecraft:simple_state_provider",
+		"state": {
+			"Name": "minecraft:cracked_deepslate_tiles"
+		}
+	}
+}

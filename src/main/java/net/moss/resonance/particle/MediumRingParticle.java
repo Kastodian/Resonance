@@ -11,10 +11,10 @@ import net.minecraft.util.math.random.Random;
 @Environment(EnvType.CLIENT)
 public class MediumRingParticle extends SpriteBillboardParticle {
 	static final Random RANDOM = Random.create();
-    private final SpriteProvider sprites;
+	private final SpriteProvider sprites;
 
-    MediumRingParticle(ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, SpriteProvider sprites) {
-    	super(world, x, y, z);
+	MediumRingParticle(ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, SpriteProvider sprites) {
+		super(world, x, y, z);
 		this.maxAge = 5;
 		this.scale = 0f;
 		this.sprites = sprites;
@@ -34,28 +34,28 @@ public class MediumRingParticle extends SpriteBillboardParticle {
 	}
 
 	@Override
-    public int getBrightness(float tint) {
-        float f = ((float)this.age + tint) / (float)this.maxAge;
-        f = MathHelper.clamp(f, 0.0f, 1.0f);
-        int i = super.getBrightness(tint);
-        int j = i & 0xFF;
-        int k = i >> 16 & 0xFF;
-        if ((j += (int)(f * 15.0f * 16.0f)) > 240) {
-            j = 240;
-        }
-        return j | k << 16;
-    }
-    
-    @Override
-    public ParticleTextureSheet getType() {
-        return ParticleTextureSheet.PARTICLE_SHEET_TRANSLUCENT;
-    }
+	public int getBrightness(float tint) {
+		float f = ((float)this.age + tint) / (float)this.maxAge;
+		f = MathHelper.clamp(f, 0.0f, 1.0f);
+		int i = super.getBrightness(tint);
+		int j = i & 0xFF;
+		int k = i >> 16 & 0xFF;
+		if ((j += (int)(f * 15.0f * 16.0f)) > 240) {
+			j = 240;
+		}
+		return j | k << 16;
+	}
+
+	@Override
+	public ParticleTextureSheet getType() {
+		return ParticleTextureSheet.PARTICLE_SHEET_TRANSLUCENT;
+	}
 
 	@Environment(EnvType.CLIENT)
-    public record Factory(SpriteProvider sprites) implements ParticleFactory<SimpleParticleType> {
+	public record Factory(SpriteProvider sprites) implements ParticleFactory<SimpleParticleType> {
 		public Particle createParticle(SimpleParticleType type, ClientWorld world, double x, double y, double z, double velX, double velY, double velZ) {
 			MediumRingParticle ringParticle = new MediumRingParticle(world, x, y, z, velX, velY, velZ, sprites);
-            ringParticle.setVelocity(0, 0, 0);
+			ringParticle.setVelocity(0, 0, 0);
 			return ringParticle;
 		}
 	}

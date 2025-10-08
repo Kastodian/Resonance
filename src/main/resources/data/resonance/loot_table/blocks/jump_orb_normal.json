@@ -1,13 +1,13 @@
 {
-  "pools": [
-    {
-      "rolls": 1,
-      "entries": [
-        {
-          "type": "minecraft:item",
-          "name": "resonance:jump_orb_normal"
-        }
-      ]
-    }
-  ]
+	"pools": [
+		{
+			"rolls": 1,
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"name": "resonance:jump_orb_normal"
+				}
+			]
+		}
+	]
 }

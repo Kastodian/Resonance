@@ -1,6 +1,5 @@
 package net.moss.resonance.world;
 
-import java.util.List;
 import com.mojang.serialization.Codec;
 import net.minecraft.block.Block;
 import net.minecraft.util.math.BlockPos;
@@ -9,38 +8,56 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.StructureWorldAccess;
 import net.minecraft.world.gen.blockpredicate.BlockPredicate;
+import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.util.FeatureContext;
 import net.minecraft.world.gen.stateprovider.BlockStateProvider;
 
 public class SpurFeature extends Feature<SpurFeatureConfig> {
-    public SpurFeature(Codec<SpurFeatureConfig> configCodec) {
-        super(configCodec);
-    }
+	public SpurFeature(Codec<SpurFeatureConfig> configCodec) {
+		super(configCodec);
+	}
 
-    @Override
-    public boolean generate(FeatureContext<SpurFeatureConfig> context) {
+	@Override
+	public boolean generate(FeatureContext<SpurFeatureConfig> context) {
 		StructureWorldAccess structureWorldAccess = context.getWorld();
 		BlockPos origin = context.getOrigin();
 		Random random = context.getRandom();
 		SpurFeatureConfig spurFeatureConfig = context.getConfig();
-        float pitch = spurFeatureConfig.getPitch().get(random) * MathHelper.RADIANS_PER_DEGREE;
-        float yaw = spurFeatureConfig.getYaw().get(random) * MathHelper.RADIANS_PER_DEGREE;
-        float radius = spurFeatureConfig.getRadius().get(random) - 0.5f + random.nextFloat();
-        int lengthRatio = spurFeatureConfig.getlengthRatio().get(random);
-        int length = (int) (lengthRatio * radius);
-        BlockPredicate target = spurFeatureConfig.getTarget();
-        BlockStateProvider state = spurFeatureConfig.getStateProvider();
-        List<BlockPos> blocks = BlockPos.stream(-length, -length, -length, length, length, length).map(BlockPos::toImmutable).toList();
-        blocks.forEach(blockPos -> {
-            Vec3d vec2 = (new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ())).rotateX(-pitch).rotateZ(-yaw);
-            if (vec2.isWithinRangeOf(Vec3d.ZERO, radius - (vec2.getY() / lengthRatio), length) && vec2.isWithinRangeOf(Vec3d.ZERO, radius + (vec2.getY() / lengthRatio), length)) {
-                blockPos = blockPos.add(origin);
-                if (target.test(structureWorldAccess, blockPos)) {
-                    structureWorldAccess.setBlockState(blockPos, state.get(random, blockPos), Block.NOTIFY_ALL);
-                }
-            }
-        });
-        return true;
-    }
+		float pitch = spurFeatureConfig.pitch.get(random) * MathHelper.RADIANS_PER_DEGREE;
+		float yaw = spurFeatureConfig.yaw.get(random) * MathHelper.RADIANS_PER_DEGREE;
+		float radius = spurFeatureConfig.radius.get(random) - 0.5f + random.nextFloat();
+		int lengthRatio = spurFeatureConfig.lengthRatio.get(random);
+		int length = (int) (lengthRatio * radius);
+		BlockPredicate target = spurFeatureConfig.target;
+		BlockStateProvider state = spurFeatureConfig.stateProvider;
+		boolean innerPresent = spurFeatureConfig.innerStateProvider.isPresent();
+		BlockStateProvider innerState = innerPresent ? spurFeatureConfig.innerStateProvider.get() : state;
+
+		BlockPos.stream(-length, -length, -length, length, length, length).map(BlockPos::toImmutable).forEach(blockPos -> {
+			blockPos = blockPos.add(origin);
+			if (structureWorldAccess.isOutOfHeightLimit(blockPos) || !target.test(structureWorldAccess, blockPos)) { return; }
+
+			Vec3d vec2 = new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ()).rotateX(-pitch).rotateZ(-yaw);
+			if (Math.abs(vec2.y) >= length) { return; }
+
+			double squaredHypot = MathHelper.squaredHypot(vec2.x, vec2.z);
+			double radiusMinus = MathHelper.square(radius - (vec2.getY() / lengthRatio));
+			double radiusPlus = MathHelper.square(radius + (vec2.getY() / lengthRatio));
+			if (squaredHypot >= radiusMinus || squaredHypot >= radiusPlus) { return; }
+
+			if (innerPresent && squaredHypot + radius < radiusMinus && squaredHypot + radius < radiusPlus) {
+				structureWorldAccess.setBlockState(blockPos, innerState.get(random, blockPos), Block.NOTIFY_LISTENERS);
+			} else {
+				structureWorldAccess.setBlockState(blockPos, state.get(random, blockPos), Block.NOTIFY_LISTENERS);
+			}
+		});
+
+		BlockPos pos = BlockPos.ofFloored(new Vec3d(0, length * 0.9, 0).rotateZ(yaw).rotateX(pitch));
+		ChunkGenerator generator = context.getGenerator();
+		if (spurFeatureConfig.topFeature.isPresent()) { spurFeatureConfig.topFeature.get().value().generateUnregistered(structureWorldAccess, generator, random, pos.add(origin)); }
+		if (spurFeatureConfig.bottomFeature.isPresent()) { spurFeatureConfig.bottomFeature.get().value().generateUnregistered(structureWorldAccess, generator, random, origin.subtract(pos)); }
+
+		return true;
+	}
 }

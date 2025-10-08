@@ -1,9 +1,9 @@
 {
-  "type": "resonance:reverberation",
-  "ingredient": {
-    "item": "minecraft:charcoal"
-  },
-  "results": [
-    { "id": "minecraft:coal" }
-  ]
+	"type": "resonance:reverberation",
+	"ingredient": {
+		"item": "minecraft:charcoal"
+	},
+	"results": [
+		{ "id": "minecraft:coal" }
+	]
 }

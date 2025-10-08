@@ -1,0 +1,11 @@
+{
+	"input": [
+		"minecraft:magma_block"
+	],
+	"output": {
+		"type": "minecraft:simple_state_provider",
+		"state": {
+			"Name": "minecraft:netherrack"
+		}
+	}
+}

@@ -6,6 +6,6 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(MobSpawnerLogic.class)
 public interface MobSpawnerLogicAccessor {
-    @Accessor("spawnDelay")
-    public void setSpawnDelay(int spawnDelay);
+	@Accessor("spawnDelay")
+	public void setSpawnDelay(int spawnDelay);
 }

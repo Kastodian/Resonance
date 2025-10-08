@@ -1,10 +1,10 @@
 {
-  "type": "resonance:reverberation",
-  "ingredient": {
-    "item": "minecraft:birch_chest_boat"
-  },
-  "results": [
-    { "id": "minecraft:chest" },
-    { "id": "minecraft:birch_boat" }
-  ]
+	"type": "resonance:reverberation",
+	"ingredient": {
+		"item": "minecraft:birch_chest_boat"
+	},
+	"results": [
+		{ "id": "minecraft:chest" },
+		{ "id": "minecraft:birch_boat" }
+	]
 }

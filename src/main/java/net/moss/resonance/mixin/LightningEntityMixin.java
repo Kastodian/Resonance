@@ -15,9 +15,9 @@ import net.minecraft.util.math.Direction.Axis;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.moss.resonance.Resonance;
+import net.moss.resonance.ResonanceEvents;
 import net.moss.resonance.util.Dischargable;
 import net.moss.resonance.util.Utils;
-import net.moss.resonance.event.ReverberateEvent;
 import net.moss.resonance.particle.ModParticles;
 import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.Mixin;
@@ -46,8 +46,8 @@ public class LightningEntityMixin {
 			LightningEntity Lightning = (LightningEntity)(Object) this;
 			if (Lightning.getWorld() instanceof ServerWorld world) {
 				List<Entity> list = Utils.entitiesInRadius(world, Lightning.getPos(), Lightning, 2, 2, Entity::isAlive);
-	            for (Entity entity2 : list) {
-            	    if (entity2 instanceof LivingEntity entity1) {
+				for (Entity entity2 : list) {
+					if (entity2 instanceof LivingEntity entity1) {
 						for (ItemStack itemStack : Utils.getAllEquipped(entity1, true)) {
 							if (itemStack.isIn(Resonance.CONDUCTIVE_ITEMS_TAG) || entity1.getSteppingBlockState().isIn(Resonance.CONDUCTIVE_BLOCKS_TAG)) {
 								world.spawnParticles(ModParticles.SPARK_PARTICLE, entity2.getX(), entity2.getY() + entity2.getHeight()/2, entity2.getZ(), 20, 0, 0, 0, 1);
@@ -56,16 +56,16 @@ public class LightningEntityMixin {
 								break;
 							}
 						}
-        	        }
-            	}
+					}
+				}
 			}
 			
-        }
+		}
 	}
 
 	public void conductElectricity(BlockPos blockPos, int strength) {
 		LightningEntity Lightning = (LightningEntity)(Object) this;
-        World world = Lightning.getWorld();
+		World world = Lightning.getWorld();
 		--strength;
 		if (world.getBlockState(blockPos).isIn(Resonance.CONDUCTIVE_BLOCKS_TAG)) {
 			if (!conductedBlocks.contains(blockPos)) { conductedBlocks.add(blockPos); }
@@ -83,7 +83,7 @@ public class LightningEntityMixin {
 
 	public void electrify(BlockPos blockPos) {
 		LightningEntity Lightning = (LightningEntity)(Object) this;
-        World world = Lightning.getWorld();
+		World world = Lightning.getWorld();
 		BlockState state = world.getBlockState(blockPos);
 		if (state.getBlock() instanceof AmethystClusterBlock) {
 			Optional<BlockState> blockstate = Dischargable.getIncreasedChargeState(state);
@@ -94,7 +94,7 @@ public class LightningEntityMixin {
 				if (direction.getAxis().isVertical()) { rotOffest = new Vector3f(1.57f, 1.57f, 0); }
 				else if (direction.getAxis() == Axis.X) { rotOffest = new Vector3f(0.1f, 1.57f, 0); }
 				else { rotOffest = new Vector3f(0.1f, 1.57f, 0); }
-				ReverberateEvent.REVERBERATE.invoker().onResonate(world, blockPos.toCenterPos(), rotOffest, null, Lightning, 2, false);
+				ResonanceEvents.REVERBERATE.invoker().onResonate(world, blockPos.toCenterPos(), rotOffest, null, Lightning, 2, false);
 			}
 		}
 	}

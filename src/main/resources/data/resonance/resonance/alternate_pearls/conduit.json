@@ -1,0 +1,15 @@
+{
+	"ingredient": { "item": "minecraft:conduit" },
+	"effects": [
+		{
+			"id": "minecraft:conduit_power",
+			"duration": 1000
+		},
+		{
+			"id": "minecraft:dolphins_grace",
+			"amplifier": 1,
+			"duration": 500
+		}
+	],
+	"sound": { "sound_id": "minecraft:block.conduit.attack.target" }
+}

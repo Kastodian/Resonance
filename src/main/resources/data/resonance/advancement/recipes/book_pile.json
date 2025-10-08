@@ -1,24 +1,24 @@
 {
-    "criteria": {
-      "requirement": {
-        "trigger": "minecraft:inventory_changed",
-        "conditions": {
-          "items": [
-            {
-              "items": [
-                "minecraft:book",
-                "minecraft:bookshelf",
-                "minecraft:paper",
-                "minecraft:enchanting_table"
-              ]
-            }
-          ]
-        }
-      }
-    },
-    "rewards": {
-      "recipes": [
-        "resonance:crafting/book_pile"
-      ]
-    }
-}  
+	"criteria": {
+		"requirement": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": [
+							"minecraft:book",
+							"minecraft:bookshelf",
+							"minecraft:paper",
+							"minecraft:enchanting_table"
+						]
+					}
+				]
+			}
+		}
+	},
+	"rewards": {
+		"recipes": [
+			"resonance:crafting/book_pile"
+		]
+	}
+}

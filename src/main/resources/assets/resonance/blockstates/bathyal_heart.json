@@ -1,6 +1,6 @@
 {
-  "variants": {
-    "waterlogged=false": { "model": "resonance:block/bathyal_heart_dry" },
-    "waterlogged=true": { "model": "resonance:block/bathyal_heart" }
-  }
+	"variants": {
+		"waterlogged=false": { "model": "resonance:block/bathyal_heart_dry" },
+		"waterlogged=true": { "model": "resonance:block/bathyal_heart" }
+	}
 }

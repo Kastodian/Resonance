@@ -1,6 +1,0 @@
-{
-  "parent": "resonance:block/icicle/icicle",
-  "textures": {
-    "cross": "resonance:block/bathyal_vent_middle_2"
-  }
-}

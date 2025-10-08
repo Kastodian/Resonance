@@ -1,6 +1,6 @@
 {
-    "replace": false,
-    "values": [
-      "resonance:vent_plume"
-    ]
+	"replace": false,
+	"values": [
+		"resonance:vent_plume"
+	]
 }

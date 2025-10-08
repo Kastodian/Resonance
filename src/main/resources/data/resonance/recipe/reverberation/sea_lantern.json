@@ -1,16 +1,16 @@
 {
-  "type": "resonance:reverberation",
-  "ingredient": {
-    "item": "minecraft:sea_lantern"
-  },
-  "results": [
-    {
-      "id": "minecraft:prismarine_crystals",
-      "count": 5
-    },
-    {
-      "id": "minecraft:prismarine_shard",
-      "count": 4
-    }
-  ]
+	"type": "resonance:reverberation",
+	"ingredient": {
+		"item": "minecraft:sea_lantern"
+	},
+	"results": [
+		{
+			"id": "minecraft:prismarine_crystals",
+			"count": 5
+		},
+		{
+			"id": "minecraft:prismarine_shard",
+			"count": 4
+		}
+	]
 }

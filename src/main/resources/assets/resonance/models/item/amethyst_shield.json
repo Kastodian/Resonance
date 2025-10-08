@@ -149,7 +149,7 @@
 			"scale": [0.9, 0.9, 0.9]
 		}
 	},
-    "overrides": [
-        { "predicate": {"blocking": 1 }, "model": "resonance:item/amethyst_shield_blocking"}
-    ]
+	"overrides": [
+		{ "predicate": {"blocking": 1 }, "model": "resonance:item/amethyst_shield_blocking"}
+	]
 }

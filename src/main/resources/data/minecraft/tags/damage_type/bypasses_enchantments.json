@@ -1,6 +1,6 @@
 {
-    "replace": false,
-    "values": [
-      "resonance:reverberation"
-    ]
-  }
+	"replace": false,
+	"values": [
+		"resonance:reverberation"
+	]
+}

@@ -20,17 +20,17 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class TridentItemMixin {
 	@Shadow private static boolean isAboutToBreak(ItemStack stack) { return true; };
 
-    @Inject(method = "onStoppedUsing", at = @At("TAIL"))
-    public void usageTick(ItemStack stack, World world, LivingEntity user, int remainingUseTicks, CallbackInfo ci) {
-        if (user instanceof PlayerEntity playerEntity) {
-            if (((TridentItem) (Object) this).getMaxUseTime(stack, user) - remainingUseTicks < 10 && EnchantmentHelper.getTridentSpinAttackStrength(stack, playerEntity) > 0.0f && TridentItemMixin.isAboutToBreak(stack)) {
-                return;
-            } else if (stack.getItem() instanceof ProjectileItem interface1) {
-                ProjectileEntity projectileEntity = interface1.createEntity(world, user.getPos(), stack, Direction.NORTH);
-                EnchantUtils.recoilCheck(user, projectileEntity.getDamageSources().trident(projectileEntity, playerEntity), stack, 0.6f, 1.4f, true);
-            } else {
-                EnchantUtils.recoilCheck(user, null, stack, 0.6f, 1.4f, true);
-            }
-        }
-    }
+	@Inject(method = "onStoppedUsing", at = @At("TAIL"))
+	public void usageTick(ItemStack stack, World world, LivingEntity user, int remainingUseTicks, CallbackInfo ci) {
+		if (user instanceof PlayerEntity playerEntity) {
+			if (((TridentItem) (Object) this).getMaxUseTime(stack, user) - remainingUseTicks < 10 && EnchantmentHelper.getTridentSpinAttackStrength(stack, playerEntity) > 0.0f && TridentItemMixin.isAboutToBreak(stack)) {
+				return;
+			} else if (stack.getItem() instanceof ProjectileItem interface1) {
+				ProjectileEntity projectileEntity = interface1.createEntity(world, user.getPos(), stack, Direction.NORTH);
+				EnchantUtils.recoilCheck(user, projectileEntity.getDamageSources().trident(projectileEntity, playerEntity), stack, 0.6f, 1.4f, true);
+			} else {
+				EnchantUtils.recoilCheck(user, null, stack, 0.6f, 1.4f, true);
+			}
+		}
+	}
 }

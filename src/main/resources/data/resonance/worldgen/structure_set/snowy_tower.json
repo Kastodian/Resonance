@@ -1,14 +1,14 @@
 {
-  "structures": [
-    {
-      "structure": "resonance:snowy_tower",
-      "weight": 1
-    }
-  ],
-  "placement": {
-    "type": "resonance:unique",
-    "salt": 1901687009,
-    "biomes": "minecraft:snowy_taiga",
-    "biome_depth": 63
-  }
+	"structures": [
+		{
+			"structure": "resonance:snowy_tower",
+			"weight": 1
+		}
+	],
+	"placement": {
+		"type": "resonance:unique",
+		"salt": 1901687009,
+		"biomes": "minecraft:snowy_taiga",
+		"biome_depth": 63
+	}
 }

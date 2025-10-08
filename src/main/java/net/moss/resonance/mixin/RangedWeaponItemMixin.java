@@ -20,13 +20,13 @@ import java.util.List;
 @Mixin(RangedWeaponItem.class)
 public class RangedWeaponItemMixin {
 	@Inject(at = @At("HEAD"), method = "shootAll", cancellable = true)
-    private void shootAll(ServerWorld world, LivingEntity shooter, Hand hand, ItemStack stack, List<ItemStack> projectiles, float speed, float divergence, boolean critical, @Nullable LivingEntity target, CallbackInfo info) {
-        ItemStack projectile = projectiles.get(0);
-        if (projectile.getItem() instanceof ProjectileItem interface1) {
-            ProjectileEntity projectileEntity = interface1.createEntity(world, shooter.getPos(), stack, Direction.NORTH);
-            if (projectileEntity instanceof PersistentProjectileEntity persistentProjectileEntity) {
-                EnchantUtils.recoilCheck(shooter, projectileEntity.getDamageSources().arrow(persistentProjectileEntity, target), stack, 0.25f + speed / 8, 1f, true);
-            }
-        } else { EnchantUtils.recoilCheck(shooter, null, stack, 0.25f + speed / 8, 1.2f, true); }
-    }
+	private void shootAll(ServerWorld world, LivingEntity shooter, Hand hand, ItemStack stack, List<ItemStack> projectiles, float speed, float divergence, boolean critical, @Nullable LivingEntity target, CallbackInfo info) {
+		ItemStack projectile = projectiles.get(0);
+		if (projectile.getItem() instanceof ProjectileItem interface1) {
+			ProjectileEntity projectileEntity = interface1.createEntity(world, shooter.getPos(), stack, Direction.NORTH);
+			if (projectileEntity instanceof PersistentProjectileEntity persistentProjectileEntity) {
+				EnchantUtils.recoilCheck(shooter, projectileEntity.getDamageSources().arrow(persistentProjectileEntity, target), stack, 0.25f + speed / 8, 1f, true);
+			}
+		} else { EnchantUtils.recoilCheck(shooter, null, stack, 0.25f + speed / 8, 1.2f, true); }
+	}
 }

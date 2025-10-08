@@ -1,0 +1,11 @@
+{
+	"input": [
+		"minecraft:nether_bricks"
+	],
+	"output": {
+		"type": "minecraft:simple_state_provider",
+		"state": {
+			"Name": "minecraft:cracked_nether_bricks"
+		}
+	}
+}

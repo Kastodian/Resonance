@@ -11,8 +11,8 @@ import net.minecraft.client.world.ClientWorld;
 
 @Environment(EnvType.CLIENT)
 public class VentSmokeParticle extends AbstractDustParticle<VentSmoke> {
-	protected VentSmokeParticle(ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, boolean thrown, VentSmoke parameters, SpriteProvider spriteProvider) {
-		super(world, x, y, z, velocityX, velocityY, velocityZ, parameters, spriteProvider);
+	protected VentSmokeParticle(ClientWorld world, double x, double y, double z, double velX, double velY, double velZ, VentSmoke parameters, SpriteProvider spriteProvider) {
+		super(world, x, y, z, velX, velY, velZ, parameters, spriteProvider);
 		float f = this.random.nextFloat() * 0.4F + 0.6F;
 		this.red = this.darken(parameters.getColor().x(), f);
 		this.green = this.darken(parameters.getColor().y(), f);
@@ -23,9 +23,9 @@ public class VentSmokeParticle extends AbstractDustParticle<VentSmoke> {
 		this.maxAge = this.random.nextInt(50) + 280;
 
 		this.gravityStrength = parameters.getThrown() ? 3.0E-3F : 3.0E-6F;
-		this.velocityX = velocityX;
-		this.velocityY = velocityY + (parameters.getThrown() ? 0 : (double)(this.random.nextFloat() / 500.0F));
-		this.velocityZ = velocityZ;
+		this.velocityX = velX;
+		this.velocityY = velY + (parameters.getThrown() ? 0 : (double)(this.random.nextFloat() / 500.0F));
+		this.velocityZ = velZ;
 	}
 
 	@Override
@@ -53,16 +53,10 @@ public class VentSmokeParticle extends AbstractDustParticle<VentSmoke> {
 	}
 
 	@Environment(EnvType.CLIENT)
-	public static class Factory implements ParticleFactory<VentSmoke> {
-		private final SpriteProvider spriteProvider;
-
-		public Factory(SpriteProvider spriteProvider) {
-			this.spriteProvider = spriteProvider;
-		}
-
-		public Particle createParticle(VentSmoke dustParticleEffect, ClientWorld clientWorld, double d, double e, double f, double g, double h, double i) {
-			VentSmokeParticle ventSmokeParticle = new VentSmokeParticle(clientWorld, d, e, f, g, h, i, false, dustParticleEffect, this.spriteProvider);
-			ventSmokeParticle.setSprite(this.spriteProvider);
+	public record Factory(SpriteProvider sprites) implements ParticleFactory<VentSmoke> {
+		public Particle createParticle(VentSmoke ventSmoke, ClientWorld clientWorld, double x, double y, double z, double velX, double velY, double velZ) {
+			VentSmokeParticle ventSmokeParticle = new VentSmokeParticle(clientWorld, x, y, z, velX, velY, velZ, ventSmoke, sprites);
+			ventSmokeParticle.setSprite(sprites);
 			return ventSmokeParticle;
 		}
 	}

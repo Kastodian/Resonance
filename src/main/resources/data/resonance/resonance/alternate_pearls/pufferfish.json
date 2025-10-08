@@ -1,0 +1,15 @@
+{
+	"ingredient": { "item": "minecraft:pufferfish" },
+	"effects": [
+		{
+			"id": "minecraft:poison",
+			"amplifier": 1,
+			"duration": 600
+		},
+		{
+			"id": "minecraft:nausea",
+			"duration": 300
+		}
+	],
+	"sound": { "sound_id": "minecraft:entity.puffer_fish.blow_up" }
+}

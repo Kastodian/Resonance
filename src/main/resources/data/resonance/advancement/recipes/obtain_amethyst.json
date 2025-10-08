@@ -1,27 +1,27 @@
 {
-  "criteria": {
-    "requirement": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
-          {
-            "items": [
-              "minecraft:amethyst_shard",
-              "resonance:charged_amethyst_shard"
-            ]
-          }
-        ]
-      }
-    }
-  },
-  "rewards": {
-    "recipes": [
-      "resonance:crafting/amethyst_shield",
-      "resonance:crafting/whistling_arrow",
-      "resonance:crafting/rain_chime",
-      "resonance:crafting/tinted_bottle_glass",
-      "resonance:crafting/tinted_bottle_shards",
-      "resonance:crafting/rock_candy"
-    ]
-  }
+	"criteria": {
+		"requirement": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": [
+							"minecraft:amethyst_shard",
+							"resonance:charged_amethyst_shard"
+						]
+					}
+				]
+			}
+		}
+	},
+	"rewards": {
+		"recipes": [
+			"resonance:crafting/amethyst_shield",
+			"resonance:crafting/whistling_arrow",
+			"resonance:crafting/rain_chime",
+			"resonance:crafting/tinted_bottle_glass",
+			"resonance:crafting/tinted_bottle_shards",
+			"resonance:crafting/rock_candy"
+		]
+	}
 }

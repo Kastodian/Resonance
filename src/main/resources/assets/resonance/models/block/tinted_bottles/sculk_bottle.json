@@ -1,8 +1,8 @@
 {
-    "parent": "resonance:block/tinted_bottles/fireball_bottle",
-    "textures": {
-      "1": "resonance:block/sculk_bottle",
-	  "particle": "resonance:block/tinted_bottle",
-	  "lantern": "resonance:block/tinted_bottle"
-    }
+	"parent": "resonance:block/tinted_bottles/fireball_bottle",
+	"textures": {
+		"1": "resonance:block/sculk_bottle",
+		"particle": "resonance:block/tinted_bottle",
+		"lantern": "resonance:block/tinted_bottle"
+	}
 }

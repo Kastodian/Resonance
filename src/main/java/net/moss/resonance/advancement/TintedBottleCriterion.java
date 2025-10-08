@@ -13,23 +13,16 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.moss.resonance.Resonance;
 
 public class TintedBottleCriterion extends AbstractCriterion<TintedBottleCriterion.Conditions> {
-    @Override public Codec<Conditions> getConditionsCodec() { return Conditions.CODEC; }
-    
-    public void trigger(ServerPlayerEntity player, Entity victim) {
-        LootContext lootContext = EntityPredicate.createAdvancementEntityLootContext(player, victim);
-        trigger(player, conditions -> { return conditions.matches(lootContext); });
-    }
+	@Override public Codec<Conditions> getConditionsCodec() { return Conditions.CODEC; }
+	public void trigger(ServerPlayerEntity player, Entity victim) { trigger(player, conditions -> conditions.matches(EntityPredicate.createAdvancementEntityLootContext(player, victim))); }
 
-    public record Conditions(Optional<LootContextPredicate> player, Optional<LootContextPredicate> entity) implements AbstractCriterion.Conditions {
-        public static final Codec<Conditions> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                EntityPredicate.LOOT_CONTEXT_PREDICATE_CODEC.optionalFieldOf("player").forGetter(Conditions::player),
-                EntityPredicate.LOOT_CONTEXT_PREDICATE_CODEC.optionalFieldOf("entity").forGetter(Conditions::entity)
-                ).apply(instance, Conditions::new));
+	public record Conditions(Optional<LootContextPredicate> player, Optional<LootContextPredicate> entity) implements AbstractCriterion.Conditions {
+		public static final Codec<Conditions> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+				EntityPredicate.LOOT_CONTEXT_PREDICATE_CODEC.optionalFieldOf("player").forGetter(Conditions::player),
+				EntityPredicate.LOOT_CONTEXT_PREDICATE_CODEC.optionalFieldOf("entity").forGetter(Conditions::entity)
+		).apply(instance, Conditions::new));
 
-        public static AdvancementCriterion<Conditions> create(EntityPredicate.Builder entity) { return Resonance.TINTED_BOTTLE_CRITERION.create(new Conditions(Optional.empty(), Optional.of(EntityPredicate.asLootContextPredicate(entity.build())))); }
-
-        boolean matches(LootContext context) {
-            return this.entity.isPresent() && this.entity.get().test(context);
-        }
-    }
+		public static AdvancementCriterion<Conditions> create(EntityPredicate.Builder entity) { return Resonance.TINTED_BOTTLE_CRITERION.create(new Conditions(Optional.empty(), Optional.of(EntityPredicate.asLootContextPredicate(entity.build())))); }
+		boolean matches(LootContext context) { return this.entity.isPresent() && this.entity.get().test(context); }
+	}
 }

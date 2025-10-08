@@ -1,0 +1,11 @@
+{
+	"ingredient": { "item": "resonance:jump_orb_strong" },
+	"effects": [
+		{
+			"id": "minecraft:jump_boost",
+			"amplifier": 2,
+			"duration": 300
+		}
+	],
+	"sound": { "sound_id": "minecraft:block.amethyst_block.resonate" }
+}

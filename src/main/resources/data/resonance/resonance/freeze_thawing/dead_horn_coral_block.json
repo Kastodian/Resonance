@@ -1,0 +1,12 @@
+{
+	"input": [
+		"minecraft:stone_bricks",
+		"minecraft:horn_coral_block"
+	],
+	"output": {
+		"type": "minecraft:simple_state_provider",
+		"state": {
+			"Name": "minecraft:dead_horn_coral_block"
+		}
+	}
+}

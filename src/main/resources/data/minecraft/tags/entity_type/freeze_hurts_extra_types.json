@@ -1,6 +1,7 @@
 {
-    "replace": false,
-    "values": [
-      "resonance:lost_soul"
-    ]
-  }
+	"replace": false,
+	"values": [
+		"resonance:lost_soul",
+		"resonance:volcano_snail"
+	]
+}

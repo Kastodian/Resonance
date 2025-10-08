@@ -1,21 +1,21 @@
 {
-    "criteria": {
-      "requirement": {
-        "trigger": "minecraft:inventory_changed",
-        "conditions": {
-          "items": [
-            {
-              "items": [
-                "minecraft:turtle_scute"
-              ]
-            }
-          ]
-        }
-      }
-    },
-    "rewards": {
-      "recipes": [
-        "resonance:crafting/turtle_helmet"
-      ]
-    }
-}  
+	"criteria": {
+		"requirement": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": [
+							"minecraft:turtle_scute"
+						]
+					}
+				]
+			}
+		}
+	},
+	"rewards": {
+		"recipes": [
+			"resonance:crafting/turtle_helmet"
+		]
+	}
+}

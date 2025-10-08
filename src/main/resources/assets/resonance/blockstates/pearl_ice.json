@@ -1,6 +1,6 @@
 {
-  "variants": {
-    "snowy=false": { "model": "resonance:block/pearl_ice" },
-    "snowy=true": { "model": "resonance:block/pearl_ice_snowy" }
-  }
+	"variants": {
+		"snowy=false": { "model": "resonance:block/pearl_ice" },
+		"snowy=true": { "model": "resonance:block/pearl_ice_snowy" }
+	}
 }

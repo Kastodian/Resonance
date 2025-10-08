@@ -1,7 +1,7 @@
 {
-    "parent": "item/generated",
-    "textures": {
-        "layer0": "resonance:item/vent_fluid_bottle",
-        "layer1": "resonance:item/vent_fluid_bottle_overlay"
-    }
+	"parent": "item/generated",
+	"textures": {
+		"layer0": "resonance:item/vent_fluid_bottle",
+		"layer1": "resonance:item/vent_fluid_bottle_overlay"
+	}
 }

@@ -1,6 +1,6 @@
 {
-  "message_id": "ground_pound",
-  "exhaustion": 0.2,
-  "scaling": "never",
-  "effects": "hurt"
+	"message_id": "ground_pound",
+	"exhaustion": 0.2,
+	"scaling": "never",
+	"effects": "hurt"
 }

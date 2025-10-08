@@ -1,6 +1,6 @@
 {
-    "parent": "minecraft:block/cube_all",
-    "textures": {
-      "all": "resonance:block/bathyal_heart_dry"
-    }
+	"parent": "minecraft:block/cube_all",
+	"textures": {
+		"all": "resonance:block/bathyal_heart_dry"
+	}
 }

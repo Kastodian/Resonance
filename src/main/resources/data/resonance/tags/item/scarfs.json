@@ -1,9 +1,9 @@
 {
-  "values": [
-    "resonance:scarf",
-    "resonance:phantom_scarf",
-    "resonance:spirit_scarf",
-    "resonance:echo_scarf",
-    "resonance:datapack_scarf"
-  ]
+	"values": [
+		"resonance:scarf",
+		"resonance:phantom_scarf",
+		"resonance:spirit_scarf",
+		"resonance:echo_scarf",
+		"resonance:datapack_scarf"
+	]
 }

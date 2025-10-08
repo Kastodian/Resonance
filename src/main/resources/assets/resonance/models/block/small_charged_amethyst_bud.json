@@ -1,6 +1,6 @@
 {
-    "parent": "minecraft:block/cross",
-    "textures": {
-      "cross": "resonance:block/small_charged_amethyst_bud"
-    }
-  }
+	"parent": "minecraft:block/cross",
+	"textures": {
+		"cross": "resonance:block/small_charged_amethyst_bud"
+	}
+}

@@ -1,19 +1,19 @@
 {
-  "type": "minecraft:crafting_shapeless",
-  "category": "misc",
-  "group": "lightning_bottle",
-  "ingredients": [
-    { "tag": "resonance:charged_amethyst_clusters" },
-    { "tag": "resonance:charged_amethyst_clusters" },
-    { "tag": "resonance:charged_amethyst_clusters" },
-    { "tag": "resonance:charged_amethyst_clusters" },
-    { "item": "resonance:tinted_bottle" },
-    { "tag": "resonance:charged_amethyst_clusters" },
-    { "tag": "resonance:charged_amethyst_clusters" },
-    { "tag": "resonance:charged_amethyst_clusters" },
-    { "tag": "resonance:charged_amethyst_clusters" }
-  ],
-  "result": {
-    "id": "resonance:lightning_bottle"
-  }
+	"type": "minecraft:crafting_shapeless",
+	"category": "misc",
+	"group": "lightning_bottle",
+	"ingredients": [
+		{ "tag": "resonance:charged_amethyst_clusters" },
+		{ "tag": "resonance:charged_amethyst_clusters" },
+		{ "tag": "resonance:charged_amethyst_clusters" },
+		{ "tag": "resonance:charged_amethyst_clusters" },
+		{ "item": "resonance:tinted_bottle" },
+		{ "tag": "resonance:charged_amethyst_clusters" },
+		{ "tag": "resonance:charged_amethyst_clusters" },
+		{ "tag": "resonance:charged_amethyst_clusters" },
+		{ "tag": "resonance:charged_amethyst_clusters" }
+	],
+	"result": {
+		"id": "resonance:lightning_bottle"
+	}
 }

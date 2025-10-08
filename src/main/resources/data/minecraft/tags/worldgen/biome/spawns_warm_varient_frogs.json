@@ -1,6 +1,6 @@
 {
-  "replace": false,
-  "values": [
-    "resonance:bathyal_zone"
-  ]
+	"replace": false,
+	"values": [
+		"resonance:bathyal_zone"
+	]
 }

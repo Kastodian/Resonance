@@ -1,11 +1,9 @@
 package net.moss.resonance.util;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import org.jetbrains.annotations.Nullable;
 import dev.emi.trinkets.api.SlotReference;
 import dev.emi.trinkets.api.TrinketComponent;
@@ -29,6 +27,7 @@ import net.minecraft.item.Equipment;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootPool;
+import net.minecraft.loot.LootPool.Builder;
 import net.minecraft.loot.condition.RandomChanceLootCondition;
 import net.minecraft.loot.entry.ItemEntry;
 import net.minecraft.loot.function.SetCountLootFunction;
@@ -67,38 +66,31 @@ public class Utils {
 	public static DamageSource damageSource(World world, RegistryKey<DamageType> key, @Nullable Entity attacker) { return new DamageSource(world.getRegistryManager().get(RegistryKeys.DAMAGE_TYPE).entryOf(key), attacker); }
 	public static DamageSource damageSource(World world, RegistryKey<DamageType> key, @Nullable Vec3d position) { return new DamageSource(world.getRegistryManager().get(RegistryKeys.DAMAGE_TYPE).entryOf(key), position); }
 
-    public static int[] IntListToArray(List<Integer> list) { return list.stream().mapToInt(Integer::intValue).toArray(); }
-    public static List<Integer> ArrayToIntList(int[] array) { return Arrays.stream(array).boxed().collect(Collectors.toList()); }
+	public static Builder lootPoolBuilder(float rolls, float conditionally, Item item, float countMin, float countMax) {
+		return LootPool.builder()
+				.rolls(ConstantLootNumberProvider.create(rolls))
+				.conditionally(RandomChanceLootCondition.builder(conditionally))
+				.with(ItemEntry.builder(item))
+				.apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(countMin, countMax)));
+	}
 
-    @SuppressWarnings("deprecation")
-	public static LootPool lootPoolBuilder(float rolls, float conditionally, Item item, float countMin, float countMax) {
-        return LootPool.builder()
-                .rolls(ConstantLootNumberProvider.create(rolls))
-                .conditionally(RandomChanceLootCondition.builder(conditionally))
-                .with(ItemEntry.builder(item))
-                .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(countMin, countMax)).build())
-				.build();
-    }
+	public static Builder enchantLootPoolBuilder(float rolls, float conditionally, Item item, RegistryEntry<Enchantment> enchant, int level) {
+		return LootPool.builder()
+				.rolls(ConstantLootNumberProvider.create(rolls))
+				.conditionally(RandomChanceLootCondition.builder(conditionally))
+				.with(ItemEntry.builder(item))
+				.apply(new SetEnchantmentsLootFunction.Builder().enchantment(enchant, ConstantLootNumberProvider.create(level)));
+	}
 
-    public static LootPool enchantLootPoolBuilder(float rolls, float conditionally, Item item, RegistryEntry<Enchantment> enchant, int level) {
-        return LootPool.builder()
-                .rolls(ConstantLootNumberProvider.create(rolls))
-                .conditionally(RandomChanceLootCondition.builder(conditionally))
-                .with(ItemEntry.builder(item))
-                .apply(new SetEnchantmentsLootFunction.Builder().enchantment(enchant, ConstantLootNumberProvider.create(level)))
-				.build();
-    }
-
-    @SuppressWarnings("deprecation")
-	public static LootPool potionLootPoolBuilder(float rolls, float conditionally, Item item, float countMin, float countMax, RegistryEntry<Potion> potion) {
-        return LootPool.builder()
-                .rolls(ConstantLootNumberProvider.create(rolls))
-                .conditionally(RandomChanceLootCondition.builder(conditionally))
-                .with(ItemEntry.builder(item))
-                .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(countMin, countMax)).build())
+	public static Builder pearlLootPoolBuilder(float rolls, float conditionally, Item item, float countMin, float countMax, RegistryEntry<Potion> potion, int duration, int recuperation, int strength, int shinyBound) {
+		return LootPool.builder()
+				.rolls(ConstantLootNumberProvider.create(rolls))
+				.conditionally(RandomChanceLootCondition.builder(conditionally))
+				.with(ItemEntry.builder(item))
+				.apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(countMin, countMax)))
 				.apply(SetPotionLootFunction.builder(potion))
-				.build();
-    }
+				.apply(SetPearlStatsLootFunction.builder(duration, recuperation, strength, shinyBound));
+	}
 
 	public static boolean isItemEquipped(LivingEntity entity, Item item, boolean checkHands) {
 		for (EquipmentSlot slot : EquipmentSlot.values()) {
@@ -108,17 +100,15 @@ public class Utils {
 		}
 		if (Resonance.isTrinketsInstalled) {
 			Optional<TrinketComponent> optional = TrinketsApi.getTrinketComponent(entity);
-			if (optional.isPresent()) {
-				if (optional.get().isEquipped(item)) { return true; }
-			}
+			if (optional.isPresent() && optional.get().isEquipped(item)) { return true; }
 		}
 		return false;
 	}
 
 	public static TypedActionResult<ItemStack> trinketHotswap(World world, PlayerEntity user, Hand hand, Item item) {
 		if (Resonance.isTrinketsInstalled) {
-		    ItemStack stack = user.getStackInHand(hand);
-		    if (TrinketItem.equipItem(user, stack)) { TypedActionResult.success(stack, world.isClient()); }
+			ItemStack stack = user.getStackInHand(hand);
+			if (TrinketItem.equipItem(user, stack)) { TypedActionResult.success(stack, world.isClient()); }
 		}
 		if (item instanceof Equipment equipment) { return equipment.equipAndSwap(item, world, user, hand); }
 		return null;
@@ -148,7 +138,7 @@ public class Utils {
 			}
 		} else { entity.addStatusEffect(additionalEffect); }
 	}
-	
+
 	public static void decrementStatusEffectAmplifiers(LivingEntity entity, RegistryEntry<StatusEffect> effectType, @Nullable Integer duration) {
 		if (entity.hasStatusEffect(effectType)) {
 			StatusEffectInstance effectInstance = entity.getStatusEffect(effectType);
@@ -182,28 +172,28 @@ public class Utils {
 	public static void customKnockbackClamp(LivingEntity entity, Vec3d source, float strength, @Nullable Float clamp) {	customKnockback(entity, source, strength, new Vec3d(0, 0, 0), new Vec3d(1, 1, 1), clamp); }
 	public static void customKnockbackDampen(LivingEntity entity, Vec3d source, float strength, Vec3d dampenMultipliers) { customKnockback(entity, source, strength, new Vec3d(0, 0, 0), dampenMultipliers, null); }
 
-    public static EntityHitResult entityRaycast(PlayerEntity player, float distance) {
-        Vec3d vec3d = player.getEyePos();
+	public static EntityHitResult entityRaycast(PlayerEntity player, float distance) {
+		Vec3d vec3d = player.getEyePos();
 		Vec3d vec3d2 = vec3d.add(player.getRotationVector(player.getPitch(), player.getYaw()).multiply(distance));
-        return ProjectileUtil.raycast(player, vec3d, vec3d2, new Box(vec3d, vec3d2), (entity) -> { return !entity.isSpectator() && entity.canHit(); }, distance * 10);
-    }
+		return ProjectileUtil.raycast(player, vec3d, vec3d2, new Box(vec3d, vec3d2), (entity) -> { return !entity.isSpectator() && entity.canHit(); }, distance * 10);
+	}
 
-    public static BlockHitResult blockRaycast(World world, PlayerEntity player, float distance, RaycastContext.FluidHandling fluidHandling) {
-        Vec3d vec3d = player.getEyePos();
-        Vec3d vec3d2 = vec3d.add(player.getRotationVector(player.getPitch(), player.getYaw()).multiply(distance));
-        return world.raycast(new RaycastContext(vec3d, vec3d2, ShapeType.OUTLINE, fluidHandling, player));
-    }
+	public static BlockHitResult blockRaycast(World world, PlayerEntity player, float distance, RaycastContext.FluidHandling fluidHandling) {
+		Vec3d vec3d = player.getEyePos();
+		Vec3d vec3d2 = vec3d.add(player.getRotationVector(player.getPitch(), player.getYaw()).multiply(distance));
+		return world.raycast(new RaycastContext(vec3d, vec3d2, ShapeType.OUTLINE, fluidHandling, player));
+	}
 
-    public static HitResult raycast(World world, PlayerEntity player, float distance, RaycastContext.FluidHandling fluidHandling) {
-        EntityHitResult entityHitResult = entityRaycast(player, distance);
-        if (entityHitResult != null && entityHitResult.getEntity() != null) { return entityHitResult; }
-        BlockHitResult blockHitResult = blockRaycast(world, player, distance, fluidHandling);
-        return blockHitResult;
-    }
+	public static HitResult raycast(World world, PlayerEntity player, float distance, RaycastContext.FluidHandling fluidHandling) {
+		EntityHitResult entityHitResult = entityRaycast(player, distance);
+		if (entityHitResult != null && entityHitResult.getEntity() != null) { return entityHitResult; }
+		BlockHitResult blockHitResult = blockRaycast(world, player, distance, fluidHandling);
+		return blockHitResult;
+	}
 
-    public static HitResult raycast(World world, PlayerEntity player, RaycastContext.FluidHandling fluidHandling) { return raycast(world, player, (float) player.getBlockInteractionRange(), fluidHandling); }
-    public static HitResult raycast(World world, PlayerEntity player, float distance) { return raycast(world, player, distance, RaycastContext.FluidHandling.ANY); }
-    public static HitResult raycast(World world, PlayerEntity player) { return raycast(world, player, (float) player.getBlockInteractionRange(), RaycastContext.FluidHandling.ANY); }
+	public static HitResult raycast(World world, PlayerEntity player, RaycastContext.FluidHandling fluidHandling) { return raycast(world, player, (float) player.getBlockInteractionRange(), fluidHandling); }
+	public static HitResult raycast(World world, PlayerEntity player, float distance) { return raycast(world, player, distance, RaycastContext.FluidHandling.ANY); }
+	public static HitResult raycast(World world, PlayerEntity player) { return raycast(world, player, (float) player.getBlockInteractionRange(), RaycastContext.FluidHandling.ANY); }
 
 	public static List<Entity> entitiesInRadius(World world, Vec3d pos, @Nullable Entity except, float searchRadius, float searchHeight, Predicate<? super Entity> predicate) {
 		return world.getOtherEntities(except, new Box(pos.getX() - searchRadius, pos.getY() - searchHeight, pos.getZ() - searchRadius, pos.getX() + searchRadius, pos.getY() + searchHeight, pos.getZ() + searchRadius), predicate);
@@ -211,19 +201,19 @@ public class Utils {
 
 	public static boolean canMobSpawn(World world, BlockPos pos) {
 		if (!world.getBlockState(pos.down()).isSideSolidFullSquare(world, pos.down(), Direction.UP)) { return false; }
-        int i = world.getDimension().monsterSpawnBlockLightLimit();
-        if (world.getLightLevel(LightType.BLOCK, pos) > i) { return false; }
+		int i = world.getDimension().monsterSpawnBlockLightLimit();
+		if (world.getLightLevel(LightType.BLOCK, pos) > i) { return false; }
 		return true;
 	}
 
 	public static final class CustomWindChargeBehavior extends ExplosionBehavior {
-        private final Float knockback;
+		private final Float knockback;
 		public CustomWindChargeBehavior(Float knockback) { this.knockback = knockback; }
-        @Override public float getKnockbackModifier(Entity entity) { return knockback; }
-        @Override public boolean shouldDamage(Explosion explosion, Entity entity) { return false; }
-        @Override public Optional<Float> getBlastResistance(Explosion explosion, BlockView world, BlockPos pos, BlockState blockState, FluidState fluidState) {
-            if (blockState.isIn(BlockTags.BLOCKS_WIND_CHARGE_EXPLOSIONS)) { return Optional.of(Float.valueOf(3600000.0f)); }
-            return Optional.empty();
-        }
-    }
+		@Override public float getKnockbackModifier(Entity entity) { return knockback; }
+		@Override public boolean shouldDamage(Explosion explosion, Entity entity) { return false; }
+		@Override public Optional<Float> getBlastResistance(Explosion explosion, BlockView world, BlockPos pos, BlockState blockState, FluidState fluidState) {
+			if (blockState.isIn(BlockTags.BLOCKS_WIND_CHARGE_EXPLOSIONS)) { return Optional.of(Float.valueOf(3600000.0f)); }
+			return Optional.empty();
+		}
+	}
 }

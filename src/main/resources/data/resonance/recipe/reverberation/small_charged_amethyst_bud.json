@@ -1,10 +1,10 @@
 {
-  "type": "resonance:reverberation",
-  "ingredient": {
-    "item": "resonance:small_charged_amethyst_bud"
-  },
-  "results": [
-    { "id": "minecraft:small_amethyst_bud" }
-  ],
-  "resonates": true
+	"type": "resonance:reverberation",
+	"ingredient": {
+		"item": "resonance:small_charged_amethyst_bud"
+	},
+	"results": [
+		{ "id": "minecraft:small_amethyst_bud" }
+	],
+	"resonates": true
 }

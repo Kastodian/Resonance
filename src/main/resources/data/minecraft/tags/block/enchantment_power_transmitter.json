@@ -1,18 +1,18 @@
 {
-  "replace": false,
-  "values": [
-    "minecraft:amethyst_cluster",
-    "minecraft:large_amethyst_bud",
-    "minecraft:medium_amethyst_bud",
-    "minecraft:small_amethyst_bud",
-    "resonance:book_pile",
-    "resonance:charged_amethyst_cluster",
-    "resonance:large_charged_amethyst_bud",
-    "resonance:medium_charged_amethyst_bud",
-    "resonance:small_charged_amethyst_bud",
-    "resonance:rain_chime",
-    "resonance:jump_orb_normal",
-    "resonance:jump_orb_strong",
-    "resonance:pearl_hub"
-  ]
+	"replace": false,
+	"values": [
+		"minecraft:amethyst_cluster",
+		"minecraft:large_amethyst_bud",
+		"minecraft:medium_amethyst_bud",
+		"minecraft:small_amethyst_bud",
+		"resonance:book_pile",
+		"resonance:charged_amethyst_cluster",
+		"resonance:large_charged_amethyst_bud",
+		"resonance:medium_charged_amethyst_bud",
+		"resonance:small_charged_amethyst_bud",
+		"resonance:rain_chime",
+		"resonance:jump_orb_normal",
+		"resonance:jump_orb_strong",
+		"resonance:pearl_hub"
+	]
 }

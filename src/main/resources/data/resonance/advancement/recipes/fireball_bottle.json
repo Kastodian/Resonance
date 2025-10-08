@@ -1,24 +1,24 @@
 {
-    "criteria": {
-      "requirement": {
-        "trigger": "minecraft:inventory_changed",
-        "conditions": {
-          "items": [
-            {
-              "items": [
-                "resonance:fireball_bottle",
-                "minecraft:fire_charge",
-                "minecraft:blaze_powder"
-              ]
-            }
-          ]
-        }
-      }
-    },
-    "rewards": {
-      "recipes": [
-        "resonance:crafting/fireball_bottle",
-        "resonance:crafting/fireball_bottle_alt"
-      ]
-    }
-}  
+	"criteria": {
+		"requirement": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": [
+							"resonance:fireball_bottle",
+							"minecraft:fire_charge",
+							"minecraft:blaze_powder"
+						]
+					}
+				]
+			}
+		}
+	},
+	"rewards": {
+		"recipes": [
+			"resonance:crafting/fireball_bottle",
+			"resonance:crafting/fireball_bottle_alt"
+		]
+	}
+}

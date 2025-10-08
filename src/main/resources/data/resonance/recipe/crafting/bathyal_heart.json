@@ -1,17 +1,17 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "category": "building",
-  "pattern": [
-    "vev",
-    "ehe",
-    "vev"
-  ],
-  "key": {
-    "e": { "item": "resonance:bathyal_vent" },
-    "h": { "item": "minecraft:heart_of_the_sea" },
-    "v": { "item": "minecraft:basalt" }
-  },
-  "result": {
-    "id": "resonance:bathyal_heart"
-  }
+	"type": "minecraft:crafting_shaped",
+	"category": "building",
+	"pattern": [
+		"vev",
+		"ehe",
+		"vev"
+	],
+	"key": {
+		"e": { "item": "resonance:bathyal_vent" },
+		"h": { "item": "minecraft:heart_of_the_sea" },
+		"v": { "item": "minecraft:basalt" }
+	},
+	"result": {
+		"id": "resonance:bathyal_heart"
+	}
 }

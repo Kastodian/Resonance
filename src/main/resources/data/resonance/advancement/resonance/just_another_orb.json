@@ -1,24 +1,24 @@
 {
-  "display": {
-    "icon": { "id": "minecraft:heart_of_the_sea" },
-    "title": { "translate": "advancement.resonance.just_another_orb" },
-    "description": { "translate": "advancement.resonance.just_another_orb.desc" },
-    "frame": "goal"
-  },
-  "parent": "resonance:resonance/we_should",
-  "criteria": {
-    "use_hub": {
-      "trigger": "resonance:use_pearl_hub",
-      "conditions": {
-        "item": {
-          "items": "#resonance:alternate_pearl_items"
-        }
-      }
-    }
-  },
-  "rewards": {
-    "recipes": [
-      "resonance:crafting/pearl_hub"
-    ]
-  }
+	"display": {
+		"icon": { "id": "minecraft:heart_of_the_sea" },
+		"title": { "translate": "advancement.resonance.just_another_orb" },
+		"description": { "translate": "advancement.resonance.just_another_orb.desc" },
+		"frame": "goal"
+	},
+	"parent": "resonance:resonance/we_should",
+	"criteria": {
+		"use_hub": {
+			"trigger": "resonance:use_pearl_hub",
+			"conditions": {
+				"item": {
+					"items": "#resonance:alternate_pearl_items"
+				}
+			}
+		}
+	},
+	"rewards": {
+		"recipes": [
+			"resonance:crafting/pearl_hub"
+		]
+	}
 }

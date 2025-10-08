@@ -1,43 +1,49 @@
 {
-  "type": "resonance:spur",
-  "config": {
-    "state_provider": {
-      "type": "minecraft:simple_state_provider",
-      "state": {
-        "Name": "resonance:pearl_ice"
-      }
-    },
-    "target": {
-      "type": "minecraft:any_of",
-      "predicates": [
-        {
-          "type": "minecraft:replaceable"
-        },
-        {
-          "type": "minecraft:matching_block_tag",
-          "tag": "minecraft:ice"
-        }
-      ]
-    },
-    "pitch": {
-      "type": "minecraft:uniform",
-      "max_inclusive": 360,
-      "min_inclusive": 0
-    },
-    "yaw": {
-      "type": "minecraft:uniform",
-      "max_inclusive": 360,
-      "min_inclusive": 0
-    },
-    "radius": {
-      "type": "minecraft:uniform",
-      "max_inclusive": 2,
-      "min_inclusive": 2
-    },
-    "length_ratio": {
-      "type": "minecraft:uniform",
-      "max_inclusive": 6,
-      "min_inclusive": 3
-    }
-  }
+	"type": "resonance:spur",
+	"config": {
+		"state_provider": {
+			"type": "minecraft:simple_state_provider",
+			"state": {
+				"Name": "resonance:pearl_ice"
+			}
+		},
+		"target": {
+			"type": "minecraft:any_of",
+			"predicates": [
+				{
+					"type": "minecraft:replaceable"
+				},
+				{
+					"type": "minecraft:matching_block_tag",
+					"tag": "minecraft:ice"
+				}
+			]
+		},
+		"pitch": {
+			"type": "minecraft:uniform",
+			"max_inclusive": 360,
+			"min_inclusive": 0
+		},
+		"yaw": {
+			"type": "minecraft:uniform",
+			"max_inclusive": 360,
+			"min_inclusive": 0
+		},
+		"radius": {
+			"type": "minecraft:uniform",
+			"max_inclusive": 2,
+			"min_inclusive": 2
+		},
+		"length_ratio": {
+			"type": "minecraft:uniform",
+			"max_inclusive": 6,
+			"min_inclusive": 3
+		},
+		"inner_state_provider": {
+			"type": "minecraft:simple_state_provider",
+			"state": {
+				"Name": "minecraft:blue_ice"
+			}
+		}
+	}
 }

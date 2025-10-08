@@ -1,10 +1,10 @@
 {
-  "type": "resonance:lightning_strike",
-  "ingredient": {
-    "item": "minecraft:medium_amethyst_bud"
-  },
-  "results": [
-    { "id": "resonance:medium_charged_amethyst_bud" }
-  ],
-  "resonates": true
+	"type": "resonance:lightning_strike",
+	"ingredient": {
+		"item": "minecraft:medium_amethyst_bud"
+	},
+	"results": [
+		{ "id": "resonance:medium_charged_amethyst_bud" }
+	],
+	"resonates": true
 }

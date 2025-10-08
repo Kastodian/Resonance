@@ -1,5 +1,5 @@
 {
-  "message_id": "reverberation",
-  "exhaustion": 0,
-  "scaling": "always"
+	"message_id": "reverberation",
+	"exhaustion": 0,
+	"scaling": "always"
 }

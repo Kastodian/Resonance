@@ -1,6 +1,5 @@
 package net.moss.resonance.block;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FluidBlock;
@@ -16,46 +15,46 @@ import net.minecraft.world.World;
 import net.moss.resonance.Resonance;
 
 public class PearlIce extends SnowyBlock {
-    public PearlIce(Settings settings) { super(settings); }
-    @Override protected boolean hasRandomTicks(BlockState state) { return true; }
+	public PearlIce(Settings settings) { super(settings); }
+	@Override protected boolean hasRandomTicks(BlockState state) { return true; }
 
-    @Override
-    public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        for (int i = 0; i < 7; i++) {
-            BlockPos blockPos = pos.add(random.nextBetween(0, 6) - 3, 0, random.nextBetween(0, 6) - 3);
-            BlockState state2 = world.getBlockState(blockPos);
-            BlockState state2up = world.getBlockState(blockPos.up());
-            BlockState state2down = world.getBlockState(blockPos.down());
-            if (state2.isOf(Blocks.WATER) && state2.get(FluidBlock.LEVEL) == 0 && (state2up.isAir() || state2up.isIn(BlockTags.ICE)) && world.getLightLevel(LightType.BLOCK, blockPos) < 11) {
-                for (Direction direction : Direction.values()) {
-                    if (direction != Direction.DOWN && world.getBlockState(blockPos.offset(direction)).isSideSolidFullSquare(world, blockPos.offset(direction), direction.getOpposite())) {
-                        world.setBlockState(blockPos, Blocks.ICE.getDefaultState(), Block.NOTIFY_ALL);
-                        return;
-                    }
-                }
-            } else if (state2down.isOf(Blocks.WATER) && state2down.get(FluidBlock.LEVEL) == 0 && state2.isSideSolidFullSquare(world, blockPos, Direction.DOWN)) {
-                world.setBlockState(blockPos.down(), Resonance.ICICLE.getDefaultState().with(Icicle.VERTICAL_DIRECTION, Direction.DOWN).with(Icicle.WATERLOGGED, true), Block.NOTIFY_ALL);
-                return;
-            }
-        }
-        for (BlockPos blockPos : BlockPos.iterateOutwards(pos, 3, 3, 3)) {
-            BlockState state2 = world.getBlockState(blockPos);
-            if (state2.isOf(Resonance.ICE_FUR) && state2.hasRandomTicks()) { state2.randomTick(world, blockPos, random); return; }
-        }
-    }
+	@Override
+	public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+		for (int i = 0; i < 7; i++) {
+			BlockPos blockPos = pos.add(random.nextBetween(0, 6) - 3, 0, random.nextBetween(0, 6) - 3);
+			BlockState state2 = world.getBlockState(blockPos);
+			BlockState state2up = world.getBlockState(blockPos.up());
+			BlockState state2down = world.getBlockState(blockPos.down());
+			if (state2.isOf(Blocks.WATER) && state2.get(FluidBlock.LEVEL) == 0 && (state2up.isAir() || state2up.isIn(BlockTags.ICE)) && world.getLightLevel(LightType.BLOCK, blockPos) < 11) {
+				for (Direction direction : Direction.values()) {
+					if (direction != Direction.DOWN && world.getBlockState(blockPos.offset(direction)).isSideSolidFullSquare(world, blockPos.offset(direction), direction.getOpposite())) {
+						world.setBlockState(blockPos, Blocks.ICE.getDefaultState());
+						return;
+					}
+				}
+			} else if (state2down.isOf(Blocks.WATER) && state2down.get(FluidBlock.LEVEL) == 0 && state2.isSideSolidFullSquare(world, blockPos, Direction.DOWN)) {
+				world.setBlockState(blockPos.down(), Resonance.ICICLE.getDefaultState().with(Icicle.VERTICAL_DIRECTION, Direction.DOWN).with(Icicle.WATERLOGGED, true));
+				return;
+			}
+		}
+		for (BlockPos blockPos : BlockPos.iterateOutwards(pos, 3, 3, 3)) {
+			BlockState state2 = world.getBlockState(blockPos);
+			if (state2.isOf(Resonance.ICE_FUR) && state2.hasRandomTicks()) { state2.randomTick(world, blockPos, random); return; }
+		}
+	}
 
-    @Override
-    protected void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-        super.onStateReplaced(state, world, pos, newState, moved);
-        if (moved && newState.isOf(Blocks.MOVING_PISTON) && newState.contains(Properties.FACING) && world instanceof ServerWorld serverWorld) {
-            Direction pushed = newState.get(Properties.FACING);
-            pos = pos.offset(pushed);
-            for (Direction direction : Direction.values()) {
-                if (direction == pushed || serverWorld.random.nextFloat() < 0.25F) {
-                    BlockPos newPos = pos.offset(direction);
-                    BrittleBlock.makeBrittle(serverWorld.getBlockState(newPos), serverWorld, newPos, world.random);
-                }
-            }
-        }
-    }
+	@Override
+	protected void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+		super.onStateReplaced(state, world, pos, newState, moved);
+		if (moved && newState.isOf(Blocks.MOVING_PISTON) && newState.contains(Properties.FACING) && world instanceof ServerWorld serverWorld) {
+			Direction pushed = newState.get(Properties.FACING);
+			pos = pos.offset(pushed);
+			for (Direction direction : Direction.values()) {
+				if (direction == pushed || serverWorld.random.nextFloat() < 0.25F) {
+					BlockPos newPos = pos.offset(direction);
+					BrittleBlock.makeBrittle(serverWorld.getBlockState(newPos), serverWorld, newPos, world.random);
+				}
+			}
+		}
+	}
 }

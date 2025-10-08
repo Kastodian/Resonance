@@ -18,8 +18,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Block.class)
 public class BlockMixin {
-    @Inject(method = "afterBreak", at = @At("HEAD"))
-    public void afterBreak(World world, PlayerEntity player, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, ItemStack stack, CallbackInfo info) {
-        if (state.isOf(Blocks.COMPOSTER) && state.get(ComposterBlock.LEVEL) > 5) { world.setBlockState(pos, Resonance.COMPOST_HEAP.getDefaultState()); }
-    }
+	@Inject(method = "afterBreak", at = @At("HEAD"))
+	public void afterBreak(World world, PlayerEntity player, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, ItemStack stack, CallbackInfo info) {
+		if (state.isOf(Blocks.COMPOSTER) && state.get(ComposterBlock.LEVEL) > 5) { world.setBlockState(pos, Resonance.COMPOST_HEAP.getDefaultState()); }
+	}
 }

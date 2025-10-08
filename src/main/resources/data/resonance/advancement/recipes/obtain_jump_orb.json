@@ -1,22 +1,23 @@
 {
-  "criteria": {
-    "requirement": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
-          {
-            "items": [
-              "resonance:jump_orb_normal",
-              "resonance:jump_orb_strong"
-            ]
-          }
-        ]
-      }
-    }
-  },
-  "rewards": {
-    "recipes": [
-      "resonance:crafting/jump_orb_strong"
-    ]
-  }
+	"criteria": {
+		"requirement": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": [
+							"resonance:jump_orb_normal",
+							"resonance:jump_orb_strong"
+						]
+					}
+				]
+			}
+		}
+	},
+	"rewards": {
+		"recipes": [
+			"resonance:crafting/jump_orb_strong",
+			"resonance:crafting/jump_orb_strong_pearl"
+		]
+	}
 }

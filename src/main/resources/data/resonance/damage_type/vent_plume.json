@@ -1,6 +1,6 @@
 {
-  "message_id": "vent_plume",
-  "exhaustion": 0.2,
-  "scaling": "always",
-  "effects": "burning"
+	"message_id": "vent_plume",
+	"exhaustion": 0.2,
+	"scaling": "always",
+	"effects": "burning"
 }

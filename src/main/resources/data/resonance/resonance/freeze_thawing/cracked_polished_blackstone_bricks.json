@@ -1,0 +1,11 @@
+{
+	"input": [
+		"minecraft:polished_blackstone_bricks"
+	],
+	"output": {
+		"type": "minecraft:simple_state_provider",
+		"state": {
+			"Name": "minecraft:cracked_polished_blackstone_bricks"
+		}
+	}
+}

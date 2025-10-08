@@ -9,17 +9,15 @@ import net.moss.resonance.Resonance;
 import net.moss.resonance.entity.WhistlingArrowEntity;
 
 @Environment(value=EnvType.CLIENT)
-public class WhistlingArrowRenderer
-extends ProjectileEntityRenderer<WhistlingArrowEntity> {
-    public static final Identifier TEXTURE = Identifier.of(Resonance.MOD_ID, "textures/entity/whistling_arrow.png");
+public class WhistlingArrowRenderer extends ProjectileEntityRenderer<WhistlingArrowEntity> {
+	public static final Identifier TEXTURE = Identifier.of(Resonance.MOD_ID, "textures/entity/whistling_arrow.png");
 
-    public WhistlingArrowRenderer(EntityRendererFactory.Context context) {
-        super(context);
-    }
+	public WhistlingArrowRenderer(EntityRendererFactory.Context context) {
+		super(context);
+	}
 
-    @Override
-    public Identifier getTexture(WhistlingArrowEntity whistlingArrowEntity) {
-        return TEXTURE;
-    }
+	@Override
+	public Identifier getTexture(WhistlingArrowEntity whistlingArrowEntity) {
+		return TEXTURE;
+	}
 }
-

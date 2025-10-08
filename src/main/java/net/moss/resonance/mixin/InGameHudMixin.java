@@ -23,37 +23,37 @@ import net.fabricmc.api.EnvType;
 @Environment(EnvType.CLIENT)
 @Mixin(InGameHud.class)
 public abstract class InGameHudMixin {
-    @Unique private static final Identifier CUSTOM_HEARTS = Identifier.of(Resonance.MOD_ID, "textures/gui/custom_hearts.png");
-    @Unique private static final Identifier NARROW_VISION = Identifier.of(Resonance.MOD_ID, "textures/gui/narrow_vision.png");
+	@Unique private static final Identifier CUSTOM_HEARTS = Identifier.of(Resonance.MOD_ID, "textures/gui/custom_hearts.png");
+	@Unique private static final Identifier NARROW_VISION = Identifier.of(Resonance.MOD_ID, "textures/gui/narrow_vision.png");
 
-    @Inject(method = "drawHeart", at = @At("HEAD"), cancellable = true)
-    private void drawHeart(DrawContext context, HeartType type, int x, int y, boolean hardcore, boolean blinking, boolean half, CallbackInfo ci) {
-        MinecraftClient client = MinecraftClient.getInstance();
-        if (!blinking && type == HeartType.NORMAL && client.cameraEntity instanceof PlayerEntity player) {
-            int offset = 0;
-            if (player.hasStatusEffect(Resonance.SOUL_FATIGUE)) { offset = 0; }
-            else if (player.hasStatusEffect(Resonance.SPARKING)) { offset = 13; }
-            else { return; }
-            context.drawTexture(CUSTOM_HEARTS, x-2, y-2, (half ? 13 : 0) + (hardcore ? 26 : 0), offset, 13, 13);
-            ci.cancel();
-        }
-    }
+	@Inject(method = "drawHeart", at = @At("HEAD"), cancellable = true)
+	private void drawHeart(DrawContext context, HeartType type, int x, int y, boolean hardcore, boolean blinking, boolean half, CallbackInfo ci) {
+		MinecraftClient client = MinecraftClient.getInstance();
+		if (!blinking && type == HeartType.NORMAL && client.cameraEntity instanceof PlayerEntity player) {
+			int offset = 0;
+			if (player.hasStatusEffect(Resonance.SOUL_FATIGUE)) { offset = 0; }
+			else if (player.hasStatusEffect(Resonance.SPARKING)) { offset = 13; }
+			else { return; }
+			context.drawTexture(CUSTOM_HEARTS, x-2, y-2, (half ? 13 : 0) + (hardcore ? 26 : 0), offset, 13, 13);
+			ci.cancel();
+		}
+	}
 
-    @Inject(method = "renderMiscOverlays", at = @At("HEAD"), cancellable = true)
-    private void renderMiscOverlays(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
-        int i = context.getScaledWindowWidth();
-        int j = context.getScaledWindowHeight();
-        MinecraftClient client = MinecraftClient.getInstance();
-        ClientPlayerEntity player = client.player;
-        if (((ClientPlayerEntityInterface)player).getPrevCrushingWeightIntensity() > 0) {
-            RenderSystem.disableDepthTest();
-            RenderSystem.depthMask(false);
-            RenderSystem.enableBlend();
-            context.setShaderColor(1.0f, 1.0f, 1.0f, MathHelper.lerp(tickCounter.getTickDelta(false), ((ClientPlayerEntityInterface)player).getPrevCrushingWeightIntensity(), ((ClientPlayerEntityInterface)player).getCrushingWeightIntensity()));
-            context.drawTexture(NARROW_VISION, 0, 0, -90, 0.0f, 0.0f, i, j, i, j);
-            RenderSystem.disableBlend();
-            RenderSystem.depthMask(true);
-            RenderSystem.enableDepthTest();
-        }
-    }
+	@Inject(method = "renderMiscOverlays", at = @At("HEAD"), cancellable = true)
+	private void renderMiscOverlays(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
+		int i = context.getScaledWindowWidth();
+		int j = context.getScaledWindowHeight();
+		MinecraftClient client = MinecraftClient.getInstance();
+		ClientPlayerEntity player = client.player;
+		if (((ClientPlayerEntityInterface)player).getPrevCrushingWeightIntensity() > 0) {
+			RenderSystem.disableDepthTest();
+			RenderSystem.depthMask(false);
+			RenderSystem.enableBlend();
+			context.setShaderColor(1.0f, 1.0f, 1.0f, MathHelper.lerp(tickCounter.getTickDelta(false), ((ClientPlayerEntityInterface)player).getPrevCrushingWeightIntensity(), ((ClientPlayerEntityInterface)player).getCrushingWeightIntensity()));
+			context.drawTexture(NARROW_VISION, 0, 0, -90, 0.0f, 0.0f, i, j, i, j);
+			RenderSystem.disableBlend();
+			RenderSystem.depthMask(true);
+			RenderSystem.enableDepthTest();
+		}
+	}
 }

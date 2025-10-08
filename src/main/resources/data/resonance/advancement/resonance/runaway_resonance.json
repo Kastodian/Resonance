@@ -1,27 +1,27 @@
 {
-  "display": {
-    "icon": { "id": "resonance:whistling_arrow" },
-    "title": { "translate":"advancement.resonance.runaway_resonance" },
+	"display": {
+		"icon": { "id": "resonance:whistling_arrow" },
+		"title": { "translate":"advancement.resonance.runaway_resonance" },
 		"description": { "translate":"advancement.resonance.runaway_resonance.desc" },
-    "frame": "goal"
-  },
-  "parent": "resonance:resonance/geodesic",
-  "criteria": {
-    "requirement": {
-      "trigger": "minecraft:player_hurt_entity",
-      "conditions": {
-        "damage": {
-          "type": {
-            "direct_entity": {
-              "type": "resonance:whistling_arrow"
-            }
-          }
-        },
-        "entity": {
-          "type": "minecraft:creeper",
-          "nbt": "{powered:1b}"
-        }
-      }
-    }
-  }
+		"frame": "goal"
+	},
+	"parent": "resonance:resonance/geodesic",
+	"criteria": {
+		"requirement": {
+			"trigger": "minecraft:player_hurt_entity",
+			"conditions": {
+				"damage": {
+					"type": {
+						"direct_entity": {
+							"type": "resonance:whistling_arrow"
+						}
+					}
+				},
+				"entity": {
+					"type": "minecraft:creeper",
+					"nbt": "{powered:1b}"
+				}
+			}
+		}
+	}
 }

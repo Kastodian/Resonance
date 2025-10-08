@@ -1,6 +1,6 @@
 {
-    "parent": "item/generated",
-    "textures": {
-        "layer0": "resonance:item/tube_worms"
-    }
+	"parent": "item/generated",
+	"textures": {
+		"layer0": "resonance:item/tube_worms"
+	}
 }

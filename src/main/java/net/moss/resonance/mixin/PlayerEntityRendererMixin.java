@@ -24,21 +24,21 @@ import net.moss.resonance.Resonance;
 @Mixin(PlayerEntityRenderer.class)
 public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<AbstractClientPlayerEntity, PlayerEntityModel<AbstractClientPlayerEntity>> {
 
-    public PlayerEntityRendererMixin(EntityRendererFactory.Context ctx, PlayerEntityModel<AbstractClientPlayerEntity> model, float shadowRadius) {
-        super(ctx, model, shadowRadius);
-    }
+	public PlayerEntityRendererMixin(EntityRendererFactory.Context ctx, PlayerEntityModel<AbstractClientPlayerEntity> model, float shadowRadius) {
+		super(ctx, model, shadowRadius);
+	}
 
-    @Inject(method = "<init>", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILSOFT)
-    private void initMixin(EntityRendererFactory.Context ctx, boolean slim, CallbackInfo info) {
-        this.addFeature(new ExtraFeatureRenderer(this, ctx.getHeldItemRenderer()));
-    }
+	@Inject(method = "<init>", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILSOFT)
+	private void initMixin(EntityRendererFactory.Context ctx, boolean slim, CallbackInfo info) {
+		this.addFeature(new ExtraFeatureRenderer(this, ctx.getHeldItemRenderer()));
+	}
 
-    @Inject(at = @At(value = "HEAD"), method = "getArmPose", cancellable = true)
-    private static void getArmPose(AbstractClientPlayerEntity player, Hand hand, CallbackInfoReturnable<BipedEntityModel.ArmPose> callbackinfo) {
-        Hand otherHand = hand == Hand.MAIN_HAND ? Hand.OFF_HAND : Hand.MAIN_HAND;
-        ItemStack thisStack = player.getStackInHand(hand);
-        ItemStack otherStack = player.getStackInHand(otherHand);
-        if (!(thisStack.isEmpty() ^ otherStack.isEmpty()) || !(thisStack.isIn(Resonance.DUAL_WIELD_RENDER_TAG) || otherStack.isIn(Resonance.DUAL_WIELD_RENDER_TAG))) { return; }
-        callbackinfo.setReturnValue(BipedEntityModel.ArmPose.ITEM);
-    }
+	@Inject(at = @At(value = "HEAD"), method = "getArmPose", cancellable = true)
+	private static void getArmPose(AbstractClientPlayerEntity player, Hand hand, CallbackInfoReturnable<BipedEntityModel.ArmPose> callbackinfo) {
+		Hand otherHand = hand == Hand.MAIN_HAND ? Hand.OFF_HAND : Hand.MAIN_HAND;
+		ItemStack thisStack = player.getStackInHand(hand);
+		ItemStack otherStack = player.getStackInHand(otherHand);
+		if (!(thisStack.isEmpty() ^ otherStack.isEmpty()) || !(thisStack.isIn(Resonance.DUAL_WIELD_RENDER_TAG) || otherStack.isIn(Resonance.DUAL_WIELD_RENDER_TAG))) { return; }
+		callbackinfo.setReturnValue(BipedEntityModel.ArmPose.ITEM);
+	}
 }

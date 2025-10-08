@@ -1,7 +1,6 @@
 package net.moss.resonance;
 
 import java.util.List;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.ModelPart;
@@ -22,42 +21,41 @@ import net.moss.resonance.util.Utils;
 
 @Environment(EnvType.CLIENT)
 public class ExtraFeatureRenderer extends HeldItemFeatureRenderer<AbstractClientPlayerEntity, PlayerEntityModel<AbstractClientPlayerEntity>> {
+	private final HeldItemRenderer heldItemRenderer;
 
-    private final HeldItemRenderer heldItemRenderer;
+	public ExtraFeatureRenderer(FeatureRendererContext<AbstractClientPlayerEntity, PlayerEntityModel<AbstractClientPlayerEntity>> context, HeldItemRenderer heldItemRenderer) {
+		super(context, heldItemRenderer);
+		this.heldItemRenderer = heldItemRenderer;
+	}
 
-    public ExtraFeatureRenderer(FeatureRendererContext<AbstractClientPlayerEntity, PlayerEntityModel<AbstractClientPlayerEntity>> context, HeldItemRenderer heldItemRenderer) {
-        super(context, heldItemRenderer);
-        this.heldItemRenderer = heldItemRenderer;
-    }
-
-    @Override
-    public void render(MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, AbstractClientPlayerEntity livingEntity, float f, float g, float h, float j, float k, float l) {
-        if (!(livingEntity instanceof AbstractClientPlayerEntity)) { return; }
-        PlayerEntity player = (PlayerEntity) livingEntity;
-        ItemStack offHandStack = player.getEquippedStack(EquipmentSlot.OFFHAND);
-        ItemStack mainHandStack = player.getEquippedStack(EquipmentSlot.MAINHAND);
-        List<ItemStack> equipped = Utils.getAllEquipped(livingEntity, false);
-        for (ItemStack item : equipped) {
-            if (item.isIn(Resonance.RENDER_ON_BACK_TAG)) {
-                matrixStack.push();
-                ModelPart modelPart = this.getContextModel().body;
-                modelPart.rotate(matrixStack);
-                matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(180.0F));
-                matrixStack.translate(0, 0.25, 0);
-                matrixStack.scale(0.65f, 0.65f, 0.65f);
-                heldItemRenderer.renderItem(livingEntity, item, ModelTransformationMode.HEAD, false, matrixStack, vertexConsumerProvider, i);
-                matrixStack.pop();
-                break;
-            }
-        }
-        ItemStack tempStack = ItemStack.EMPTY;
-        if (!mainHandStack.isEmpty() && mainHandStack.isIn(Resonance.DUAL_WIELD_RENDER_TAG) && (offHandStack.isEmpty())) { tempStack = mainHandStack; }
-        else if (!offHandStack.isEmpty() && offHandStack.isIn(Resonance.DUAL_WIELD_RENDER_TAG) && (mainHandStack.isEmpty())) { tempStack = offHandStack; }
-        if (!tempStack.isEmpty()) {
-            matrixStack.push();
-            this.renderItem(livingEntity, tempStack, ModelTransformationMode.THIRD_PERSON_RIGHT_HAND, Arm.RIGHT, matrixStack, vertexConsumerProvider, i);
-            this.renderItem(livingEntity, tempStack, ModelTransformationMode.THIRD_PERSON_LEFT_HAND, Arm.LEFT, matrixStack, vertexConsumerProvider, i);
-            matrixStack.pop();
-        }
-    }
+	@Override
+	public void render(MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, AbstractClientPlayerEntity livingEntity, float f, float g, float h, float j, float k, float l) {
+		if (!(livingEntity instanceof AbstractClientPlayerEntity)) { return; }
+		PlayerEntity player = (PlayerEntity) livingEntity;
+		ItemStack offHandStack = player.getEquippedStack(EquipmentSlot.OFFHAND);
+		ItemStack mainHandStack = player.getEquippedStack(EquipmentSlot.MAINHAND);
+		List<ItemStack> equipped = Utils.getAllEquipped(livingEntity, false);
+		for (ItemStack item : equipped) {
+			if (item.isIn(Resonance.RENDER_ON_BACK_TAG)) {
+				matrixStack.push();
+				ModelPart modelPart = this.getContextModel().body;
+				modelPart.rotate(matrixStack);
+				matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(180.0F));
+				matrixStack.translate(0, 0.25, 0);
+				matrixStack.scale(0.65f, 0.65f, 0.65f);
+				heldItemRenderer.renderItem(livingEntity, item, ModelTransformationMode.HEAD, false, matrixStack, vertexConsumerProvider, i);
+				matrixStack.pop();
+				break;
+			}
+		}
+		ItemStack tempStack = ItemStack.EMPTY;
+		if (!mainHandStack.isEmpty() && mainHandStack.isIn(Resonance.DUAL_WIELD_RENDER_TAG) && (offHandStack.isEmpty())) { tempStack = mainHandStack; }
+		else if (!offHandStack.isEmpty() && offHandStack.isIn(Resonance.DUAL_WIELD_RENDER_TAG) && (mainHandStack.isEmpty())) { tempStack = offHandStack; }
+		if (!tempStack.isEmpty()) {
+			matrixStack.push();
+			this.renderItem(livingEntity, tempStack, ModelTransformationMode.THIRD_PERSON_RIGHT_HAND, Arm.RIGHT, matrixStack, vertexConsumerProvider, i);
+			this.renderItem(livingEntity, tempStack, ModelTransformationMode.THIRD_PERSON_LEFT_HAND, Arm.LEFT, matrixStack, vertexConsumerProvider, i);
+			matrixStack.pop();
+		}
+	}
 }

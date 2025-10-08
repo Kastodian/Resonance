@@ -1,10 +1,10 @@
 {
-  "type": "resonance:reverberation",
-  "ingredient": {
-    "item": "minecraft:magma_cream"
-  },
-  "results": [
-    { "id": "minecraft:slime_ball" },
-    { "id": "minecraft:blaze_powder" }
-  ]
+	"type": "resonance:reverberation",
+	"ingredient": {
+		"item": "minecraft:magma_cream"
+	},
+	"results": [
+		{ "id": "minecraft:slime_ball" },
+		{ "id": "minecraft:blaze_powder" }
+	]
 }

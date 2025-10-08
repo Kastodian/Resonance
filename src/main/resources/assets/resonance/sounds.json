@@ -1,56 +1,57 @@
 {
-  "reverberation": {
-    "subtitle": "resonance.reverberation",
-    "sounds": [ "resonance:reverberation" ]
-  },
-  "sparks": {
-    "subtitle": "resonance.sparks",
-    "sounds": [ "resonance:sparks" ]
-  },
-  "double_jump": {
-    "subtitle": "resonance.double_jump",
-    "sounds": [ "resonance:swoop" ]
-  },
-  "pearl_hub_add": {
-    "subtitle": "resonance.pearl_hub.add",
-    "sounds": [
-      "minecraft:entity/itemframe/add_item1",
-      "minecraft:entity/itemframe/add_item2",
-      "minecraft:entity/itemframe/add_item3",
-      "minecraft:entity/itemframe/add_item4"
-    ]
-  },
-  "pearl_hub_remove": {
-    "subtitle": "resonance.pearl_hub.remove",
-    "sounds": [
-      "minecraft:entity/itemframe/remove_item1",
-      "minecraft:entity/itemframe/remove_item2",
-      "minecraft:entity/itemframe/remove_item3",
-      "minecraft:entity/itemframe/remove_item4"
-    ]
-  },
-  "pearl_hub_use": {
-    "subtitle": "resonance.pearl_hub.use",
-    "sounds": [ "resonance:reverberation" ]
-  },
-  "bathyal_heart_ambient": {
-    "subtitle": "resonance.bathyal_heart.ambient",
-    "sounds": [
-      "minecraft:mob/guardian/elder_idle1",
-      "minecraft:mob/guardian/elder_idle2",
-      "minecraft:mob/guardian/elder_idle3",
-      "minecraft:mob/guardian/elder_idle4" ]
-  },
-  "bathyal_heart_pulse": {
-    "subtitle": "resonance.bathyal_heart.pulse",
-    "sounds": [ "minecraft:mob/guardian/elder_death" ]
-  },
-  "bathyal_vent_extinguish": {
-    "subtitle": "resonance.bathyal_vent.extinguish",
-    "sounds": [ "resonance:vent_extinguish" ]
-  },
-  "bathyal_vent_ambient": {
-    "subtitle": "resonance.bathyal_vent.ambient",
-    "sounds": [ "resonance:vent_ambient" ]
-  }
+	"reverberation": {
+		"subtitle": "resonance.reverberation",
+		"sounds": [ "resonance:reverberation" ]
+	},
+	"sparks": {
+		"subtitle": "resonance.sparks",
+		"sounds": [ "resonance:sparks" ]
+	},
+	"double_jump": {
+		"subtitle": "resonance.double_jump",
+		"sounds": [ "resonance:swoop" ]
+	},
+	"put_item": {
+		"subtitle": "resonance.put_item",
+		"sounds": [
+			"minecraft:entity/itemframe/add_item1",
+			"minecraft:entity/itemframe/add_item2",
+			"minecraft:entity/itemframe/add_item3",
+			"minecraft:entity/itemframe/add_item4"
+		]
+	},
+	"remove_item": {
+		"subtitle": "resonance.remove_item",
+		"sounds": [
+			"minecraft:entity/itemframe/remove_item1",
+			"minecraft:entity/itemframe/remove_item2",
+			"minecraft:entity/itemframe/remove_item3",
+			"minecraft:entity/itemframe/remove_item4"
+		]
+	},
+	"pearl_hub_use": {
+		"subtitle": "resonance.pearl_hub.use",
+		"sounds": [ "resonance:reverberation" ]
+	},
+	"bathyal_heart_ambient": {
+		"subtitle": "resonance.bathyal_heart.ambient",
+		"sounds": [
+			"minecraft:mob/guardian/elder_idle1",
+			"minecraft:mob/guardian/elder_idle2",
+			"minecraft:mob/guardian/elder_idle3",
+			"minecraft:mob/guardian/elder_idle4"
+		]
+	},
+	"bathyal_heart_pulse": {
+		"subtitle": "resonance.bathyal_heart.pulse",
+		"sounds": [ "minecraft:mob/guardian/elder_death" ]
+	},
+	"bathyal_vent_extinguish": {
+		"subtitle": "resonance.bathyal_vent.extinguish",
+		"sounds": [ "resonance:vent_extinguish" ]
+	},
+	"bathyal_vent_ambient": {
+		"subtitle": "resonance.bathyal_vent.ambient",
+		"sounds": [ "resonance:vent_ambient" ]
+	}
 }

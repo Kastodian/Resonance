@@ -15,16 +15,14 @@ import net.moss.resonance.block.entity.BrittleBlockEntity;
 
 @Environment(value=EnvType.CLIENT)
 public class BrittleBlockEntityRenderer implements BlockEntityRenderer<BrittleBlockEntity> {
-    private final BlockRenderManager blockRenderManager;
-    
-    public BrittleBlockEntityRenderer(BlockEntityRendererFactory.Context context) { this.blockRenderManager = MinecraftClient.getInstance().getBlockRenderManager(); }
+	private final BlockRenderManager blockRenderManager;
 
-    @Override
-    public void render(BrittleBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        World world = entity.getWorld();
-        BlockState blockState = entity.getStoredState();
-        // matrices.translate(0.001f, 0.001f, 0.001f);
-        // matrices.scale(0.998f, 0.998f, 0.998f);
-        this.blockRenderManager.renderBlock(blockState, entity.getPos(), world, matrices, vertexConsumers.getBuffer(RenderLayers.getBlockLayer(blockState)), false, world.getRandom());
-    }
+	public BrittleBlockEntityRenderer(BlockEntityRendererFactory.Context context) { this.blockRenderManager = MinecraftClient.getInstance().getBlockRenderManager(); }
+
+	@Override
+	public void render(BrittleBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+		World world = entity.getWorld();
+		BlockState blockState = entity.getStoredState();
+		this.blockRenderManager.renderBlock(blockState, entity.getPos(), world, matrices, vertexConsumers.getBuffer(RenderLayers.getBlockLayer(blockState)), false, world.getRandom());
+	}
 }

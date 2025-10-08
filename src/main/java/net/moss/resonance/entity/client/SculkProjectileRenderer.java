@@ -12,19 +12,17 @@ import net.moss.resonance.entity.SculkProjectileEntity;
 
 @Environment(value=EnvType.CLIENT)
 public class SculkProjectileRenderer extends EntityRenderer<SculkProjectileEntity> {
-    public static final Identifier TEXTURE = Identifier.of(Resonance.MOD_ID, "textures/entity/sculk_projectile.png");
+	public static final Identifier TEXTURE = Identifier.of(Resonance.MOD_ID, "textures/entity/sculk_projectile.png");
 
-    public SculkProjectileRenderer(EntityRendererFactory.Context context) {
-        super(context);
-    }
+	public SculkProjectileRenderer(EntityRendererFactory.Context context) {
+		super(context);
+	}
 
-    @Override
-    public void render(SculkProjectileEntity sculkProjectileEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
-        
-    }
+	@Override
+	public void render(SculkProjectileEntity sculkProjectileEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) { return; }
 
-    @Override
-    public Identifier getTexture(SculkProjectileEntity dragonFireballEntity) {
-        return TEXTURE;
-    }
+	@Override
+	public Identifier getTexture(SculkProjectileEntity dragonFireballEntity) {
+		return TEXTURE;
+	}
 }

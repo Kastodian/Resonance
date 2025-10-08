@@ -9,15 +9,14 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
 public class DatapackItem extends Item {
+	public DatapackItem(Item.Settings settings) {
+		super(settings);
+	}
 
-    public DatapackItem(Item.Settings settings) {
-        super(settings);
-    }
-
-    @Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        ItemStack itemStack = user.getStackInHand(hand);
-        user.incrementStat(Stats.USED.getOrCreateStat(this));
-        return TypedActionResult.success(itemStack, world.isClient());
-    }
+	@Override
+	public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+		ItemStack itemStack = user.getStackInHand(hand);
+		user.incrementStat(Stats.USED.getOrCreateStat(this));
+		return TypedActionResult.success(itemStack, world.isClient());
+	}
 }

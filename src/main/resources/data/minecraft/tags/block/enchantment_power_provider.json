@@ -1,10 +1,10 @@
 {
-    "replace": false,
-    "values": [
-      "resonance:book_pile",
-      "resonance:charged_amethyst_cluster",
-      "resonance:large_charged_amethyst_bud",
-      "resonance:medium_charged_amethyst_bud",
-      "resonance:small_charged_amethyst_bud"
-    ]
-  }
+	"replace": false,
+	"values": [
+		"resonance:book_pile",
+		"resonance:charged_amethyst_cluster",
+		"resonance:large_charged_amethyst_bud",
+		"resonance:medium_charged_amethyst_bud",
+		"resonance:small_charged_amethyst_bud"
+	]
+}

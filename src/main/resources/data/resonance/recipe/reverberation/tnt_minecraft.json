@@ -1,14 +1,14 @@
 {
-  "type": "resonance:reverberation",
-  "ingredient": {
-    "item": "minecraft:tnt_minecart"
-  },
-  "results": [
-    {
-      "id": "minecraft:gunpowder",
-      "count": 3
-    },
-    { "id": "minecraft:minecart" }
-  ],
-  "explosionPower": 1
+	"type": "resonance:reverberation",
+	"ingredient": {
+		"item": "minecraft:tnt_minecart"
+	},
+	"results": [
+		{
+			"id": "minecraft:gunpowder",
+			"count": 3
+		},
+		{ "id": "minecraft:minecart" }
+	],
+	"explosionPower": 1
 }

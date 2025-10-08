@@ -1,10 +1,10 @@
 {
-  "type": "resonance:reverberation",
-  "ingredient": {
-    "item": "resonance:charged_amethyst_shard"
-  },
-  "results": [
-    { "id": "minecraft:amethyst_shard" }
-  ],
-  "resonates": true
+	"type": "resonance:reverberation",
+	"ingredient": {
+		"item": "resonance:charged_amethyst_shard"
+	},
+	"results": [
+		{ "id": "minecraft:amethyst_shard" }
+	],
+	"resonates": true
 }

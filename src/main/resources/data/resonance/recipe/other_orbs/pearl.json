@@ -1,6 +1,0 @@
-{
-    "type": "resonance:other_orb_effects",
-    "ingredient": { "item": "resonance:pearl" },
-    "result": { "id": "resonance:pearl" },
-    "texture": "resonance:textures/block/pearl"
-  }

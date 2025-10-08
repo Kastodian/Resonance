@@ -1,10 +1,10 @@
 {
-  "type": "resonance:reverberation",
-  "ingredient": {
-    "item": "minecraft:furnace_minecart"
-  },
-  "results": [
-    { "id": "minecraft:furnace" },
-    { "id": "minecraft:minecart" }
-  ]
+	"type": "resonance:reverberation",
+	"ingredient": {
+		"item": "minecraft:furnace_minecart"
+	},
+	"results": [
+		{ "id": "minecraft:furnace" },
+		{ "id": "minecraft:minecart" }
+	]
 }

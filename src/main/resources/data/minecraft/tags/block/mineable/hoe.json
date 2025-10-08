@@ -1,6 +1,6 @@
 {
-    "replace": false,
-    "values": [
-      "resonance:compost_heap"
-    ]
-  }
+	"replace": false,
+	"values": [
+		"resonance:compost_heap"
+	]
+}

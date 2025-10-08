@@ -1,8 +1,9 @@
 {
-    "values": [
-        "resonance:tower",
-        "resonance:team",
-        "resonance:sublimation",
-        "resonance:blast"
-    ]
+	"values": [
+		"resonance:tower",
+		"resonance:team",
+		"resonance:sublimation",
+		"resonance:blast",
+		"resonance:effervescent"
+	]
 }

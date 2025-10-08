@@ -1,6 +1,6 @@
 {
-  "variants": {
-    "cracked=false": { "model": "resonance:block/brittle_block" },
-    "cracked=true": { "model": "resonance:block/brittle_block_cracked" }
-  }
+	"variants": {
+		"cracked=false": { "model": "resonance:block/brittle_block" },
+		"cracked=true": { "model": "resonance:block/brittle_block_cracked" }
+	}
 }

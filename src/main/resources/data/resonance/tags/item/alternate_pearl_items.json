@@ -1,14 +1,13 @@
 {
-  "values": [
-    "minecraft:ender_pearl",
-    "minecraft:heart_of_the_sea",
-    "minecraft:nautilus_shell",
-    "minecraft:conduit",
-    "minecraft:heavy_core",
-    "minecraft:wind_charge",
-    "resonance:jump_orb_normal",
-    "resonance:jump_orb_strong",
-    "minecraft:pufferfish",
-    "minecraft:dragon_egg"
-  ]
+	"values": [
+		"minecraft:ender_pearl",
+		"minecraft:heart_of_the_sea",
+		"minecraft:nautilus_shell",
+		"minecraft:conduit",
+		"minecraft:heavy_core",
+		"resonance:jump_orb_normal",
+		"resonance:jump_orb_strong",
+		"minecraft:pufferfish",
+		"minecraft:dragon_egg"
+	]
 }

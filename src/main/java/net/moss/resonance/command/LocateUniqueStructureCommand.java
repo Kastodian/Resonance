@@ -20,53 +20,53 @@ import net.moss.resonance.world.UniqueStructurePlacement;
 import net.minecraft.text.ClickEvent.Action;
 
 public class LocateUniqueStructureCommand {
-    private static final DynamicCommandExceptionType STRUCTURE_INVALID_EXCEPTION = new DynamicCommandExceptionType(id -> Text.stringifiedTranslatable("commands.locate.structure.invalid", id));
-    
-    public static void register(CommandDispatcher<ServerCommandSource> dispatcher, boolean dedicated) {
-        dispatcher.register(CommandManager.literal("unique").requires(source -> source.hasPermissionLevel(2))
-            .then(CommandManager.literal("regenerate")
-                .executes(context -> { return regenerate(context); }))    
-            .then(CommandManager.literal("find")
-                .then(CommandManager.argument("structure", RegistryPredicateArgumentType.registryPredicate(RegistryKeys.STRUCTURE))
-                    .executes(context -> { return find(context, RegistryPredicateArgumentType.getPredicate(context, "structure", RegistryKeys.STRUCTURE, STRUCTURE_INVALID_EXCEPTION)); }))
-        ));
-    }
+	private static final DynamicCommandExceptionType STRUCTURE_INVALID_EXCEPTION = new DynamicCommandExceptionType(id -> Text.stringifiedTranslatable("commands.locate.structure.invalid", id));
 
-    private static int regenerate(CommandContext<ServerCommandSource> context) {
-        ServerCommandSource source = context.getSource();
-        UniqueStructureDataSaver serverState = UniqueStructureDataSaver.getServerState(source.getServer());
-        source.getWorld().getChunkManager().getStructurePlacementCalculator().getStructureSets().forEach(structureSet -> {
-            if (structureSet.value().placement() instanceof UniqueStructurePlacement placement) {
-                String name = structureSet.getIdAsString();
-                if (!serverState.name.contains(name)) { return; }
-                BlockPos pos = serverState.pos.get(serverState.name.indexOf(name));
-                placement.setChunk(pos.getX() >> 4, pos.getZ() >> 4);
-                Resonance.LOGGER.info("Assigned [" + name + "] To: " + pos);
-            }
-        });
-        source.sendFeedback(() -> { return Text.translatable("command.unique_structure.regenerate.success"); }, false);
-        return 0;
-    }
+	public static void register(CommandDispatcher<ServerCommandSource> dispatcher, boolean dedicated) {
+		dispatcher.register(CommandManager.literal("unique").requires(source -> source.hasPermissionLevel(2))
+			.then(CommandManager.literal("regenerate")
+				.executes(context -> { return regenerate(context); }))	
+			.then(CommandManager.literal("find")
+				.then(CommandManager.argument("structure", RegistryPredicateArgumentType.registryPredicate(RegistryKeys.STRUCTURE))
+					.executes(context -> { return find(context, RegistryPredicateArgumentType.getPredicate(context, "structure", RegistryKeys.STRUCTURE, STRUCTURE_INVALID_EXCEPTION)); }))
+		));
+	}
 
-    private static int find(CommandContext<ServerCommandSource> context, RegistryPredicateArgumentType.RegistryPredicate<Structure> predicate) {
-        String uniqueStructure = predicate.getKey().left().get().getValue().toString();
-        System.out.println(uniqueStructure);
-        ServerCommandSource source = context.getSource();
-        UniqueStructureDataSaver uniqueStructureDataSaver = UniqueStructureDataSaver.getServerState(source.getServer());
-        int i = uniqueStructureDataSaver.name.indexOf(uniqueStructure);
-        if (i == -1) { 
-            source.sendFeedback(() -> {
-                return Text.translatable("command.unique_structure.unique_structure_not_found").formatted(Formatting.RED);
-            }, false);
-            return 0;
-        }
-        BlockPos blockPos = uniqueStructureDataSaver.pos.get(i);
-        Text text = Texts.bracketed(Text.translatable("chat.coordinates", new Object[]{blockPos.getX(), "~", blockPos.getZ()})).styled((style) -> {
-            return style.withColor(Formatting.GREEN).withClickEvent(new ClickEvent(Action.SUGGEST_COMMAND, "/tp @s " + blockPos.getX() + " " + "~" + " " + blockPos.getZ())).withHoverEvent(new HoverEvent(net.minecraft.text.HoverEvent.Action.SHOW_TEXT, Text.translatable("chat.coordinates.tooltip")));
-        });
-        source.sendFeedback(() -> {
-            return Text.translatable("command.unique_structure.find.success", new Object[]{uniqueStructure, text});
-        }, false);
-        return 0;
-    }
+	private static int regenerate(CommandContext<ServerCommandSource> context) {
+		ServerCommandSource source = context.getSource();
+		UniqueStructureDataSaver serverState = UniqueStructureDataSaver.getServerState(source.getServer());
+		source.getWorld().getChunkManager().getStructurePlacementCalculator().getStructureSets().forEach(structureSet -> {
+			if (structureSet.value().placement() instanceof UniqueStructurePlacement placement) {
+				String name = structureSet.getIdAsString();
+				if (!serverState.name.contains(name)) { return; }
+				BlockPos pos = serverState.pos.get(serverState.name.indexOf(name));
+				placement.setChunk(pos.getX() >> 4, pos.getZ() >> 4);
+				Resonance.LOGGER.info("Assigned [" + name + "] To: " + pos);
+			}
+		});
+		source.sendFeedback(() -> { return Text.translatable("command.unique_structure.regenerate.success"); }, false);
+		return 0;
+	}
+
+	private static int find(CommandContext<ServerCommandSource> context, RegistryPredicateArgumentType.RegistryPredicate<Structure> predicate) {
+		String uniqueStructure = predicate.getKey().left().get().getValue().toString();
+		System.out.println(uniqueStructure);
+		ServerCommandSource source = context.getSource();
+		UniqueStructureDataSaver uniqueStructureDataSaver = UniqueStructureDataSaver.getServerState(source.getServer());
+		int i = uniqueStructureDataSaver.name.indexOf(uniqueStructure);
+		if (i == -1) { 
+			source.sendFeedback(() -> {
+				return Text.translatable("command.unique_structure.unique_structure_not_found").formatted(Formatting.RED);
+			}, false);
+			return 0;
+		}
+		BlockPos blockPos = uniqueStructureDataSaver.pos.get(i);
+		Text text = Texts.bracketed(Text.translatable("chat.coordinates", new Object[]{blockPos.getX(), "~", blockPos.getZ()})).styled((style) -> {
+			return style.withColor(Formatting.GREEN).withClickEvent(new ClickEvent(Action.SUGGEST_COMMAND, "/tp @s " + blockPos.getX() + " " + "~" + " " + blockPos.getZ())).withHoverEvent(new HoverEvent(net.minecraft.text.HoverEvent.Action.SHOW_TEXT, Text.translatable("chat.coordinates.tooltip")));
+		});
+		source.sendFeedback(() -> {
+			return Text.translatable("command.unique_structure.find.success", new Object[]{uniqueStructure, text});
+		}, false);
+		return 0;
+	}
 }

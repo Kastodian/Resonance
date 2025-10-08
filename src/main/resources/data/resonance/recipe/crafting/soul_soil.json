@@ -1,77 +1,77 @@
 {
-    "type": "minecraft:crafting_shapeless",
-    "category": "building",
-    "ingredients": [
-        {
-            "item": "resonance:soul_bottle"
-        },
-        [
-      {
-        "tag": "minecraft:dirt"
-      },
-      {
-        "item": "minecraft:moss_block"
-      }
-    ],
-        [
-      {
-        "tag": "minecraft:dirt"
-      },
-      {
-        "item": "minecraft:moss_block"
-      }
-    ],
-        [
-      {
-        "tag": "minecraft:dirt"
-      },
-      {
-        "item": "minecraft:moss_block"
-      }
-    ],
-        [
-      {
-        "tag": "minecraft:dirt"
-      },
-      {
-        "item": "minecraft:moss_block"
-      }
-    ],
-        [
-      {
-        "tag": "minecraft:dirt"
-      },
-      {
-        "item": "minecraft:moss_block"
-      }
-    ],
-        [
-      {
-        "tag": "minecraft:dirt"
-      },
-      {
-        "item": "minecraft:moss_block"
-      }
-    ],
-        [
-      {
-        "tag": "minecraft:dirt"
-      },
-      {
-        "item": "minecraft:moss_block"
-      }
-    ],
-        [
-      {
-        "tag": "minecraft:dirt"
-      },
-      {
-        "item": "minecraft:moss_block"
-      }
-    ]
-    ],
-    "result": {
-        "id": "minecraft:soul_soil",
-        "count": 8
-    }
+	"type": "minecraft:crafting_shapeless",
+	"category": "building",
+	"ingredients": [
+		{
+				"item": "resonance:soul_bottle"
+		},
+		[
+			{
+				"tag": "minecraft:dirt"
+			},
+			{
+				"item": "minecraft:moss_block"
+			}
+		],
+		[
+			{
+				"tag": "minecraft:dirt"
+			},
+			{
+				"item": "minecraft:moss_block"
+			}
+		],
+		[
+			{
+				"tag": "minecraft:dirt"
+			},
+			{
+				"item": "minecraft:moss_block"
+			}
+		],
+		[
+			{
+				"tag": "minecraft:dirt"
+			},
+			{
+				"item": "minecraft:moss_block"
+			}
+		],
+		[
+			{
+				"tag": "minecraft:dirt"
+			},
+			{
+				"item": "minecraft:moss_block"
+			}
+		],
+		[
+			{
+				"tag": "minecraft:dirt"
+			},
+			{
+				"item": "minecraft:moss_block"
+			}
+		],
+		[
+			{
+				"tag": "minecraft:dirt"
+			},
+			{
+				"item": "minecraft:moss_block"
+			}
+		],
+		[
+			{
+				"tag": "minecraft:dirt"
+			},
+			{
+				"item": "minecraft:moss_block"
+			}
+		]
+	],
+	"result": {
+		"id": "minecraft:soul_soil",
+		"count": 8
+	}
 }

@@ -1,0 +1,12 @@
+{
+	"input": [
+		"minecraft:stone_bricks",
+		"minecraft:brain_coral_block"
+	],
+	"output": {
+		"type": "minecraft:simple_state_provider",
+		"state": {
+			"Name": "minecraft:dead_brain_coral_block"
+		}
+	}
+}

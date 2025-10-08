@@ -8,5 +8,5 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(ServerWorld.class)
 public interface ServerWorldAccessor {
 	@Accessor
-    public ServerWorldProperties getWorldProperties();
+	public ServerWorldProperties getWorldProperties();
 }

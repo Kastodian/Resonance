@@ -1,10 +1,10 @@
 {
-  "type": "resonance:reverberation",
-  "ingredient": {
-    "item": "minecraft:rooted_dirt"
-  },
-  "results": [
-    { "id": "minecraft:dirt" },
-    { "id": "minecraft:hanging_roots" }
-  ]
+	"type": "resonance:reverberation",
+	"ingredient": {
+		"item": "minecraft:rooted_dirt"
+	},
+	"results": [
+		{ "id": "minecraft:dirt" },
+		{ "id": "minecraft:hanging_roots" }
+	]
 }

@@ -1,0 +1,12 @@
+{
+	"input": [
+		"minecraft:stone",
+		"minecraft:infested_stone"
+	],
+	"output": {
+		"type": "minecraft:simple_state_provider",
+		"state": {
+			"Name": "minecraft:cobblestone"
+		}
+	}
+}

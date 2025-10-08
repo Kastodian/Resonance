@@ -11,17 +11,14 @@ import net.moss.resonance.Resonance;
 import java.util.Optional;
 
 public class DoubleJumpCriterion extends AbstractCriterion<DoubleJumpCriterion.Conditions> {
-    @Override public Codec<Conditions> getConditionsCodec() { return Conditions.CODEC; }
+	@Override public Codec<Conditions> getConditionsCodec() { return Conditions.CODEC; }
+	public void trigger(ServerPlayerEntity player) { trigger(player, conditions -> true); }
 
-    public void trigger(ServerPlayerEntity player) {
-        trigger(player, conditions -> true);
-    }
+	public record Conditions(Optional<LootContextPredicate> player) implements AbstractCriterion.Conditions {
+		public static final Codec<Conditions> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+				EntityPredicate.LOOT_CONTEXT_PREDICATE_CODEC.optionalFieldOf("player").forGetter(Conditions::player)
+		).apply(instance, Conditions::new));
 
-    public record Conditions(Optional<LootContextPredicate> player) implements AbstractCriterion.Conditions {
-        public static final Codec<Conditions> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                EntityPredicate.LOOT_CONTEXT_PREDICATE_CODEC.optionalFieldOf("player").forGetter(Conditions::player)
-                ).apply(instance, Conditions::new));
-
-        public static AdvancementCriterion<Conditions> create() { return Resonance.DOUBLE_JUMP_CRITERION.create(new Conditions(Optional.empty())); }
-    }
+		public static AdvancementCriterion<Conditions> create() { return Resonance.DOUBLE_JUMP_CRITERION.create(new Conditions(Optional.empty())); }
+	}
 }

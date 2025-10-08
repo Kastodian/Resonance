@@ -1,24 +1,24 @@
 {
-  "display": {
-    "icon": { "id": "resonance:fireball_bottle" },
+	"display": {
+		"icon": { "id": "resonance:fireball_bottle" },
 		"title": { "translate":"advancement.resonance.message_received"},
 		"description": { "translate":"advancement.resonance.message_received.desc" }
-  },
-  "parent": "minecraft:nether/return_to_sender",
-  "criteria": {
-    "catch": {
-      "trigger": "resonance:tinted_bottling",
+	},
+	"parent": "minecraft:nether/return_to_sender",
+	"criteria": {
+		"catch": {
+			"trigger": "resonance:tinted_bottling",
 			"conditions": {
 				"entity": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "type": "minecraft:fireball"
-            }
-          }
-        ]
+					{
+						"condition": "minecraft:entity_properties",
+						"entity": "this",
+						"predicate": {
+							"type": "minecraft:fireball"
+						}
+					}
+				]
 			}
 		}
-  }
+	}
 }

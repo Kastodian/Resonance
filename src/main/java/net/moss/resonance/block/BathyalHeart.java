@@ -28,49 +28,49 @@ import net.moss.resonance.Resonance;
 import net.moss.resonance.util.Utils;
 
 public class BathyalHeart extends Block implements Waterloggable {
-    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
-    public static final BooleanProperty POWERED = Properties.POWERED;
-    public static final IntProperty POWER = Properties.POWER;
+	public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
+	public static final BooleanProperty POWERED = Properties.POWERED;
+	public static final IntProperty POWER = Properties.POWER;
 
-    public BathyalHeart(Settings settings) {
+	public BathyalHeart(Settings settings) {
 		super(settings);
-        this.setDefaultState(this.getDefaultState().with(WATERLOGGED, false).with(POWERED, false).with(POWER, 0));
+		this.setDefaultState(this.getDefaultState().with(WATERLOGGED, false).with(POWERED, false).with(POWER, 0));
 	}
 
-    @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        super.appendProperties(builder);
-        builder.add(WATERLOGGED, POWERED, POWER);
-    }
-    
-    @Override protected boolean hasRandomTicks(BlockState state) { return state.get(WATERLOGGED); }
-    @Override public FluidState getFluidState(BlockState state) { return state.get(WATERLOGGED).booleanValue() ? Fluids.WATER.getStill(false) : state.getFluidState(); }
+	@Override
+	protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+		super.appendProperties(builder);
+		builder.add(WATERLOGGED, POWERED, POWER);
+	}
+
+	@Override protected boolean hasRandomTicks(BlockState state) { return state.get(WATERLOGGED); }
+	@Override public FluidState getFluidState(BlockState state) { return state.get(WATERLOGGED).booleanValue() ? Fluids.WATER.getStill(false) : state.getFluidState(); }
 	@Override protected int getComparatorOutput(BlockState state, World world, BlockPos pos) { return state.get(POWER); }
 	@Override protected boolean hasComparatorOutput(BlockState state) { return true; }
-	
-    @Override
-    @Nullable
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
+
+	@Override
+	@Nullable
+	public BlockState getPlacementState(ItemPlacementContext ctx) {
 		World world = ctx.getWorld();
 		BlockPos pos = ctx.getBlockPos();
-        return this.getDefaultState().with(WATERLOGGED, world.getFluidState(pos).getFluid() == Fluids.WATER).with(POWER, world.getReceivedRedstonePower(pos)).with(POWERED, world.isReceivingRedstonePower(pos));
-    }
+		return this.getDefaultState().with(WATERLOGGED, world.getFluidState(pos).getFluid() == Fluids.WATER).with(POWER, world.getReceivedRedstonePower(pos)).with(POWERED, world.isReceivingRedstonePower(pos));
+	}
 
-    @Override
-    public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        Utils.entitiesInRadius(world, pos.toCenterPos(), null, 32, 32, Entity::isAlive).forEach(entity -> {
+	@Override
+	public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+		Utils.entitiesInRadius(world, pos.toCenterPos(), null, 32, 32, Entity::isAlive).forEach(entity -> {
 			if (entity instanceof LivingEntity livingEntity && livingEntity.isSubmergedInWater() && livingEntity.isAttackable()) { livingEntity.addStatusEffect(new StatusEffectInstance(Resonance.CRUSHING_WEIGHT, 600, 0, true, false)); }
 		});
-    }
+	}
 
-    @Override
+	@Override
 	public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
 		int i = pos.getX();
 		int j = pos.getY();
 		int k = pos.getZ();
 		world.addParticle(ParticleTypes.ASH, i + random.nextDouble(), j + 0.7, k + random.nextDouble(), 0, 0, 0);
 		if (!state.get(WATERLOGGED)) { return; }
-        if (random.nextInt(100) == 1) { world.playSound(pos.getX(), pos.getY(), pos.getZ(), Resonance.BATHYAL_HEART_AMBIENT_SOUND.value(), SoundCategory.AMBIENT, 0.2f, 0.5f + world.random.nextFloat() * 1.2f, false); }
+		if (random.nextInt(100) == 1) { world.playSound(pos.getX(), pos.getY(), pos.getZ(), Resonance.BATHYAL_HEART_AMBIENT_SOUND.value(), SoundCategory.AMBIENT, 0.2f, 0.5f + world.random.nextFloat() * 1.2f, false); }
 		BlockPos.Mutable mutable = new BlockPos.Mutable();
 		for (int l = 0; l < 64; l++) {
 			mutable.set(i + MathHelper.nextInt(random, -10, 10), j - MathHelper.nextInt(random, -10, 10), k + MathHelper.nextInt(random, -10, 10));
@@ -83,17 +83,17 @@ public class BathyalHeart extends Block implements Waterloggable {
 	}
 
 	@Override
-    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
-        if (world.isClient) { return; }
-        if (world.isReceivingRedstonePower(pos)) {
-        	if (!state.get(POWERED) && state.get(WATERLOGGED)) { world.playSound(null, pos, Resonance.BATHYAL_HEART_PULSE_SOUND.value(), SoundCategory.AMBIENT, 0.2f, 0.5f + world.random.nextFloat() * 1.2f); }
-            world.setBlockState(pos, state.with(POWERED, true).with(POWER, world.getReceivedRedstonePower(pos)), Block.NOTIFY_LISTENERS);
+	public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
+		if (world.isClient) { return; }
+		if (world.isReceivingRedstonePower(pos)) {
+			if (!state.get(POWERED) && state.get(WATERLOGGED)) { world.playSound(null, pos, Resonance.BATHYAL_HEART_PULSE_SOUND.value(), SoundCategory.AMBIENT, 0.2f, 0.5f + world.random.nextFloat() * 1.2f); }
+			world.setBlockState(pos, state.with(POWERED, true).with(POWER, world.getReceivedRedstonePower(pos)), Block.NOTIFY_LISTENERS);
 			updateSignal(state, world, pos);
-        } else if (state.get(POWERED)) {
-            world.setBlockState(pos, state.with(POWERED, false).with(POWER, 0), Block.NOTIFY_LISTENERS);
+		} else if (state.get(POWERED)) {
+			world.setBlockState(pos, state.with(POWERED, false).with(POWER, 0), Block.NOTIFY_LISTENERS);
 			updateSignal(state, world, pos);
-        }
-    }
+		}
+	}
 
 	@Override
 	protected void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {

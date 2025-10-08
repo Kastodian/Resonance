@@ -1,6 +1,6 @@
 {
-  "parent": "resonance:block/icicle/icicle",
-  "textures": {
-    "cross": "resonance:block/icicle_up_tip_merge"
-  }
+	"parent": "resonance:block/icicle/icicle",
+	"textures": {
+		"cross": "resonance:block/icicle_up_tip_merge"
+	}
 }

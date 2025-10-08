@@ -1,38 +1,38 @@
 {
-  "display": {
-    "icon": { "id": "resonance:charged_amethyst_shard" },
+	"display": {
+		"icon": { "id": "resonance:charged_amethyst_shard" },
 		"title": { "translate":"advancement.resonance.shocking_stuff"},
 		"description": { "translate":"advancement.resonance.shocking_stuff.desc" }
-  },
-  "parent": "resonance:resonance/geodesic",
-  "criteria": {
-    "inventory": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
-          {
-            "items": [
-              "resonance:charged_amethyst_shard",
-              "resonance:charged_amethyst_cluster",
-              "resonance:large_charged_amethyst_bud",
-              "resonance:medium_charged_amethyst_bud",
-              "resonance:small_charged_amethyst_bud",
-              "resonance:enchanted_rock_candy"
-            ]
-          }
-        ]
-      }
-    }
-  },
-  "rewards": {
-    "recipes": [
-      "resonance:crafting/amethyst_shield",
-      "resonance:crafting/whistling_arrow",
-      "resonance:crafting/tinted_bottle_glass",
-      "resonance:crafting/tinted_bottle_shards",
-      "resonance:crafting/lightning_bottle",
-      "resonance:crafting/jump_orb_normal",
-      "resonance:crafting/enchanted_rock_candy"
-    ]
-  }
+	},
+	"parent": "resonance:resonance/geodesic",
+	"criteria": {
+		"inventory": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": [
+							"resonance:charged_amethyst_shard",
+							"resonance:charged_amethyst_cluster",
+							"resonance:large_charged_amethyst_bud",
+							"resonance:medium_charged_amethyst_bud",
+							"resonance:small_charged_amethyst_bud",
+							"resonance:enchanted_rock_candy"
+						]
+					}
+				]
+			}
+		}
+	},
+	"rewards": {
+		"recipes": [
+			"resonance:crafting/amethyst_shield",
+			"resonance:crafting/whistling_arrow",
+			"resonance:crafting/tinted_bottle_glass",
+			"resonance:crafting/tinted_bottle_shards",
+			"resonance:crafting/lightning_bottle",
+			"resonance:crafting/jump_orb_normal",
+			"resonance:crafting/enchanted_rock_candy"
+		]
+	}
 }

@@ -1,9 +1,10 @@
 {
-  "values": [
-    "minecraft:warden",
-    "minecraft:vex",
-    "minecraft:allay",
-    "minecraft:breeze",
-    "resonance:lost_soul"
-  ]
+	"values": [
+		"minecraft:warden",
+		"minecraft:vex",
+		"minecraft:allay",
+		"minecraft:bat",
+		"minecraft:breeze",
+		"resonance:lost_soul"
+	]
 }

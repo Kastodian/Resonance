@@ -1,8 +1,8 @@
 {
-  "values": [
-    "resonance:dream",
-    "resonance:cold_dream",
-    "resonance:lukewarm_dream",
-    "resonance:warm_dream"
-  ]
+	"values": [
+		"resonance:dream",
+		"resonance:cold_dream",
+		"resonance:lukewarm_dream",
+		"resonance:warm_dream"
+	]
 }

@@ -12,23 +12,15 @@ import net.minecraft.util.math.Vec3d;
 import net.moss.resonance.util.EnchantUtils;
 
 public record SetCooldownEnchantmentEffect(EnchantmentLevelBasedValue cooldown) implements EnchantmentEntityEffect {
-    public static final MapCodec<SetCooldownEnchantmentEffect> CODEC = RecordCodecBuilder.mapCodec((instance) -> {
-        return instance.group(EnchantmentLevelBasedValue.CODEC.fieldOf("cooldown").forGetter(SetCooldownEnchantmentEffect::cooldown)).apply(instance, SetCooldownEnchantmentEffect::new);
-    });
+	public static final MapCodec<SetCooldownEnchantmentEffect> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+			EnchantmentLevelBasedValue.CODEC.fieldOf("cooldown").forGetter(SetCooldownEnchantmentEffect::cooldown)
+	).apply(instance, SetCooldownEnchantmentEffect::new));
 
-    public SetCooldownEnchantmentEffect(EnchantmentLevelBasedValue cooldown) {
-        this.cooldown = cooldown;
-    }
+	public SetCooldownEnchantmentEffect(EnchantmentLevelBasedValue cooldown) { this.cooldown = cooldown; }
+	@Override public MapCodec<SetCooldownEnchantmentEffect> getCodec() { return CODEC; }
 
-    public void apply(ServerWorld world, int level, EnchantmentEffectContext context, Entity user, Vec3d pos) {
-        if (user instanceof PlayerEntity playerEntity) { EnchantUtils.setCooldownTime(context.stack(), playerEntity, this.cooldown.getValue(level)); }
-    }
-
-    public MapCodec<SetCooldownEnchantmentEffect> getCodec() {
-        return CODEC;
-    }
-
-    public EnchantmentLevelBasedValue cooldown() {
-        return this.cooldown;
-    }
+	@Override
+	public void apply(ServerWorld world, int level, EnchantmentEffectContext context, Entity user, Vec3d pos) {
+		if (user instanceof PlayerEntity playerEntity) { EnchantUtils.setCooldownTime(context.stack(), playerEntity, this.cooldown.getValue(level)); }
+	}
 }

@@ -1,8 +1,8 @@
 {
-    "replace": false,
-    "values": [
-      "resonance:reverberation",
-      "resonance:sparking",
-      "resonance:vent_plume"
-    ]
+	"replace": false,
+	"values": [
+		"resonance:reverberation",
+		"resonance:sparking",
+		"resonance:vent_plume"
+	]
 }

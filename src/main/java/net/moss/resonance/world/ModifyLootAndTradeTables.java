@@ -5,66 +5,51 @@ import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.loot.LootTables;
 import net.minecraft.potion.Potions;
 import net.minecraft.registry.RegistryEntryLookup;
 import net.minecraft.registry.RegistryKeys;
-import net.minecraft.util.Identifier;
 import net.minecraft.village.TradeOffer;
 import net.minecraft.village.TradedItem;
 import net.moss.resonance.Resonance;
 import net.moss.resonance.util.Utils;
 
 public class ModifyLootAndTradeTables {
-    private static final Identifier ANCIENT_CITY = Identifier.of("chests/ancient_city");
-    private static final Identifier ANCIENT_CITY_ICE_BOX = Identifier.of("chests/ancient_city_ice_box");
-    private static final Identifier BASTION_OTHER = Identifier.of("chests/bastion_other");
-    private static final Identifier BASTION_TREASURE = Identifier.of("chests/bastion_treasure");
-    private static final Identifier END_CITY = Identifier.of("chests/end_city_treasure");
-    private static final Identifier SNOWY_TOWER_RARE = Identifier.of(Resonance.MOD_ID, "chests/snowy_tower_rare");
-    private static final Identifier TRIAL_CHAMBER_SUPPLY = Identifier.of("chests/trial_chambers/supply");
-    private static final Identifier TRIAL_CHAMBER_CORRIDOR = Identifier.of("chests/trial_chambers/corridor");
-    private static final Identifier TRIAL_CHAMBER_INTERSECTION = Identifier.of("chests/trial_chambers/intersection");
-    private static final Identifier JUNGLE_TEMPLE = Identifier.of("chests/jungle_temple");
+	public static void modifyLootTables() {
+		LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
+			RegistryEntryLookup<Enchantment> registryEntryLookup = registries.createRegistryLookup().getOrThrow(RegistryKeys.ENCHANTMENT);
+			if (key.equals(LootTables.ANCIENT_CITY_CHEST) || key.equals(LootTables.TRIAL_CHAMBERS_SUPPLY_CHEST) || key.equals(LootTables.TRIAL_CHAMBERS_CORRIDOR_CHEST) || key.equals(LootTables.TRIAL_CHAMBERS_INTERSECTION_CHEST)) {
+				if (key.equals(LootTables.ANCIENT_CITY_CHEST)) {
+					tableBuilder.pool(Utils.enchantLootPoolBuilder(1, 0.2f, Items.ENCHANTED_BOOK, registryEntryLookup.getOrThrow(Resonance.RECOILING_CURSE), 1));
+				}
+				tableBuilder.pool(Utils.lootPoolBuilder(2, 0.05f, Resonance.CHARGED_AMETHYST_SHARD, 1, 3));
+				tableBuilder.pool(Utils.lootPoolBuilder(1, 0.15f, Resonance.ROCK_CANDY, 1, 3));
+				tableBuilder.pool(Utils.lootPoolBuilder(1, 0.05f, Resonance.ENCHANTED_ROCK_CANDY, 1, 3));
+				tableBuilder.pool(Utils.lootPoolBuilder(1, 0.2f, Resonance.WHISTLING_ARROW, 1, 3));
+				tableBuilder.pool(Utils.enchantLootPoolBuilder(1, 0.1f, Items.ENCHANTED_BOOK, registryEntryLookup.getOrThrow(Resonance.SPARKING_ENCHANT), 1));
+			} else if (key.equals(LootTables.ANCIENT_CITY_ICE_BOX_CHEST)) {
+				tableBuilder.pool(Utils.pearlLootPoolBuilder(1, 0.1f, Resonance.PEARL, 1, 1, Potions.STRENGTH, 1, 1, 1, 100));
+				tableBuilder.pool(Utils.pearlLootPoolBuilder(1, 0.1f, Resonance.PEARL, 1, 1, Potions.REGENERATION, 1, 1, 1, 100));
+				tableBuilder.pool(Utils.pearlLootPoolBuilder(1, 0.1f, Resonance.PEARL, 1, 1, Resonance.DARKNESS_POTION_1, 1, 1, 1, 100));
+				tableBuilder.pool(Utils.pearlLootPoolBuilder(1, 0.1f, Resonance.PEARL, 1, 1, Resonance.SOUL_FATIGUE_POTION_2, 1, 1, 1, 100));
+			} else if (key.equals(LootTables.BASTION_OTHER_CHEST) || key.equals(LootTables.JUNGLE_TEMPLE_CHEST)) {
+				tableBuilder.pool(Utils.lootPoolBuilder(1, 0.2f, Resonance.TREASURE_HOARD.asItem(), 1, 1));
+			} else if (key.equals(LootTables.BASTION_TREASURE_CHEST)) {
+				tableBuilder.pool(Utils.lootPoolBuilder(2, 0.3f, Resonance.TREASURE_HOARD.asItem(), 1, 3));
+			} else if (key.equals(LootTables.END_CITY_TREASURE_CHEST)) {
+				tableBuilder.pool(Utils.lootPoolBuilder(1, 0.15f, Resonance.SHULKER_BOTTLE, 1, 2));
+			}
+		});
 
-    @SuppressWarnings("deprecation")
-    public static void modifyLootTables() {
-        LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
-            Identifier id = key.getValue();
-            RegistryEntryLookup<Enchantment> registryEntryLookup = registries.createRegistryLookup().getOrThrow(RegistryKeys.ENCHANTMENT);
-            if (ANCIENT_CITY.equals(id) || TRIAL_CHAMBER_SUPPLY.equals(id) || TRIAL_CHAMBER_CORRIDOR.equals(id) || TRIAL_CHAMBER_INTERSECTION.equals(id)) {
-                if (ANCIENT_CITY.equals(id)) {
-                    tableBuilder.pool(Utils.enchantLootPoolBuilder(1, 0.2f, Items.ENCHANTED_BOOK, registryEntryLookup.getOrThrow(Resonance.RECOILING_CURSE), 1));
-                }
-                tableBuilder.pool(Utils.lootPoolBuilder(2, 0.05f, Resonance.CHARGED_AMETHYST_SHARD, 1, 3));
-                tableBuilder.pool(Utils.lootPoolBuilder(1, 0.15f, Resonance.ROCK_CANDY, 1, 3));
-                tableBuilder.pool(Utils.lootPoolBuilder(1, 0.05f, Resonance.ENCHANTED_ROCK_CANDY, 1, 3));
-                tableBuilder.pool(Utils.lootPoolBuilder(1, 0.2f, Resonance.WHISTLING_ARROW, 1, 3));
-                tableBuilder.pool(Utils.enchantLootPoolBuilder(1, 0.1f, Items.ENCHANTED_BOOK, registryEntryLookup.getOrThrow(Resonance.SPARKING_ENCHANT), 1));
-            } else if (ANCIENT_CITY_ICE_BOX.equals(id)) {
-                tableBuilder.pool(Utils.potionLootPoolBuilder(1, 0.1f, Resonance.PEARL, 1, 1, Potions.STRENGTH));
-                tableBuilder.pool(Utils.potionLootPoolBuilder(1, 0.1f, Resonance.PEARL, 1, 1, Potions.REGENERATION));
-                tableBuilder.pool(Utils.potionLootPoolBuilder(1, 0.1f, Resonance.PEARL, 1, 1, Resonance.DARKNESS_POTION_1));
-                tableBuilder.pool(Utils.potionLootPoolBuilder(1, 0.1f, Resonance.PEARL, 1, 1, Resonance.SOUL_FATIGUE_POTION_2));
-            } else if (BASTION_OTHER.equals(id) || JUNGLE_TEMPLE.equals(id)) {
-                tableBuilder.pool(Utils.lootPoolBuilder(1, 0.2f, Resonance.TREASURE_HOARD.asItem(), 1, 1));
-            } else if (BASTION_TREASURE.equals(id)) {
-                tableBuilder.pool(Utils.lootPoolBuilder(2, 0.3f, Resonance.TREASURE_HOARD.asItem(), 1, 3));
-            } else if (END_CITY.equals(id)) {
-                tableBuilder.pool(Utils.lootPoolBuilder(1, 0.15f, Resonance.SHULKER_BOTTLE, 1, 2));
-            } else if (SNOWY_TOWER_RARE.equals(id)) {
-                tableBuilder.pool(Utils.potionLootPoolBuilder(1, 1f, Resonance.PEARL, 1, 1, Potions.LONG_SLOW_FALLING));
-            }
-        });
-
-        TradeOfferHelper.registerWanderingTraderOffers(1, factories -> {
-                factories.add((entity, random) -> new TradeOffer(
-                        new TradedItem(Items.EMERALD, 3),
-                        new ItemStack(Resonance.BATHYAL_VENT, 1),
-                        6, 12, 0.075f));
-                factories.add((entity, random) -> new TradeOffer(
-                    new TradedItem(Items.EMERALD, 3),
-                    new ItemStack(Resonance.BOOK_PILE, 1),
-                    2, 12, 0.075f));
-        });
-    }
+		TradeOfferHelper.registerWanderingTraderOffers(1, factories -> {
+				factories.add((entity, random) -> new TradeOffer(
+						new TradedItem(Items.EMERALD, 3),
+						new ItemStack(Resonance.BATHYAL_VENT, 1),
+						6, 12, 0.075f));
+				factories.add((entity, random) -> new TradeOffer(
+					new TradedItem(Items.EMERALD, 3),
+					new ItemStack(Resonance.BOOK_PILE, 1),
+					2, 12, 0.075f));
+		});
+	}
 }

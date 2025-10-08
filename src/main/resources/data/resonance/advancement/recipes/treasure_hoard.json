@@ -1,25 +1,25 @@
 {
-    "criteria": {
-      "requirement": {
-        "trigger": "minecraft:inventory_changed",
-        "conditions": {
-          "items": [
-            {
-              "items": [
-                "minecraft:gold_block",
-                "minecraft:gold_ingot",
-                "minecraft:diamond",
-                "minecraft:emerald",
-                "minecraft:amethyst_shard"
-              ]
-            }
-          ]
-        }
-      }
-    },
-    "rewards": {
-      "recipes": [
-        "resonance:crafting/treasure_hoard"
-      ]
-    }
-}  
+	"criteria": {
+		"requirement": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": [
+							"minecraft:gold_block",
+							"minecraft:gold_ingot",
+							"minecraft:diamond",
+							"minecraft:emerald",
+							"minecraft:amethyst_shard"
+						]
+					}
+				]
+			}
+		}
+	},
+	"rewards": {
+		"recipes": [
+			"resonance:crafting/treasure_hoard"
+		]
+	}
+}

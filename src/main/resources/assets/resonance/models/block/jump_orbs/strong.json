@@ -1,7 +1,7 @@
 {
-    "parent": "resonance:block/jump_orbs/expended",
-    "textures": {
-      "0": "resonance:block/jump_orb_strong",
-      "particle": "resonance:block/jump_orb_strong"
-    }
+	"parent": "resonance:block/jump_orbs/expended",
+	"textures": {
+		"0": "resonance:block/jump_orb_strong",
+		"particle": "resonance:block/jump_orb_strong"
+	}
 }

@@ -1,27 +1,27 @@
 {
-    "criteria": {
-      "requirement": {
-        "trigger": "minecraft:inventory_changed",
-        "conditions": {
-          "items": [
-            {
-              "items": [
-                "minecraft:soul_sand",
-                "minecraft:soul_soil"
-              ]
-            }
-          ]
-        }
-      }
-    },
-    "rewards": {
-      "recipes": [
-        "resonance:smelting/smelt_soul_sand_furnace",
-        "resonance:smelting/smelt_soul_soil_furnace",
-        "resonance:smelting/smelt_soul_sand_blasting",
-        "resonance:smelting/smelt_soul_soil_blasting",
-        "resonance:smelting/smelt_soul_sand_smoking",
-        "resonance:smelting/smelt_soul_soil_smoking"
-      ]
-    }
-}  
+	"criteria": {
+		"requirement": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": [
+							"minecraft:soul_sand",
+							"minecraft:soul_soil"
+						]
+					}
+				]
+			}
+		}
+	},
+	"rewards": {
+		"recipes": [
+			"resonance:smelting/smelt_soul_sand_furnace",
+			"resonance:smelting/smelt_soul_soil_furnace",
+			"resonance:smelting/smelt_soul_sand_blasting",
+			"resonance:smelting/smelt_soul_soil_blasting",
+			"resonance:smelting/smelt_soul_sand_smoking",
+			"resonance:smelting/smelt_soul_soil_smoking"
+		]
+	}
+}
