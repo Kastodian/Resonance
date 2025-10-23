@@ -189,6 +189,7 @@
 	"entity.resonance.lost_soul": "Lost Soul",
 	"entity.resonance.vent_fluid_projectile": "thrown Vent Fluid",
 	"entity.resonance.volcano_snail": "Volcano Snail",
+	"entity.resonance.beaconed_pearl": "Powered Orb",
 
 	"advancement.resonance.root": "Resonance",
 	"advancement.resonance.root.desc": "Alone at the edge of a universe humming a tune",
@@ -220,6 +221,8 @@
 	"advancement.resonance.sole_survivor.desc": "Perform 15 Critical Attacks in a row",
 	"advancement.resonance.portable_infection": "Portable Infection",
 	"advancement.resonance.portable_infection.desc": "Use a Tinted Bottle on a Sculk Catalyst as it spreads",
+	"advancement.resonance.star_atop_the_world": "Star Atop The World",
+	"advancement.resonance.star_atop_the_world.desc": "Power a Pearl Hub with a Beacon at the top of the world",
 
 	"gamerule.cactiDestroyUniqueItems": "Cacti destroy Unique Items",
 	"gamerule.cactiDestroyUniqueItems.description": "Cacti destroy otherwise indestructible items tagged as 'Unique'",

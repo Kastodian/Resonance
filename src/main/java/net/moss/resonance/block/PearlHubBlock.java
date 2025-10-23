@@ -16,16 +16,19 @@ import net.minecraft.world.event.GameEvent;
 import net.minecraft.world.explosion.Explosion;
 import net.moss.resonance.Resonance;
 import net.moss.resonance.block.entity.PearlHubBlockEntity;
+import net.moss.resonance.entity.BeaconedPearlEntity;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.Waterloggable;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -40,6 +43,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.ItemActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 
@@ -83,12 +87,19 @@ public class PearlHubBlock extends BlockWithEntity implements Waterloggable {
 	@Override protected BlockState mirror(BlockState state, BlockMirror mirror) { return state.rotate(mirror.getRotation(state.get(FACING))); }
 
 	@Override
-	protected ItemActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-		if (!state.get(HAS_PEARL) && (stack.isIn(Resonance.PEARL_ITEMS_TAG) || stack.isOf(Resonance.PEARL) || stack.isOf(Resonance.BIFURCATED_PEARL)) && stack.getDamage()  != stack.getMaxDamage()) {
+	protected ItemActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity user, Hand hand, BlockHitResult hit) {
+		if (!state.get(HAS_PEARL) && (stack.isIn(Resonance.PEARL_ITEMS_TAG) || stack.isOf(Resonance.PEARL) || stack.isOf(Resonance.BIFURCATED_PEARL)) && (!stack.contains(DataComponentTypes.DAMAGE) || stack.getDamage() != stack.getMaxDamage())) {
 			world.playSound(null, pos, Resonance.PUT_ITEM_SOUND.value(), SoundCategory.BLOCKS);
 			if (!world.isClient() && world.getBlockEntity(pos) instanceof PearlHubBlockEntity blockEntity) {
 				blockEntity.setStack(stack.split(1));
 				world.setBlockState(pos, state.with(HAS_PEARL, true));
+				if (state.get(BEACON_POWERED)) {
+				BeaconedPearlEntity beaconedPearlEntity = new BeaconedPearlEntity(world, pos.getX() + 0.5, pos.getY() + 2.2, pos.getZ() + 0.5, blockEntity.getStack());
+				world.spawnEntity(beaconedPearlEntity);
+					for (ServerPlayerEntity player : world.getNonSpectatingEntities(ServerPlayerEntity.class, new Box(pos).expand(12))) {
+						Resonance.PEARL_HUB_CRITERION.trigger(player, blockEntity.getStack(), blockEntity.getLevel());
+					}
+				}
 			}
 			return ItemActionResult.success(world.isClient());
 		}
@@ -97,7 +108,7 @@ public class PearlHubBlock extends BlockWithEntity implements Waterloggable {
 
 	@Override
 	protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
-		if (!world.isClient() && world.getBlockEntity(pos) instanceof PearlHubBlockEntity blockEntity && state.get(HAS_PEARL)) {
+		if (!world.isClient() && world.getBlockEntity(pos) instanceof PearlHubBlockEntity blockEntity && state.get(HAS_PEARL) && !state.get(BEACON_POWERED)) {
 			if (player.isSneaking()) {
 				blockEntity.dropStack(world, pos, 0.5, 0.6, 0.5);
 				blockEntity.setStack(ItemStack.EMPTY);
@@ -114,7 +125,7 @@ public class PearlHubBlock extends BlockWithEntity implements Waterloggable {
 
 	@Override
 	protected void onExploded(BlockState state, World world, BlockPos pos, Explosion explosion, BiConsumer<ItemStack, BlockPos> stackMerger) {
-		if (!state.get(EXPENDED) && state.get(HAS_PEARL) && world.getBlockEntity(pos) instanceof PearlHubBlockEntity pearlHubBlockEntity) {
+		if (!state.get(EXPENDED) && !state.get(BEACON_POWERED) && state.get(HAS_PEARL) && world.getBlockEntity(pos) instanceof PearlHubBlockEntity pearlHubBlockEntity) {
 			world.setBlockState(pos, state.with(EXPENDED, true));
 			int i = pearlHubBlockEntity.pulsePearl(world, pos);
 			world.scheduleBlockTick(pos, this, world.getGameRules().getInt(Resonance.PEARL_REFRESH_DELAY_GAMERULE) / i);
@@ -132,7 +143,7 @@ public class PearlHubBlock extends BlockWithEntity implements Waterloggable {
 	@Override
 	protected void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
 		if (state.isOf(newState.getBlock())) { return; }
-		if (world.getBlockEntity(pos) instanceof PearlHubBlockEntity blockEntity && state.get(HAS_PEARL)) {
+		if (world.getBlockEntity(pos) instanceof PearlHubBlockEntity blockEntity && state.get(HAS_PEARL) && !state.get(BEACON_POWERED)) {
 			blockEntity.dropStack(world, pos, 0.5, 0.6, 0.5);
 			blockEntity.clear();
 		}
@@ -142,7 +153,7 @@ public class PearlHubBlock extends BlockWithEntity implements Waterloggable {
 	@Override
 	protected void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
 		if (!world.isClient() && world.isReceivingRedstonePower(pos) != state.get(POWERED)) {
-			if (!state.get(EXPENDED) && state.get(HAS_PEARL) && world.getBlockEntity(pos) instanceof PearlHubBlockEntity pearlHubBlockEntity) {
+			if (!state.get(EXPENDED) && state.get(HAS_PEARL) && !state.get(BEACON_POWERED) && world.getBlockEntity(pos) instanceof PearlHubBlockEntity pearlHubBlockEntity) {
 				int i = pearlHubBlockEntity.pulsePearl(world, pos);
 				state = state.with(EXPENDED, true);
 				world.scheduleBlockTick(pos, this, 5 * world.getGameRules().getInt(Resonance.PEARL_REFRESH_DELAY_GAMERULE) / i);

@@ -43,7 +43,7 @@ public class ShulkerBottle extends TintedBottle {
 			BlockPos vec3d = new BlockPos(0, 0, 0).offset(pointer.state().get(DispenserBlock.FACING)).multiply(4);
 			ArmorStandEntity armorStandEntity = new ArmorStandEntity(world, vec3d.getX(), vec3d.getY(), vec3d.getZ());
 			armorStandEntity.setCustomName(Text.translatable("block.minecraft.dispenser"));
-			ShulkerBulletEntity shulkerBulletEntity = new ShulkerBulletEntity(world, armorStandEntity, world.getClosestEntity(LivingEntity.class, TargetPredicate.createAttackable(), armorStandEntity, blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5, new Box(blockPos.getX() - 32, blockPos.getY() - 32, blockPos.getZ() - 32, blockPos.getX() + 32, blockPos.getY() + 32, blockPos.getZ() + 32)), pointer.state().get(DispenserBlock.FACING).getAxis());
+			ShulkerBulletEntity shulkerBulletEntity = new ShulkerBulletEntity(world, armorStandEntity, world.getClosestEntity(LivingEntity.class, TargetPredicate.createAttackable(), armorStandEntity, blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5, new Box(blockPos).expand(32)), pointer.state().get(DispenserBlock.FACING).getAxis());
 			shulkerBulletEntity.setPosition(blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5);
 			world.spawnEntity(shulkerBulletEntity);
 			return replace(pointer, stack, new ItemStack(Resonance.TINTED_BOTTLE));
@@ -61,7 +61,7 @@ public class ShulkerBottle extends TintedBottle {
 		world.playSound(null, user.getX(), user.getEyeY(), user.getZ(), SoundEvents.ENTITY_SHULKER_SHOOT, SoundCategory.PLAYERS, 0.5f, 0.4f / (world.getRandom().nextFloat() * 0.4f + 0.8f));
 		world.playSound(null, user.getBlockPos(), SoundEvents.ITEM_BOTTLE_EMPTY, SoundCategory.PLAYERS, 1.0f, world.getRandom().nextFloat() * 0.4f + 0.8f);
 		if (!world.isClient) {
-			ShulkerBulletEntity shulkerBulletEntity = new ShulkerBulletEntity(world, user, world.getClosestEntity(LivingEntity.class, TargetPredicate.createAttackable(), user, user.getX() + 0.5, user.getY() + 0.5, user.getZ() + 0.5, new Box(user.getX() - 32, user.getY() - 32, user.getZ() - 32, user.getX() + 32, user.getY() + 32, user.getZ() + 32)), Axis.Y);
+			ShulkerBulletEntity shulkerBulletEntity = new ShulkerBulletEntity(world, user, world.getClosestEntity(LivingEntity.class, TargetPredicate.createAttackable(), user, user.getX() + 0.5, user.getY() + 0.5, user.getZ() + 0.5, new Box(user.getBlockPos()).expand(32)), Axis.Y);
 			shulkerBulletEntity.setPosition(user.getEyePos());
 			world.spawnEntity(shulkerBulletEntity);
 		}

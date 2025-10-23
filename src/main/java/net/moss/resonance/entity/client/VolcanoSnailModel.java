@@ -11,17 +11,18 @@ import net.minecraft.client.render.entity.model.SinglePartEntityModel;
 import net.minecraft.util.math.MathHelper;
 import net.moss.resonance.entity.VolcanoSnailEntity;
 
+// TODO: animate hiding in their shell
 public class VolcanoSnailModel<T extends VolcanoSnailEntity> extends SinglePartEntityModel<T> {
 	private final ModelPart root;
 	private final ModelPart stalkR;
 	private final ModelPart stalkL;
-	private final ModelPart shell;
+	// private final ModelPart shell;
 
 	public VolcanoSnailModel(ModelPart root) {
 		this.root = root.getChild("root");
 		this.stalkR = this.root.getChild("stalk_r");
 		this.stalkL = this.root.getChild("stalk_l");
-		this.shell = this.root.getChild("shell");
+		// this.shell = this.root.getChild("shell");
 	}
 
 	public static TexturedModelData getTexturedModelData() {

@@ -223,6 +223,7 @@ public final class ResonanceEvents {
 		return TypedActionResult.pass(itemstack); 
 	}
 
+	// TODO: upgrade this with iterators
 	public static void onServerStart(MinecraftServer server) {
 		if (!server.getSaveProperties().getGeneratorOptions().shouldGenerateStructures()) { return; }
 		UniqueStructureDataSaver serverState = UniqueStructureDataSaver.getServerState(server);

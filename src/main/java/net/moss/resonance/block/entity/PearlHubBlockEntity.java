@@ -3,10 +3,12 @@ package net.moss.resonance.block.entity;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.entity.BeaconBlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.component.DataComponentTypes;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.Entity.RemovalReason;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -23,11 +25,16 @@ import net.minecraft.world.event.GameEvent;
 import net.moss.resonance.AlternatePearl;
 import net.moss.resonance.Resonance;
 import net.moss.resonance.block.PearlHubBlock;
+import net.moss.resonance.entity.BeaconedPearlEntity;
+import net.moss.resonance.entity.ModEntities;
 import net.moss.resonance.item.Pearl;
+import net.moss.resonance.mixin.BeaconBlockEntityAccessor;
 import net.moss.resonance.util.PearlStatsComponent;
 import net.moss.resonance.util.abstracts.BlockEntityWithItemIntentory;
 
 public class PearlHubBlockEntity extends BlockEntityWithItemIntentory {
+	protected int level;
+
 	public PearlHubBlockEntity(BlockPos pos, BlockState state) {
 		super(Resonance.PEARL_HUB_BLOCK_ENTITY, pos, state);
 	}
@@ -36,10 +43,46 @@ public class PearlHubBlockEntity extends BlockEntityWithItemIntentory {
 		super(type, pos, state);
 	}
 
+	public void setLevel(int level) {
+		this.level = level;
+	}
+
+	public int getLevel() {
+		return level;
+	}
+
+	public static void tick(World world, BlockPos pos, BlockState state, PearlHubBlockEntity entity) {
+		boolean bl1 = world.getBlockState(pos.down()).isOf(Blocks.BEACON);
+		int i = bl1 ? BeaconBlockEntityAccessor.updateLevel(world, pos.getX(), pos.getY() - 1, pos.getZ()) : 0;
+		boolean bl2 = i > 0;
+		boolean bl3 = state.get(PearlHubBlock.BEACON_POWERED);
+		if (bl3 && world.getTime() % 80L == 0L) {
+			world.playSound(null, pos, SoundEvents.BLOCK_BEACON_AMBIENT, SoundCategory.BLOCKS, 0.3F, 1.0F);
+		}
+		if (((!bl1 || !bl2) && bl3) || (bl1 && bl2 && !bl3)) {
+			BeaconBlockEntity.playSound(world, pos, SoundEvents.BLOCK_BEACON_DEACTIVATE);
+			BeaconBlockEntity.playSound(world, pos, Resonance.REVERBERATION_SOUND.value());
+			world.setBlockState(pos, state.with(PearlHubBlock.BEACON_POWERED, !bl3));
+			if (!bl3 && entity.hasStack()) {
+				BeaconedPearlEntity beaconedPearlEntity = new BeaconedPearlEntity(world, pos.getX() + 0.5, pos.getY() + 2.2, pos.getZ() + 0.5, entity.getStack());
+				world.spawnEntity(beaconedPearlEntity);
+				for (ServerPlayerEntity player : world.getNonSpectatingEntities(ServerPlayerEntity.class, new Box(pos).expand(12))) {
+					Resonance.PEARL_HUB_CRITERION.trigger(player, entity.getStack(), i);
+				}
+			} else {
+				for (BeaconedPearlEntity beaconedPearlEntity : world.getEntitiesByType(ModEntities.BEACONED_PEARL, new Box(pos.up(2)), BeaconedPearlEntity::isAttackable)) {
+					beaconedPearlEntity.remove(RemovalReason.DISCARDED);
+				}
+			}
+			return;
+		}
+		entity.setLevel(i);
+	}
+
 	public int usePearl(World world, BlockPos pos, PlayerEntity player) {
 		if (this.hasStack() && world instanceof ServerWorld serverWorld) {
 			world.emitGameEvent(null, GameEvent.BLOCK_ACTIVATE, pos);
-			Resonance.PEARL_HUB_CRITERION.trigger((ServerPlayerEntity) player, this.getStack());
+			Resonance.PEARL_HUB_CRITERION.trigger((ServerPlayerEntity) player, this.getStack(), 0);
 			return affectEntities(serverWorld, pos, List.of(player));
 		}
 		return 3;
@@ -51,7 +94,7 @@ public class PearlHubBlockEntity extends BlockEntityWithItemIntentory {
 			if (!this.getCachedState().get(PearlHubBlock.WATERLOGGED)) {
 				world.playSound(null, pos, SoundEvents.BLOCK_SCULK_SHRIEKER_SHRIEK, SoundCategory.BLOCKS, 0.5f, 0.6f + world.random.nextFloat() * 0.4f);
 			}
-			return affectEntities(serverWorld, pos, world.getEntitiesByClass(LivingEntity.class, new Box(pos).expand(3), Entity::isAlive));
+			return affectEntities(serverWorld, pos, world.getNonSpectatingEntities(LivingEntity.class, new Box(pos).expand(3)));
 		}
 		return 3;
 	}
@@ -114,10 +157,6 @@ public class PearlHubBlockEntity extends BlockEntityWithItemIntentory {
 		}
 
 		return recuperation;
-	}
-
-	public static void tick(World world, BlockPos pos, BlockState state, PearlHubBlockEntity entity) {
-
 	}
 
 	@Override

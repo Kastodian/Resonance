@@ -25,7 +25,7 @@ import net.minecraft.util.Identifier;
 import net.moss.resonance.Resonance;
 import net.moss.resonance.item.Pearl;
 
-// TODO: make this simpler and reflect stats and durability
+// TODO: make this simpler and reflect stats, durability, and blacklist
 public class PearlGestationEmiRecipe implements EmiRecipe {
 	private static final List<Potion> POTIONS = Registries.POTION.stream().collect(Collectors.toList());
 	private static final List<SuspiciousStewIngredient> STEW = SuspiciousStewIngredient.getAll();
@@ -87,14 +87,14 @@ public class PearlGestationEmiRecipe implements EmiRecipe {
 			ItemStack stack1 = input.get(1).getEmiStacks().getFirst().getItemStack();
 			ItemStack stack2 = input.get(2).getEmiStacks().getFirst().getItemStack();
 			ItemStack result = results.get(0).getItemStack();
-			if (stack1.getItem() instanceof Pearl) { widgets.add(randomPotion(stack1, false, 36, 2)).recipeContext(this); }
+			if (stack1.getItem() instanceof Pearl) { widgets.add(randomPotion(stack1, false, false, 36, 2)).recipeContext(this); }
 			else { widgets.addSlot(input.get(1), 36, 2).recipeContext(this); }
 
-			if (stack2.isOf(Resonance.PEARL)) { widgets.add(randomPotion(stack2, true, 54, 2)).recipeContext(this); }
+			if (stack2.isOf(Resonance.PEARL)) { widgets.add(randomPotion(stack2, true, false, 54, 2)).recipeContext(this); }
 			else if (stack2.isOf(Resonance.BIFURCATED_PEARL)) { widgets.add(randomBifurcated(stack2, 54, 2)).recipeContext(this); }
 			else { widgets.addSlot(input.get(2), 54, 2).recipeContext(this); }
 
-			if (result.isOf(Resonance.PEARL)) { widgets.add(randomPotion(result, true, 90, 2)).recipeContext(this); }
+			if (result.isOf(Resonance.PEARL)) { widgets.add(randomPotion(result, true, true, 90, 2)).recipeContext(this); }
 			else if (result.isOf(Resonance.BIFURCATED_PEARL)) { widgets.add(randomBifurcated(result, 90, 2)).recipeContext(this); }
 			else { widgets.addSlot(input.get(2), 90, 2).recipeContext(this); }
 		} else {
@@ -108,7 +108,7 @@ public class PearlGestationEmiRecipe implements EmiRecipe {
 		widgets.addSlot(results.get(1), 108, 2).recipeContext(this);
 	}
 
-	private GeneratedSlotWidget randomPotion(ItemStack stack, boolean second, int x, int y) {
+	private GeneratedSlotWidget randomPotion(ItemStack stack, boolean second, boolean product, int x, int y) {
 		return new GeneratedSlotWidget((random) -> {
 			RegistryEntry<Potion> potion1 = Registries.POTION.getEntry(POTIONS.get(random.nextInt(POTIONS.size())));
 			RegistryEntry<Potion> potion2 = Registries.POTION.getEntry(POTIONS.get(random.nextInt(POTIONS.size())));

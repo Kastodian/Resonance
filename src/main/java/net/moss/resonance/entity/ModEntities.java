@@ -18,9 +18,11 @@ public class ModEntities {
 	public static final EntityType<LostSoulEntity> LOST_SOUL = Registry.register(Registries.ENTITY_TYPE, Identifier.of(Resonance.MOD_ID, "lost_soul"), FabricEntityTypeBuilder.<LostSoulEntity>create(SpawnGroup.MONSTER, LostSoulEntity::new).dimensions(EntityDimensions.fixed(0.6F, 0.6F)).fireImmune().trackRangeChunks(4).build());
 	public static final EntityType<VentFluidProjectileEntity> VENT_FLUID_PROJECTILE = Registry.register(Registries.ENTITY_TYPE, Identifier.of(Resonance.MOD_ID, "vent_fluid_projectile"), FabricEntityTypeBuilder.<VentFluidProjectileEntity>create(SpawnGroup.MISC, VentFluidProjectileEntity::new).dimensions(EntityDimensions.fixed(0.5F, 0.5F)).trackRangeChunks(4).trackedUpdateRate(10).build());
 	public static final EntityType<VolcanoSnailEntity> VOLCANO_SNAIL = Registry.register(Registries.ENTITY_TYPE, Identifier.of(Resonance.MOD_ID, "volcano_snail"), FabricEntityTypeBuilder.<VolcanoSnailEntity>create(SpawnGroup.WATER_AMBIENT, VolcanoSnailEntity::new).dimensions(EntityDimensions.fixed(0.4F, 0.4F)).trackRangeChunks(4).build());
+	public static final EntityType<BeaconedPearlEntity> BEACONED_PEARL = Registry.register(Registries.ENTITY_TYPE, Identifier.of(Resonance.MOD_ID, "beaconed_pearl"), FabricEntityTypeBuilder.<BeaconedPearlEntity>create(SpawnGroup.WATER_AMBIENT, BeaconedPearlEntity::new).dimensions(EntityDimensions.fixed(0.6F, 0.6F)).trackRangeChunks(4).build());
 
 	public static void registerModEntities() {
 		FabricDefaultAttributeRegistry.register(LOST_SOUL, LostSoulEntity.createLostSoulAttributes());
 		FabricDefaultAttributeRegistry.register(VOLCANO_SNAIL, VolcanoSnailEntity.createVolcanoSnailAttributes());
+		FabricDefaultAttributeRegistry.register(BEACONED_PEARL, BeaconedPearlEntity.createLostSoulAttributes());
 	}
 }

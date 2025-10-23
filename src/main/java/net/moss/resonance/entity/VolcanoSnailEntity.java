@@ -20,6 +20,8 @@ import net.minecraft.entity.ai.goal.MoveIntoWaterGoal;
 import net.minecraft.entity.ai.goal.MoveToTargetPosGoal;
 import net.minecraft.entity.ai.goal.WanderAroundGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
+import net.minecraft.entity.attribute.EntityAttributeModifier;
+import net.minecraft.entity.attribute.EntityAttributeModifier.Operation;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
@@ -52,7 +54,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
 import net.minecraft.world.event.GameEvent;
 import net.moss.resonance.Resonance;
-import net.moss.resonance.util.EnchantUtils;
 
 public class VolcanoSnailEntity extends WaterCreatureEntity implements Bucketable {
 	private static final TrackedData<Byte> SNAIL_FLAGS = DataTracker.registerData(VolcanoSnailEntity.class, TrackedDataHandlerRegistry.BYTE);
@@ -123,9 +124,13 @@ public class VolcanoSnailEntity extends WaterCreatureEntity implements Bucketabl
 
 	@Nullable
 	public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
-		this.setColor(generateDefaultColor(world.getRandom()));
+		Random random = world.getRandom();
+		this.setColor(generateDefaultColor(random));
+		this.getAttributeInstance(EntityAttributes.GENERIC_SCALE).addPersistentModifier(new EntityAttributeModifier(RANDOM_SPAWN_BONUS_MODIFIER_ID, (random.nextFloat() * 0.3F) - 0.15F, Operation.ADD_MULTIPLIED_BASE));
 		return super.initialize(world, difficulty, spawnReason, entityData);
 	}
+	
+	@Override protected void playStepSound(BlockPos pos, BlockState state) { return; }
 
 	@Override
 	public boolean addStatusEffect(StatusEffectInstance effect, Entity source) {
@@ -141,14 +146,13 @@ public class VolcanoSnailEntity extends WaterCreatureEntity implements Bucketabl
 			this.dataTracker.set(HUNGRY, true);
 			this.dropStack(this.getVariant().getMetalState().copy());
 			this.emitGameEvent(GameEvent.ENTITY_INTERACT);
-			itemStack.damage(2, player, getSlotForHand(hand));
-			EnchantUtils.setCooldownTime(itemStack, player, 50);
+			itemStack.damage(4, player, getSlotForHand(hand));
 			// TODO : Sound Effects...
 		} else if (item instanceof DyeItem dyeItem) {
 			this.setColor(dyeItem.getColor());
 			this.emitGameEvent(GameEvent.ENTITY_INTERACT);
 			itemStack.decrementUnlessCreative(1, player);
-			// TODO : Sound Effects...
+			this.playSound(SoundEvents.ITEM_DYE_USE, 1.0F, 1.0F);
 		} else {
 			return Bucketable.tryBucket(player, hand, this).orElse(super.interactMob(player, hand));
 		}
@@ -184,11 +188,8 @@ public class VolcanoSnailEntity extends WaterCreatureEntity implements Bucketabl
 
 	public void setClimbingWall(boolean climbing) {
 		byte b = (Byte)this.dataTracker.get(SNAIL_FLAGS);
-		if (climbing) {
-			b = (byte)(b | 1);
-		} else {
-			b &= -2;
-		}
+		if (climbing) { b = (byte)(b | 1); }
+		else { b &= -2; }
 		this.dataTracker.set(SNAIL_FLAGS, b);
 	}
 
@@ -271,20 +272,9 @@ public class VolcanoSnailEntity extends WaterCreatureEntity implements Bucketabl
 			this.setControls(EnumSet.of(Goal.Control.JUMP, Goal.Control.MOVE));
 		}
 
-		@Override
-		public double getDesiredDistanceToTarget() {
-			return 4;
-		}
-
-		@Override
-		protected boolean isTargetPos(WorldView world, BlockPos pos) {
-			return VENT_FLUID_PREDICATE.test(world.getBlockState(pos));
-		}
-
-		@Override
-		public boolean canStart() {
-			return this.entity.getHungry() && this.mob.getRandom().nextInt(1000) == 0 && super.canStart();
-		}
+		@Override public double getDesiredDistanceToTarget() { return 4; }
+		@Override protected boolean isTargetPos(WorldView world, BlockPos pos) { return VENT_FLUID_PREDICATE.test(world.getBlockState(pos)); }
+		@Override public boolean canStart() { return this.entity.getHungry() && this.mob.getRandom().nextInt(1000) == 0 && super.canStart(); }
 
 		@Override
 		public void tick() {

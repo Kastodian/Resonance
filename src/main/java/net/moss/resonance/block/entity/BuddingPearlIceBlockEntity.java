@@ -1,5 +1,6 @@
 package net.moss.resonance.block.entity;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import org.jetbrains.annotations.Nullable;
@@ -79,6 +80,18 @@ public class BuddingPearlIceBlockEntity extends BlockEntity {
 			duration = (duration + potionStats.get(0)) / 2;
 			recupera = (recupera + potionStats.get(1)) / 2;
 			strength = (strength + potionStats.get(2)) / 2;
+		}
+
+		System.out.println("potionComponent: " + potionComponent);
+		Iterator<StatusEffectInstance> effects = potionComponent.getEffects().iterator();
+		potionComponent = PotionContentsComponent.DEFAULT;
+		while (effects.hasNext()) {
+			StatusEffectInstance effect = effects.next();
+			if (effect.getEffectType().isIn(Resonance.PEARL_EFFECT_BLACKLIST_TAG)) {
+				potionComponent = potionComponent.with(new StatusEffectInstance(StatusEffects.UNLUCK, effect.getDuration(), effect.getAmplifier(), effect.isAmbient(), effect.shouldShowParticles(), effect.shouldShowIcon()));
+			} else {
+				potionComponent = potionComponent.with(effect);
+			}
 		}
 
 		PearlNatures nature = hasCatalyst() && getCatalyst().contains(Resonance.PEARL_NATURE) ? getCatalyst().get(Resonance.PEARL_NATURE) : seed.getOrDefault(Resonance.PEARL_STATS, PearlStatsComponent.DEFAULT).nature();

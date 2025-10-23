@@ -104,7 +104,7 @@ import net.minecraft.text.Text;
 import net.moss.resonance.advancement.*;
 import net.moss.resonance.block.*;
 import net.moss.resonance.block.entity.*;
-import net.moss.resonance.compat.trinkets.TrinketsCompat;
+import net.moss.resonance.compat.TrinketsCompat;
 import net.moss.resonance.enchantment.*;
 import net.moss.resonance.entity.ModEntities;
 import net.moss.resonance.item.*;
@@ -138,6 +138,7 @@ public class Resonance implements ModInitializer {
 	public static final TagKey<Item> VENT_IGNITERS_TAG = TagKey.of(RegistryKeys.ITEM, Identifier.of(MOD_ID, "vent_igniters"));
 	public static final TagKey<Item> UNIQUE_ITEMS_TAG = TagKey.of(RegistryKeys.ITEM, Identifier.of(MOD_ID, "unique_items"));
 	public static final TagKey<Item> PEARL_ITEMS_TAG = TagKey.of(RegistryKeys.ITEM, Identifier.of(MOD_ID, "alternate_pearl_items"));
+	public static final TagKey<StatusEffect> PEARL_EFFECT_BLACKLIST_TAG = TagKey.of(RegistryKeys.STATUS_EFFECT, Identifier.of(MOD_ID, "pearl_effect_blacklist"));
 	// Advancement Criterion --------------------------------------------------------------------------------------------------------------------------------------------------------
 	public static final CritCriterion CRIT_CRITERION = Criteria.register(MOD_ID + ":" + "crit", new CritCriterion());
 	public static final ParryCriterion PARRY_CRITERION = Criteria.register(MOD_ID + ":" + "shield_parry", new ParryCriterion());

@@ -21,6 +21,8 @@ import net.moss.resonance.block.renderer.BrittleBlockEntityRenderer;
 import net.moss.resonance.block.renderer.BuddingPearlIceBlockEntityRenderer;
 import net.moss.resonance.block.renderer.PearlHubBlockEntityRenderer;
 import net.moss.resonance.entity.ModEntities;
+import net.moss.resonance.entity.client.BeaconedPearlModel;
+import net.moss.resonance.entity.client.BeaconedPearlRenderer;
 import net.moss.resonance.entity.client.LostSoulModel;
 import net.moss.resonance.entity.client.LostSoulRenderer;
 import net.moss.resonance.entity.client.SculkProjectileRenderer;
@@ -38,6 +40,7 @@ import net.moss.resonance.particle.MediumRingParticle;
 public class ResonanceClient implements ClientModInitializer {
 	public static final EntityModelLayer LOST_SOUL_LAYER = new EntityModelLayer(Identifier.of(Resonance.MOD_ID, "lost_soul"), "main");
 	public static final EntityModelLayer VOCANO_SNAIL_LAYER = new EntityModelLayer(Identifier.of(Resonance.MOD_ID, "volcano_snail"), "main");
+	public static final EntityModelLayer BEACONED_PEARL_LAYER = new EntityModelLayer(Identifier.of(Resonance.MOD_ID, "beaconed_pearl"), "main");
 
 	@Override
 	public void onInitializeClient() {
@@ -81,9 +84,11 @@ public class ResonanceClient implements ClientModInitializer {
 		EntityRendererRegistry.register(ModEntities.PEARL_PROJECTILE, FlyingItemEntityRenderer::new);
 		EntityRendererRegistry.register(ModEntities.VENT_FLUID_PROJECTILE, VentFluidProjectileRenderer::new);
 		EntityRendererRegistry.register(ModEntities.VOLCANO_SNAIL, VolcanoSnailRenderer::new);
+		EntityRendererRegistry.register(ModEntities.BEACONED_PEARL, BeaconedPearlRenderer::new);
 
 		EntityModelLayerRegistry.registerModelLayer(LOST_SOUL_LAYER, LostSoulModel::getTexturedModelData);
 		EntityModelLayerRegistry.registerModelLayer(VOCANO_SNAIL_LAYER, VolcanoSnailModel::getTexturedModelData);
+		EntityModelLayerRegistry.registerModelLayer(BEACONED_PEARL_LAYER, BeaconedPearlModel::getTexturedModelData);
 
 		BlockEntityRendererFactories.register(Resonance.RAIN_CHIME_BLOCK_ENTITY, RainChimeBlockRenderer::new);
 		BlockEntityRendererFactories.register(Resonance.PEARL_HUB_BLOCK_ENTITY, PearlHubBlockEntityRenderer::new);

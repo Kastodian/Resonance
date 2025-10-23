@@ -69,12 +69,13 @@ public class LivingEntityMixin {
 		}
 	}
 
-	@Inject(at = @At("HEAD"), method = "onDamaged")
-	private void onDamaged(DamageSource source, CallbackInfo ci) {
+	@Inject(at = @At("HEAD"), method = "damage")
+    private void damage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
 		LivingEntity entity = (LivingEntity)(Object) this;
+		if (entity.hurtTime > 0) { return; }
 		Random random = entity.getRandom();
 		World world = entity.getWorld();
-		Optional<LivingEntity> attacker = source.getAttacker() instanceof ProjectileEntity projectileEntity && projectileEntity.getOwner() instanceof LivingEntity ownerEntity ? Optional.of(ownerEntity) : source.getAttacker() instanceof LivingEntity livingEntity ? Optional.of(livingEntity) : Optional.empty();
+		Optional<LivingEntity> attacker = (source.getAttacker() instanceof ProjectileEntity projectileEntity && projectileEntity.getOwner() instanceof LivingEntity ownerEntity) ? Optional.of(ownerEntity) : (source.getAttacker() instanceof LivingEntity livingEntity ? Optional.of(livingEntity) : Optional.empty());
 
 		if (attacker.isPresent()) {
 			for (ItemStack itemStack : Utils.getAllEquipped(entity, false)) {
@@ -87,14 +88,14 @@ public class LivingEntityMixin {
 		}
 
 		if (!source.isOf(Resonance.REVERBERATION_DAMAGE) && Utils.isItemEquipped(entity, Resonance.ECHO_SCARF, false)) {
-			ResonanceEvents.REVERBERATE.invoker().onResonate(world, entity.getEyePos(), new Vector3f(0f, entity.getHeadYaw() * MathHelper.DEGREES_PER_RADIAN, 0f), entity, entity, 1.5f, false);
+			ResonanceEvents.REVERBERATE.invoker().onResonate(world, entity.getEyePos(), new Vector3f(0f, entity.getHeadYaw() * MathHelper.DEGREES_PER_RADIAN, 0f), entity, entity, 2f, false);
 		}
 
 		if (world instanceof ServerWorld serverWorld && entity.hasStatusEffect(StatusEffects.WIND_CHARGED) && random.nextInt(1 + entity.getStatusEffect(StatusEffects.WIND_CHARGED).getAmplifier()) != 0) {
 			double d = entity.getX();
 			double e = entity.getY() + entity.getHeight() / 2.0f;
 			double f = entity.getZ();
-			float g = 3.0f + random.nextFloat() * 2.0f;
+			float g = 3.0f + entity.getStatusEffect(StatusEffects.WIND_CHARGED).getAmplifier() * 2.0f;
 			serverWorld.createExplosion(entity, null, AbstractWindChargeEntity.EXPLOSION_BEHAVIOR, d, e, f, g, false, World.ExplosionSourceType.TRIGGER, ParticleTypes.GUST_EMITTER_SMALL, ParticleTypes.GUST_EMITTER_LARGE, SoundEvents.ENTITY_BREEZE_WIND_BURST);
 		}
 
@@ -102,7 +103,7 @@ public class LivingEntityMixin {
 			world.playSound(null, entity.getX(), entity.getY(), entity.getZ(), Resonance.ELECTRIC_SPARK_SOUND.value(), SoundCategory.BLOCKS, 0.1f, 1f);
 			for (ItemStack itemStack : Utils.getAllEquipped(entity, true)) {
 				if (itemStack.isIn(Resonance.CONDUCTIVE_ITEMS_TAG) || entity.getSteppingBlockState().isIn(Resonance.CONDUCTIVE_BLOCKS_TAG) || entity.getBlockStateAtPos().isIn(Resonance.CONDUCTIVE_BLOCKS_TAG) || entity.getActiveItem().isIn(Resonance.CONDUCTIVE_ITEMS_TAG)) {
-					ResonanceEvents.STATIC_SHOCK.invoker().staticShock(entity, entity.getStatusEffect(Resonance.SPARKING).getAmplifier(), attacker.get());
+					ResonanceEvents.STATIC_SHOCK.invoker().staticShock(entity, entity.getStatusEffect(Resonance.SPARKING).getAmplifier(), attacker.orElse(null));
 					break;
 				}
 			}

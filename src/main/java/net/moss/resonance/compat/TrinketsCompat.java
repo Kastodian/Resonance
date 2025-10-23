@@ -1,4 +1,4 @@
-package net.moss.resonance.compat.trinkets;
+package net.moss.resonance.compat;
 
 import dev.emi.trinkets.api.Trinket;
 import dev.emi.trinkets.api.TrinketsApi;

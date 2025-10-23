@@ -12,6 +12,7 @@ import net.minecraft.client.model.ModelTransform;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.block.entity.BeaconBlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.registry.Registries;
@@ -33,15 +34,18 @@ public class PearlHubBlockEntityRenderer extends BlockEntityWithNametagRenderer<
 		super(context);
 		ModelData modelData = new ModelData();
 		ModelPartData modelPartData = modelData.getRoot();
-		ModelPartData pearl = modelPartData.addChild("pearl", ModelPartBuilder.create().uv(0, 0).cuboid(-3, height, -3, 6, 6, 6, new Dilation(0.0F)), ModelTransform.of(8, 0, 8, 0, 0, 0));
-		pearl.addChild("pearlCore", ModelPartBuilder.create().uv(0, 12).cuboid(-2.5f, height + 0.25f, -2.5f, 5, 5, 5, new Dilation(0.0F)), ModelTransform.NONE);
+		ModelPartData pearl = modelPartData.addChild("pearl", ModelPartBuilder.create().uv(0, 0).cuboid(-3, height, -3, 6, 6, 6, Dilation.NONE).uv(0, 12).cuboid(-2.5f, height + 0.25f, -2.5f, 5, 5, 5, Dilation.NONE), ModelTransform.of(8, 0, 8, 0, 0, 0));
 		this.pearl = pearl.createPart(32, 32);
 	}
 
 	@Override
 	public void render(PearlHubBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
 		BlockState state = entity.getCachedState();
-		if (!entity.hasStack() || state.get(PearlHubBlock.BEACON_POWERED)) { return; }
+		if (state.get(PearlHubBlock.BEACON_POWERED)) {
+			BeaconBlockEntityRenderer.renderBeam(matrices, vertexConsumers, BeaconBlockEntityRenderer.BEAM_TEXTURE, tickDelta, 1.0F, entity.getWorld().getTime(), -1, 1, 16383998, 0.2F, 0.25F);
+			return;
+		}
+		if (!entity.hasStack()) { return; }
 		super.render(entity, tickDelta, matrices, vertexConsumers, light, overlay);
 		if (state.get(PearlHubBlock.EXPENDED)) { light /= 2; }
 		VertexConsumer consumer = vertexConsumers.getBuffer(RenderLayer.getEntityCutoutNoCull(Identifier.of(Resonance.MOD_ID, "textures/entity/pearl_hub/" + Registries.ITEM.getId(entity.getStack().getItem()).getPath() + ".png")));
