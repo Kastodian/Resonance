@@ -25,7 +25,9 @@
 								"minecraft:potion",
 								"minecraft:splash_potion",
 								"minecraft:lingering_potion",
-								"minecraft:ominous_bottle"
+								"minecraft:ominous_bottle",
+								"minecraft:suspicious_stew",
+								"minecraft:tipped_arrow"
 							]
 						}
 					}

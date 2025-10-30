@@ -15,6 +15,7 @@
 	},
 	"rewards": {
 		"recipes": [
+			"resonance:crafting/spirit_scarf",
 			"resonance:crafting/experience_bottle",
 			"resonance:crafting/soul_sand",
 			"resonance:crafting/soul_soil"

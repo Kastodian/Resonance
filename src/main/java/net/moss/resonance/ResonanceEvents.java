@@ -42,7 +42,6 @@ import net.minecraft.item.Items;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.input.SingleStackRecipeInput;
-import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.entry.RegistryEntryList;
 import net.minecraft.server.MinecraftServer;
@@ -239,12 +238,12 @@ public final class ResonanceEvents {
 		} else {
 			int sizeMultiplier = 100;
 			int maxSearchRadius = 200 * sizeMultiplier;
-			for (RegistryKey<World> WorldKey : server.getWorldRegistryKeys().stream().toList()) {
-				ServerWorld world = server.getWorld(WorldKey);
+			server.getWorldRegistryKeys().stream().forEach(worldKey -> {
+				ServerWorld world = server.getWorld(worldKey);
 				Map<String, StructureSet> temp = world.getChunkManager().getStructurePlacementCalculator().getStructureSets().stream()
 						.filter(structure -> structure.value().placement() instanceof UniqueStructurePlacement)
 						.collect(Collectors.toMap(RegistryEntry<StructureSet>::getIdAsString, structure -> structure.value()));
-				if (temp.isEmpty()) { break; }
+				if (temp.isEmpty()) { return; }
 				temp.forEach((id, structureSet) -> {
 					if (structureSet.structures().getFirst().structure().value() instanceof FixedStructureType structureType) {
 						UniqueStructurePlacement placement = (UniqueStructurePlacement) structureSet.placement();
@@ -297,7 +296,7 @@ public final class ResonanceEvents {
 					}
 					if (temp.isEmpty()) { break; }
 				}
-			}
+			});
 			serverState.generated = true;
 		}
 	}

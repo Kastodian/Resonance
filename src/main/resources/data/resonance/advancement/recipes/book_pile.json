@@ -9,7 +9,8 @@
 							"minecraft:book",
 							"minecraft:bookshelf",
 							"minecraft:paper",
-							"minecraft:enchanting_table"
+							"minecraft:enchanting_table",
+							"resonance:book_pile"
 						]
 					}
 				]
