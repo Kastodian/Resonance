@@ -50,14 +50,7 @@ public class BrittleBlock extends BlockWithEntity {
 
 	@Override
 	protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-		super.appendProperties(builder);
-		builder.add(CRACKED);
-	}
-
-	public void setStoredState(BlockState state, ServerWorld world, BlockPos pos, BlockState storedState) {
-		if (world.getBlockEntity(pos) instanceof BrittleBlockEntity blockEntity) {
-			blockEntity.setStoredState(storedState);
-		}
+		super.appendProperties(builder.add(CRACKED));
 	}
 
 	@Override
@@ -86,7 +79,7 @@ public class BrittleBlock extends BlockWithEntity {
 
 	@Override
 	public void onLandedUpon(World world, BlockState state, BlockPos pos, Entity entity, float fallDistance) {
-		if (world.isClient) { return; }
+		if (world.isClient()) { return; }
 		if (state.get(CRACKED)) {
 			world.breakBlock(pos, true, entity);
 		} else if (world.getRandom().nextInt(3) == 0) {
@@ -148,8 +141,10 @@ public class BrittleBlock extends BlockWithEntity {
 	public static void makeBrittle(BlockState state, ServerWorld world, BlockPos pos, Random random) {
 		Block block = state.getBlock();
 		if (state.isIn(Resonance.BRITTLE_BLACKLIST_TAG) || block instanceof BrittleBlock || block instanceof BlockEntityProvider || !state.isFullCube(world, pos) || state.getHardness(world, pos) < 0) { return; }
-		world.setBlockState(pos, Resonance.BRITTLE_BLOCK.getDefaultState(), Block.NOTIFY_ALL);
-		((BrittleBlock)Resonance.BRITTLE_BLOCK.getDefaultState().getBlock()).setStoredState(world.getBlockState(pos), world, pos, state);
+		world.setBlockState(pos, Resonance.BRITTLE_BLOCK.getDefaultState());
+		if (world.getBlockEntity(pos) instanceof BrittleBlockEntity blockEntity) {
+			blockEntity.setStoredState(state);
+		}
 	}
 
 	@Override public BlockEntity createBlockEntity(BlockPos blockPos, BlockState blockState) { return new BrittleBlockEntity(blockPos, blockState); }

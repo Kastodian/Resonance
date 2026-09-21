@@ -53,5 +53,9 @@
 	"bathyal_vent_ambient": {
 		"subtitle": "resonance.bathyal_vent.ambient",
 		"sounds": [ "resonance:vent_ambient" ]
+	},
+	"skeleton_converts_to_wither_skeleton": {
+		"subtitle": "resonance.skeleton_converts_to_wither_skeleton",
+		"sounds": [ "resonance:skeleton_converts_to_wither_skeleton" ]
 	}
 }

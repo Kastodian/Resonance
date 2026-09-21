@@ -45,9 +45,22 @@
 							}
 						},
 						{
-							"condition": "resonance:crit_count",
+							"condition": "minecraft:entity_properties",
 							"entity": "attacker",
-							"crit_count": 3
+							"predicate": {
+								"equipment": {
+									"mainhand": {
+										"predicates": {
+											"resonance:stored_crits": {
+												"stored_crits": {
+													"min": 3,
+													"max": 255
+												}
+											}
+										}
+									}
+								}
+							}
 						}
 					]
 				}

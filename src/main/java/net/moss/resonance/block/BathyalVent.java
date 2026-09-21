@@ -1,4 +1,3 @@
-// Source code is decompiled from a .class file using FernFlower decompiler.
 package net.moss.resonance.block;
 
 import net.minecraft.block.AbstractBlock;
@@ -151,7 +150,7 @@ public class BathyalVent extends Block implements Waterloggable {
 					BlockPos blockPos = supportingPos.get();
 					boolean heatSource = false;
 					for (int i = 1; i < 5; i++) {
-						if (world.getBlockState(blockPos.down(i)).isIn(Resonance.VENT_HEAT_SOURCE_BLOCKS_TAG)) {
+						if (world.getBlockState(blockPos.down(i)).isIn(Resonance.VENT_HEAT_SOURCE_TAG)) {
 							heatSource = true;
 							break; 
 						}
@@ -159,7 +158,7 @@ public class BathyalVent extends Block implements Waterloggable {
 					if (heatSource == state.get(LIT)) {
 						return super.onUseWithItem(stack, state, world, pos, player, hand, hit);
 					}
-					world.setBlockState(pos, state.with(LIT, heatSource), Block.NOTIFY_ALL);
+					world.setBlockState(pos, state.with(LIT, heatSource));
 					if (heatSource) {
 						world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.NEUTRAL, 0.2f, 0.4f / (world.getRandom().nextFloat() * 0.4f + 0.8f));
 						world.scheduleBlockTick(pos, this, 1);
@@ -171,7 +170,7 @@ public class BathyalVent extends Block implements Waterloggable {
 							Vec3d vec3d = state.getModelOffset(world, pos);
 							for (int i = 0; i < 5; i++) {
 								world.addImportantParticle(
-										new VentSmoke(colour, 1.0F + random.nextFloat() * 2, false), true,
+										new VentSmoke(colour, 1.0F + random.nextFloat() * 2, true, true), true,
 										pos.getX() + 0.5 + vec3d.x + (random.nextDouble() - 0.5) / 5.0,
 										pos.getY() + 0.25 + random.nextDouble(),
 										pos.getZ() + 0.5 + vec3d.z + (random.nextDouble() - 0.5) / 5.0,
@@ -182,7 +181,7 @@ public class BathyalVent extends Block implements Waterloggable {
 					stack.decrementUnlessCreative(1, player);
 					player.incrementStat(Stats.USED.getOrCreateStat(item));
 					world.emitGameEvent(player, GameEvent.BLOCK_ACTIVATE, pos);
-					return ItemActionResult.success(world.isClient);
+					return ItemActionResult.success(world.isClient());
 				}
 			}
 		}
@@ -204,18 +203,18 @@ public class BathyalVent extends Block implements Waterloggable {
 			BlockPos blockPos = supportingPos.get();
 			boolean heatSource = false;
 			for (int i = 1; i < 5; i++) {
-				if (world.getBlockState(blockPos.down(i)).isIn(Resonance.VENT_HEAT_SOURCE_BLOCKS_TAG)) {
+				if (world.getBlockState(blockPos.down(i)).isIn(Resonance.VENT_HEAT_SOURCE_TAG)) {
 					heatSource = true;
 					break; 
 				}
 			}
 			if (light) {
-				world.setBlockState(pos, state.with(LIT, heatSource), Block.NOTIFY_ALL);
+				world.setBlockState(pos, state.with(LIT, heatSource));
 				if (heatSource) { world.scheduleBlockTick(pos, this, 1); }
 			} else if (grow && heatSource && VentFluidBlock.isStillWater(world.getBlockState(pos.up()))) {
 				DimensionType dim = world.getDimension();
 				int age = Math.min(state.get(AGE) + random.nextBetween(1, 3 + ((pos.getY() + dim.minY()) / (dim.height() + dim.minY())) * 3), 5);
-				world.setBlockState(pos.up(), Resonance.BATHYAL_VENT.getDefaultState().with(THICKNESS, VentThickness.TIP).with(AGE, age).with(WATERLOGGED, world.getFluidState(pos).getFluid() == Fluids.WATER), Block.NOTIFY_ALL);
+				world.setBlockState(pos.up(), Resonance.BATHYAL_VENT.getDefaultState().with(THICKNESS, VentThickness.TIP).with(AGE, age).with(WATERLOGGED, world.getFluidState(pos).getFluid() == Fluids.WATER));
 			}
 		}
 	}
@@ -229,7 +228,7 @@ public class BathyalVent extends Block implements Waterloggable {
 	@Override
 	public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
 		super.randomDisplayTick(state, world, pos, random);
-		if (state.get(LIT) && state.get(WATERLOGGED)) {
+		if (state.get(LIT) && (state.get(WATERLOGGED) || world.getDimension().ultrawarm())) {
 			if (random.nextInt(50) == 1) {
 				world.playSound(pos.getX(), pos.getY(), pos.getZ(), Resonance.BATHYAL_VENT_AMBIENT_SOUND.value(), SoundCategory.AMBIENT, 0.5f, 0.4f / (world.getRandom().nextFloat() * 0.4f + 0.8f), false);
 			}
@@ -237,7 +236,7 @@ public class BathyalVent extends Block implements Waterloggable {
 			Vector3f colour = Vec3d.unpackRgb(state.get(COLOR).getFireworkColor()).toVector3f();
 			for (int i = 0; i < random.nextInt(3) + 1; i++) {
 				world.addImportantParticle(
-						new VentSmoke(colour, 1.0F + random.nextFloat() * 2, false), true,
+						new VentSmoke(colour, 1.0F + random.nextFloat() * 2, state.get(WATERLOGGED), false), true,
 						pos.getX() + 0.5 + vec3d.x + (random.nextDouble() - 0.5) / 5.0,
 						pos.getY() + 0.25 + random.nextDouble(),
 						pos.getZ() + 0.5 + vec3d.z + (random.nextDouble() - 0.5) / 5.0,

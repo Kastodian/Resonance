@@ -23,12 +23,15 @@
 		"RedstoneViewMixin",
 		"ProjectileEntityMixin",
 		"BeaconBlockEntityMixin",
+		"BeamSegmentMixin",
+		"FlowableFluidMixin",
 		"BeaconBlockEntityAccessor"
 	],
 	"client": [
 		"ArmorRendererMixin",
 		"HeldItemRendereryMixin",
 		"PlayerEntityRendererMixin",
+		"BeaconBlockEntityRendererMixin",
 		"EntityRendererMixin",
 		"InGameHudMixin",
 		"ClientPlayerEntityMixin"

@@ -1,0 +1,100 @@
+{
+	"carvers": {
+		"air": [
+			"resonance:bathyal_carver"
+		]
+	},
+	"temperature": 0.7,
+	"downfall": 0.5,
+	"has_precipitation": true,
+	"effects": {
+		"sky_color": 8103167,
+		"water_color": 4742067,
+		"fog_color": 12638463,
+		"water_fog_color": 724762,
+		"grass_color": 9343833,
+		"foliage_color": 9343833,
+		"ambient_sound": "ambient.underwater.loop",
+		"mood_sound": {
+			"sound": "ambient.underwater.loop.additions.ultra_rare",
+			"tick_delay": 6000,
+			"block_search_extent": 8,
+			"offset": 2
+		},
+		"additions_sound": {
+			"sound": "ambient.nether_wastes.additions",
+			"tick_chance": 0.01
+		},
+		"music": {
+			"sound": "ambient.underwater.loop",
+			"min_delay": 10000,
+			"max_delay": 20000,
+			"replace_current_music": true
+		}
+	},
+	"spawn_costs": {},
+	"spawners": {
+		"ambient": [],
+		"axolotls": [],
+		"creature": [],
+		"misc": [],
+		"monster": [],
+		"underground_water_creature": [],
+		"water_ambient": [],
+		"water_creature": []
+	},
+	"features": [
+		[],
+		[
+			"minecraft:lake_lava_underground",
+			"minecraft:lake_lava_surface"
+		],
+		[
+			"minecraft:amethyst_geode"
+		],
+		[],
+		[],
+		[],
+		[
+			"resonance:baythal_floor",
+			"resonance:bathyal_heat",
+			"resonance:baythal_spur",
+			"minecraft:ore_gravel",
+			"minecraft:ore_granite_upper",
+			"minecraft:ore_granite_lower",
+			"minecraft:ore_diorite_upper",
+			"minecraft:ore_diorite_lower",
+			"minecraft:ore_andesite_upper",
+			"minecraft:ore_andesite_lower",
+			"minecraft:ore_tuff",
+			"minecraft:ore_coal_upper",
+			"minecraft:ore_coal_lower",
+			"minecraft:ore_iron_upper",
+			"minecraft:ore_iron_middle",
+			"minecraft:ore_iron_small",
+			"minecraft:ore_gold",
+			"minecraft:ore_gold_lower",
+			"minecraft:ore_redstone",
+			"minecraft:ore_redstone_lower",
+			"minecraft:ore_diamond",
+			"minecraft:ore_diamond_medium",
+			"minecraft:ore_diamond_large",
+			"minecraft:ore_diamond_buried",
+			"minecraft:ore_lapis",
+			"minecraft:ore_lapis_buried",
+			"minecraft:ore_copper",
+			"minecraft:underwater_magma"
+		],
+		[],
+		[
+			"minecraft:spring_water",
+			"minecraft:spring_lava"
+		],
+		[
+			"resonance:vent_cluster",
+			"resonance:vent_column",
+			"minecraft:glow_lichen"
+		],
+		[]
+	]
+}

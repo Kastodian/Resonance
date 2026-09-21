@@ -21,7 +21,7 @@ public interface RedstoneViewMixin extends BlockView {
 			BlockState blockState = this.getBlockState(pos.offset(direction, i));
 			if (blockState.isIn(BlockTags.OCCLUDES_VIBRATION_SIGNALS)) { return; }
 			if (i % 2 == 0) { continue; }
-			if (blockState.isOf(Resonance.BATHYAL_HEART) && blockState.get(Properties.POWERED)) {
+			if (blockState.isOf(Resonance.BATHYAL_HEART) && blockState.get(Properties.POWERED) && blockState.get(Properties.WATERLOGGED)) {
 				int power = blockState.get(Properties.POWER);
 				int bitValue = (power >> ((i + 1) / 2 - 1)) & 1;
 				if (bitValue == 1) { cir.setReturnValue(power); }

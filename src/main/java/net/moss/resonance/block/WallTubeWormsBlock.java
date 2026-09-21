@@ -41,6 +41,7 @@ public class WallTubeWormsBlock extends TubeWormsBlock {
 		}
 	}
 
+	@Override
 	protected BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
 		return !canGrowOn(world, state.get(HORIZONTAL_FACING), pos) ? Blocks.AIR.getDefaultState() : state;
 	}
@@ -54,15 +55,11 @@ public class WallTubeWormsBlock extends TubeWormsBlock {
 		return false;
 	}
 
-	protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-		builder.add(AGE, HORIZONTAL_FACING);
-	}
-
 	@Override
 	@Nullable
 	public BlockState getPlacementState(ItemPlacementContext ctx) {
 		for (Direction direction : ctx.getPlacementDirections()) {
-			if (canGrowOn(ctx.getWorld(), direction, ctx.getBlockPos())) {
+			if (direction != Direction.UP && canGrowOn(ctx.getWorld(), direction, ctx.getBlockPos())) {
 				return this.getDefaultState().with(HORIZONTAL_FACING, direction);
 			}
 		}
@@ -70,4 +67,5 @@ public class WallTubeWormsBlock extends TubeWormsBlock {
 	}
 
 	@Override protected boolean hasRandomTicks(BlockState state) { return state.get(AGE) < 2; }
+	@Override protected void appendProperties(StateManager.Builder<Block, BlockState> builder) { super.appendProperties(builder.add(HORIZONTAL_FACING)); }
 }

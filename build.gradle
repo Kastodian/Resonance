@@ -1,21 +1,13 @@
 plugins {
-	id 'fabric-loom' version '1.7-SNAPSHOT'
+	id 'fabric-loom' version '1.17-SNAPSHOT'
 	id 'maven-publish'
 }
-
-sourceCompatibility = JavaVersion.VERSION_21
-targetCompatibility = JavaVersion.VERSION_21
-
-archivesBaseName = project.archives_base_name
-version = project.mod_version
-group = project.maven_group
 
 loom {
 	accessWidenerPath = file("src/main/resources/resonance.accesswidener")
 }
 
 repositories {
-	// Add repositories to retrieve artifacts from in here.
 	// You should only use this when depending on other mods because
 	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
 	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
@@ -23,17 +15,16 @@ repositories {
 	maven { url "https://maven.terraformersmc.com/" }
 	maven { url "https://maven.ladysnake.org/releases" }
 	maven { url "https://api.modrinth.com/maven" }
+	maven { url "https://repo.sleeping.town/" }
 }
 
 dependencies {
-	// To change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-	
-	//TODO: EMI SUPPORT
+
 	modCompileOnly "dev.emi:emi-fabric:${project.emi_version}:api"
 	modLocalRuntime "dev.emi:emi-fabric:${project.emi_version}"
 	//modApi "dev.emi:emi-fabric:${project.emi_version}:api"
@@ -46,8 +37,6 @@ dependencies {
 	modApi "dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cardinal_components_version}"
 	modApi "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${project.cardinal_components_version}"
 
-	// modApi("com.terraformersmc:biolith-fabric:${biolith_version}")
-	// modApi "com.terraformersmc:biolith:${biolith_version}"
 	modApi "com.terraformersmc:biolith-fabric:${project.biolith_version}"
 	include "com.terraformersmc:biolith-fabric:${project.biolith_version}"
 }
@@ -61,7 +50,6 @@ processResources {
 }
 
 tasks.withType(JavaCompile).configureEach {
-	// Minecraft 1.18 (1.18-pre2) upwards uses Java 17.
 	it.options.release = 21
 }
 
@@ -70,6 +58,8 @@ java {
 	// if it is present.
 	// If you remove this line, sources will not be generated.
 	withSourcesJar()
+	sourceCompatibility = JavaVersion.VERSION_21
+	targetCompatibility = JavaVersion.VERSION_21
 }
 
 jar {

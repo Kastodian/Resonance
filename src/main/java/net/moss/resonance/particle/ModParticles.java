@@ -15,6 +15,7 @@ public class ModParticles {
 	public static final SimpleParticleType AMETHYST_PARTICLE = FabricParticleTypes.simple();
 	public static final SimpleParticleType GOLDEN_GLITTER = FabricParticleTypes.simple();
 	public static final ParticleType<VentSmoke> VENT_SMOKE = FabricParticleTypes.complex(VentSmoke.CODEC, VentSmoke.PACKET_CODEC);
+	public static final SimpleParticleType SOUL_DARKNESS = FabricParticleTypes.simple();
 
 	public static void registerModParticles() {
 		Registry.register(Registries.PARTICLE_TYPE, Identifier.of(Resonance.MOD_ID, "small_ring_particle"), SMALL_RING_PARTICLE);
@@ -23,5 +24,6 @@ public class ModParticles {
 		Registry.register(Registries.PARTICLE_TYPE, Identifier.of(Resonance.MOD_ID, "amethyst_particle"), AMETHYST_PARTICLE);
 		Registry.register(Registries.PARTICLE_TYPE, Identifier.of(Resonance.MOD_ID, "golden_glitter"), GOLDEN_GLITTER);
 		Registry.register(Registries.PARTICLE_TYPE, Identifier.of(Resonance.MOD_ID, "vent_smoke"), VENT_SMOKE);
+		Registry.register(Registries.PARTICLE_TYPE, Identifier.of(Resonance.MOD_ID, "soul_darkness"), SOUL_DARKNESS);
 	}
 }

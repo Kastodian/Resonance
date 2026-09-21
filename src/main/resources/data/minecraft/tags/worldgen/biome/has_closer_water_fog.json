@@ -1,6 +1,7 @@
 {
 	"replace": false,
 	"values": [
-		"resonance:bathyal_zone"
+		"resonance:bathyal_vents",
+		"resonance:bathyal_dream"
 	]
 }

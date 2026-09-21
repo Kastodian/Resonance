@@ -23,7 +23,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.world.World;
-import net.moss.resonance.util.Utils;
 import net.moss.resonance.entity.SculkProjectileEntity;
 
 public class SculkProjectileEntity extends ProjectileEntity {
@@ -44,8 +43,8 @@ public class SculkProjectileEntity extends ProjectileEntity {
 	protected void onCollision(HitResult hitResult) {
 		super.onCollision(hitResult);
 		if (this.getWorld() instanceof ServerWorld world) {
-			Utils.entitiesInRadius(world, this.getPos(), this, 2, 2, Entity::isAlive).forEach(entity -> {
-				if (entity instanceof LivingEntity livingEntity) { livingEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.DARKNESS, 10 * 20)); }
+			world.getEntitiesByClass(LivingEntity.class, this.getBoundingBox().expand(2), LivingEntity::isAlive).forEach(entity -> {
+				entity.addStatusEffect(new StatusEffectInstance(StatusEffects.DARKNESS, 10 * 20));
 			});
 		}
 		if (!this.getWorld().isClient()) { this.discard(); }

@@ -8,7 +8,7 @@ import net.minecraft.enchantment.effect.EnchantmentEntityEffect;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Vec3d;
-import net.moss.resonance.util.interfaces.CritStoringInterface;
+import net.moss.resonance.Resonance;
 
 public record SetCritCountEnchantmentEffect(EnchantmentLevelBasedValue critCount) implements EnchantmentEntityEffect {
 	public static final MapCodec<SetCritCountEnchantmentEffect> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
@@ -20,6 +20,6 @@ public record SetCritCountEnchantmentEffect(EnchantmentLevelBasedValue critCount
 
 	@Override
 	public void apply(ServerWorld world, int level, EnchantmentEffectContext context, Entity user, Vec3d pos) {
-		if (context.stack().getItem() instanceof CritStoringInterface interface1) { interface1.setStoredCrits(context.stack(), (int) this.critCount.getValue(level)); }
+		if (context.stack().contains(Resonance.STORED_CRITS)) { context.stack().set(Resonance.STORED_CRITS, (int) this.critCount.getValue(level)); }
 	}
 }

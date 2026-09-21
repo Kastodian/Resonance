@@ -1,31 +1,45 @@
 package net.moss.resonance.block.entity;
 
 import java.util.Iterator;
-import java.util.List;
 import java.util.Objects;
 import org.jetbrains.annotations.Nullable;
+import com.mojang.logging.LogUtils;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.SculkSpreadManager;
 import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.ItemEnchantmentsComponent;
 import net.minecraft.component.type.PotionContentsComponent;
-import net.minecraft.component.type.SuspiciousStewEffectsComponent;
 import net.minecraft.component.type.SuspiciousStewEffectsComponent.StewEffect;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.ItemStack;
+import net.minecraft.loot.LootTable;
+import net.minecraft.loot.context.LootContextParameterSet;
+import net.minecraft.loot.context.LootContextParameters;
+import net.minecraft.loot.context.LootContextTypes;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.property.Properties;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
@@ -36,6 +50,7 @@ import net.moss.resonance.Resonance;
 import net.moss.resonance.block.BuddingPearlIce;
 import net.moss.resonance.util.PearlNatures;
 import net.moss.resonance.util.PearlStatsComponent;
+import org.slf4j.Logger;
 
 public class BuddingPearlIceBlockEntity extends BlockEntity {
 	private final SculkSpreadManager spreadManager;
@@ -47,23 +62,40 @@ public class BuddingPearlIceBlockEntity extends BlockEntity {
 	private long nextDustTime;
 	private long nextBrushTime;
 	@Nullable private Direction hitDirection;
+	@Nullable private RegistryKey<LootTable> lootTable;
+	private long lootTableSeed;
+	private static final Logger LOGGER = LogUtils.getLogger();
 
 	public BuddingPearlIceBlockEntity(BlockPos pos, BlockState state) {
 		super(Resonance.BUDDING_PEARL_ICE_BLOCK_ENTITY, pos, state);
 		this.spreadManager = SculkSpreadManager.create();
 	}
 
+	public void generateItem(ServerPlayerEntity player) {
+		if (hasPearl() || this.lootTable == null) { return; }
+		LootTable lootTable = this.world.getServer().getReloadableRegistries().getLootTable(this.lootTable);
+		Criteria.PLAYER_GENERATES_CONTAINER_LOOT.trigger(player, this.lootTable);
+
+		LootContextParameterSet lootContextParameterSet = (new LootContextParameterSet.Builder((ServerWorld)this.world)).add(LootContextParameters.ORIGIN, Vec3d.ofCenter(this.pos)).luck(player.getLuck()).add(LootContextParameters.THIS_ENTITY, player).build(LootContextTypes.CHEST);
+		ObjectArrayList<ItemStack> objectArrayList = lootTable.generateLoot(lootContextParameterSet, this.lootTableSeed);
+		ItemStack newStack;
+		switch (objectArrayList.size()) {
+			case 0: newStack = ItemStack.EMPTY; break;
+			case 1: newStack = objectArrayList.get(0); break;
+			default:
+			LOGGER.warn("Expected max 1 loot from loot table {}, but got {}", this.lootTable.getValue(), objectArrayList.size());
+			newStack = objectArrayList.get(0);
+		}
+		this.pearl = newStack;
+		this.lootTable = null;
+		this.markDirty();
+	}
+
 	// TODO: this is very messy
 	public void craftPearl(BlockState state, Random random) {
 		ItemStack stack = new ItemStack(Resonance.PEARL);
 		PotionContentsComponent potionComponent = potion.getOrDefault(DataComponentTypes.POTION_CONTENTS, PotionContentsComponent.DEFAULT);
-		if (potion.contains(DataComponentTypes.OMINOUS_BOTTLE_AMPLIFIER)) { potionComponent = potionComponent.with(new StatusEffectInstance(StatusEffects.BAD_OMEN, 120000, stack.getOrDefault(DataComponentTypes.OMINOUS_BOTTLE_AMPLIFIER, 0))); }
-		if (potion.contains(DataComponentTypes.SUSPICIOUS_STEW_EFFECTS)) {
-			SuspiciousStewEffectsComponent stewEffect = potion.get(DataComponentTypes.SUSPICIOUS_STEW_EFFECTS);
-			for (StewEffect effect : stewEffect.effects()) {
-				potionComponent = potionComponent.with(new StatusEffectInstance(effect.effect(), effect.duration(), 0));
-			}
-		}
+		
 		if (potion.isOf(Resonance.BIFURCATED_PEARL) || seed.isOf(Resonance.BIFURCATED_PEARL)) {
 			stack = new ItemStack(Resonance.BIFURCATED_PEARL);
 		} else if (potion.isOf(Resonance.PEARL) && seed.isOf(Resonance.PEARL)) {
@@ -71,18 +103,34 @@ public class BuddingPearlIceBlockEntity extends BlockEntity {
 			stack = new ItemStack(Resonance.BIFURCATED_PEARL);
 		}
 
-		PearlStatsComponent seedPearl = seed.getOrDefault(Resonance.PEARL_STATS, PearlStatsComponent.DEFAULT);
-		int duration = seedPearl.getDuration();
-		int recupera = seedPearl.getRecuperation();
-		int strength = seedPearl.getStrength();
-		if (potion.contains(Resonance.PEARL_STATS)) {
-			List<Integer> potionStats = potion.get(Resonance.PEARL_STATS).stats();
-			duration = (duration + potionStats.get(0)) / 2;
-			recupera = (recupera + potionStats.get(1)) / 2;
-			strength = (strength + potionStats.get(2)) / 2;
+		ItemEnchantmentsComponent.Builder builder = new ItemEnchantmentsComponent.Builder(EnchantmentHelper.getEnchantments(seed));
+		outerloop:
+		for(Object2IntMap.Entry<RegistryEntry<Enchantment>> entry : EnchantmentHelper.getEnchantments(potion).getEnchantmentEntries()) {
+			RegistryEntry<Enchantment> registryEntry = entry.getKey();
+			int q = builder.getLevel(registryEntry);
+			int r = entry.getIntValue();
+			r = q == r ? r + 1 : Math.max(r, q);
+			Enchantment enchantment = registryEntry.value();
+			if (!enchantment.isAcceptableItem(stack)) { continue; }
+			for(RegistryEntry<Enchantment> registryEntry2 : builder.getEnchantments()) {
+				if (!registryEntry2.equals(registryEntry) && !Enchantment.canBeCombined(registryEntry, registryEntry2)) {
+					break outerloop;
+				}
+			}
+			if (r > enchantment.getMaxLevel()) { r = enchantment.getMaxLevel(); }
+			builder.set(registryEntry, r);
+		}
+		EnchantmentHelper.set(stack, builder.build());
+		
+		// Convert others
+		if (potion.contains(DataComponentTypes.OMINOUS_BOTTLE_AMPLIFIER)) { potionComponent.with(new StatusEffectInstance(StatusEffects.BAD_OMEN, 120000, stack.getOrDefault(DataComponentTypes.OMINOUS_BOTTLE_AMPLIFIER, 0))); }
+		if (potion.contains(DataComponentTypes.SUSPICIOUS_STEW_EFFECTS)) {
+			for (StewEffect effect : potion.get(DataComponentTypes.SUSPICIOUS_STEW_EFFECTS).effects()) {
+				potionComponent = potionComponent.with(effect.createStatusEffectInstance());
+			}
 		}
 
-		System.out.println("potionComponent: " + potionComponent);
+		// Filter effects
 		Iterator<StatusEffectInstance> effects = potionComponent.getEffects().iterator();
 		potionComponent = PotionContentsComponent.DEFAULT;
 		while (effects.hasNext()) {
@@ -94,9 +142,15 @@ public class BuddingPearlIceBlockEntity extends BlockEntity {
 			}
 		}
 
-		PearlNatures nature = hasCatalyst() && getCatalyst().contains(Resonance.PEARL_NATURE) ? getCatalyst().get(Resonance.PEARL_NATURE) : seed.getOrDefault(Resonance.PEARL_STATS, PearlStatsComponent.DEFAULT).nature();
+		PearlStatsComponent seedPearl = seed.getOrDefault(Resonance.PEARL_STATS, PearlStatsComponent.DEFAULT);
+		PearlStatsComponent potionPearl = potion.getOrDefault(Resonance.PEARL_STATS, PearlStatsComponent.DEFAULT);
+		int duration = Math.max(seedPearl.getDuration(), potionPearl.getDuration());
+		int recupera = Math.max(seedPearl.getRecuperation(), potionPearl.getRecuperation());
+		int strength = Math.max(seedPearl.getStrength(), potionPearl.getStrength());
+		int shiny = seedPearl.shiny() || potionPearl.shiny() ? 1 : 128;
+		PearlNatures nature = hasCatalyst() && getCatalyst().contains(Resonance.PEARL_NATURE) ? getCatalyst().get(Resonance.PEARL_NATURE) : seedPearl.nature();
 
-		stack.set(Resonance.PEARL_STATS, PearlStatsComponent.randomStats(random, duration, recupera, strength, seedPearl.shiny() ? 0 : 128, nature));
+		stack.set(Resonance.PEARL_STATS, PearlStatsComponent.randomStats(random, duration, recupera, strength, shiny, nature));
 		stack.set(DataComponentTypes.POTION_CONTENTS, potionComponent);
 
 		clear();
@@ -116,14 +170,15 @@ public class BuddingPearlIceBlockEntity extends BlockEntity {
 		for (int i = 0; i < count; i++) { this.spreadManager.tick(world, pos2, random, true); }
 	}
 
-	public boolean brush(long worldTime, Direction hitDirection) {
+	public boolean brush(long worldTime, ServerPlayerEntity player, Direction hitDirection) {
 		if (this.hitDirection == null) { this.hitDirection = hitDirection; }
 		this.nextDustTime = worldTime + 40L;
-		if (worldTime < this.nextBrushTime || this.world.isClient()) { return false; }
+		if (worldTime < this.nextBrushTime) { return false; }
 		this.nextBrushTime = worldTime + 10L;
+		this.generateItem(player);
 		int i = this.getDustedLevel();
 		if (++this.brushesCount >= 10) {
-			this.finishBrushing();
+			this.finishBrushing(player);
 			return true;
 		}
 		this.world.scheduleBlockTick(this.getPos(), this.getCachedState().getBlock(), 2);
@@ -152,9 +207,7 @@ public class BuddingPearlIceBlockEntity extends BlockEntity {
 		}
 	}
 
-	private void finishBrushing() {
-		if (this.world == null || this.world.getServer() == null) { return; }
-
+	private void finishBrushing(ServerPlayerEntity player) {
 		if (hasPearl()) {
 			double d = EntityType.ITEM.getWidth();
 			double f = (0.5 * (1.0 - d)) + (d / 2.0);
@@ -195,7 +248,15 @@ public class BuddingPearlIceBlockEntity extends BlockEntity {
 		this.seed = nbt.contains("Seed", NbtElement.COMPOUND_TYPE) ? ItemStack.fromNbt(registryLookup, nbt.getCompound("Seed")).orElse(ItemStack.EMPTY) : ItemStack.EMPTY;
 		this.potion = nbt.contains("Potion", NbtElement.COMPOUND_TYPE) ? ItemStack.fromNbt(registryLookup, nbt.getCompound("Potion")).orElse(ItemStack.EMPTY) : ItemStack.EMPTY;
 		this.catalyst = nbt.contains("Catalyst", NbtElement.COMPOUND_TYPE) ? ItemStack.fromNbt(registryLookup, nbt.getCompound("Catalyst")).orElse(ItemStack.EMPTY) : ItemStack.EMPTY;
-		this.pearl = nbt.contains("Pearl", NbtElement.COMPOUND_TYPE) ? ItemStack.fromNbt(registryLookup, nbt.getCompound("Pearl")).orElse(ItemStack.EMPTY) : ItemStack.EMPTY;
+		if (nbt.contains("Pearl", NbtElement.COMPOUND_TYPE)) {
+			this.pearl = ItemStack.fromNbt(registryLookup, nbt.getCompound("Pearl")).orElse(ItemStack.EMPTY);
+		} else {
+			if (nbt.contains("LootTable", NbtElement.STRING_TYPE)) {
+				this.lootTable = RegistryKey.of(RegistryKeys.LOOT_TABLE, Identifier.of(nbt.getString("LootTable")));
+				this.lootTableSeed = nbt.getLong("LootTableSeed");
+			}
+			this.pearl = ItemStack.EMPTY;
+		}
 		if (nbt.contains("hit_direction")) { this.hitDirection = Direction.values()[nbt.getInt("hit_direction")]; }
 	}
 
@@ -206,6 +267,12 @@ public class BuddingPearlIceBlockEntity extends BlockEntity {
 		if (hasPotion()) { nbt.put("Potion", this.getPotion().encode(registryLookup)); }
 		if (hasCatalyst()) { nbt.put("Catalyst", this.getCatalyst().encode(registryLookup)); }
 		if (hasPearl()) { nbt.put("Pearl", this.getPearl().encode(registryLookup)); }
+		else if (this.lootTable != null) {
+			nbt.putString("LootTable", this.lootTable.getValue().toString());
+			if (this.lootTableSeed != 0L) {
+				nbt.putLong("LootTableSeed", this.lootTableSeed);
+			}
+		}
 	}
 
 	@Override

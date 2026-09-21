@@ -1,6 +1,7 @@
 {
 	"replace": false,
 	"values": [
-		"resonance:volcano_snail_bucket"
+		"resonance:volcano_snail_bucket",
+		"resonance:yeti_crab_bucket"
 	]
 }

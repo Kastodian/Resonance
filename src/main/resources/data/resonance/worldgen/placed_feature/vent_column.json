@@ -1,33 +1,58 @@
 {
-	"feature": "resonance:vent_column",
+	"feature": {
+		"type": "minecraft:random_patch",
+		"config": {
+			"tries": 32,
+			"xz_spread": 8,
+			"y_spread": 0,
+			"feature": {
+				"feature": {
+					"type": "minecraft:block_column",
+					"config": {
+						"allowed_placement": { "type": "minecraft:matching_blocks", "blocks": "minecraft:water" },
+						"direction": "up",
+						"layers": [
+							{
+								"height": 1,
+								"provider": {
+									"type": "minecraft:weighted_state_provider",
+									"entries": [
+										{ "data": { "Name": "minecraft:basalt" }, "weight": 3 },
+										{ "data": { "Name": "minecraft:smooth_basalt" }, "weight": 1 }
+									]
+								}
+							}
+						],
+						"prioritize_tip": true
+					}
+				},
+				"placement": [
+					{
+						"type": "minecraft:block_predicate_filter",
+						"predicate": {
+							"type": "minecraft:matching_blocks",
+							"offset": [ 0, -1, 0 ],
+							"blocks": "minecraft:basalt"
+						}
+					},
+					{ "type": "minecraft:heightmap", "heightmap": "OCEAN_FLOOR" }
+				]
+			}
+		}
+	},
 	"placement": [
 		{
 			"type": "minecraft:count",
-			"count": {
-				"type": "minecraft:uniform",
-				"max_inclusive": 64,
-				"min_inclusive": 48
-			}
+			"count": { "type": "minecraft:uniform", "max_inclusive": 64, "min_inclusive": 48 }
 		},
-		{
-			"type": "minecraft:in_square"
-		},
-		{
-			"type": "minecraft:heightmap",
-			"heightmap": "OCEAN_FLOOR"
-		},
-		{
-			"type": "minecraft:biome"
-		},
+		{ "type": "minecraft:in_square" },
+		{ "type": "minecraft:heightmap", "heightmap": "OCEAN_FLOOR" },
+		{ "type": "minecraft:biome" },
 		{
 			"type": "minecraft:block_predicate_filter",
 			"predicate": {
 				"type": "minecraft:matching_blocks",
-				"offset": [
-					0,
-					-1,
-					0
-				],
+				"offset": [ 0, -1, 0 ],
 				"blocks": "minecraft:basalt"
 			}
 		}

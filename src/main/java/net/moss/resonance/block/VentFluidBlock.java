@@ -16,6 +16,7 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.state.StateManager;
@@ -50,6 +51,13 @@ public class VentFluidBlock extends Block implements FluidDrainable {
 	}
 
 	public static void update(WorldAccess world, BlockPos pos, BlockState water, BlockState bubbleSource) {
+		for (Direction direction2 : Direction.values()) {
+			if (world.getFluidState(pos.offset(direction2.getOpposite())).isIn(FluidTags.LAVA)) {
+				world.syncWorldEvent(1501, pos, 0);
+				world.setBlockState(pos, Blocks.BLACKSTONE.getDefaultState(), Block.NOTIFY_LISTENERS);
+				return;
+			}
+		}
 		if (isStillWater(water)) {
 			BlockState blockState = getBubbleState(bubbleSource);
 			int distance = blockState.isOf(Blocks.WATER) ? 7 : blockState.get(DISTANCE);
@@ -86,10 +94,16 @@ public class VentFluidBlock extends Block implements FluidDrainable {
 
 	@Override
 	protected BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-		world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+		for (Direction direction2 : Direction.values()) {
+			if (world.getFluidState(pos.offset(direction2.getOpposite())).isIn(FluidTags.LAVA)) {
+				world.syncWorldEvent(1501, pos, 0);
+				return Blocks.BLACKSTONE.getDefaultState();
+			}
+		}
 		if (!state.canPlaceAt(world, pos)) {
 			world.scheduleBlockTick(pos, this, 5);
 		}
+		world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
 		return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
 	}
 

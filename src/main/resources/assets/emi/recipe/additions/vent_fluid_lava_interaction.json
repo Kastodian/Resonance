@@ -1,0 +1,9 @@
+{
+	"type": "emi:world_interaction",
+	"left": [
+		{ "type": "item", "id": "resonance:bathyal_vent", "remainder": "item:resonance:bathyal_vent" },
+		{ "type": "fluid", "id": "minecraft:water", "amount": 81000 }
+	],
+	"right": { "type": "fluid", "id": "minecraft:lava", "amount": 81000, "remainder": "fluid:minecraft:lava" },
+	"output": "item:minecraft:blackstone"
+}

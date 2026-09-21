@@ -1,21 +1,16 @@
 package net.moss.resonance.util.interfaces;
 
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Hand;
 import net.moss.resonance.Resonance;
 
 public interface CritStoringInterface {
-	default public int getStoredCrits(ItemStack stack) {
-		if (!stack.contains(Resonance.STORED_CRITS)) { return 0; }
-		return stack.get(Resonance.STORED_CRITS);
-	}
+	default public int maxCritCount(ItemStack stack) { return 255; }
+	default public void critDeath(PlayerEntity attacker, Entity victim, int critStreak, Hand hand, ItemStack stack) { }
 
-	default public void setStoredCrits(ItemStack stack, int critCount) {
-		stack.set(Resonance.STORED_CRITS, critCount);
+	default public void onCrit(PlayerEntity attacker, Entity victim, int critStreak, Hand hand, ItemStack stack) {
+		stack.set(Resonance.STORED_CRITS, Math.min(stack.getOrDefault(Resonance.STORED_CRITS, 0) + 1, this.maxCritCount(stack)));
 	}
-
-	default public void critStreak(ItemStack stack, int critCount) {
-		setStoredCrits(stack, critCount);
-	}
-
-	default public void critDeath(ItemStack stack, int critCount) { }
 }

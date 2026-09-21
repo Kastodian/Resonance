@@ -10,6 +10,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.LichenGrower;
 import net.minecraft.block.LichenGrower.GrowPos;
 import net.minecraft.block.MultifaceGrowthBlock;
+import net.minecraft.block.Waterloggable;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
@@ -35,7 +36,7 @@ import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
-public class IceFur extends MultifaceGrowthBlock {
+public class IceFur extends MultifaceGrowthBlock implements Waterloggable {
 	public static final MapCodec<IceFur> CODEC = createCodec(IceFur::new);
 	private final LichenGrower grower = new LichenGrower(new IceFurGrowerChecker(this));
 	public static final IntProperty AGE = Properties.AGE_7;

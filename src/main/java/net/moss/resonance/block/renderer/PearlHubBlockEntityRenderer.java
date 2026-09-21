@@ -9,13 +9,16 @@ import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.model.ModelPartBuilder;
 import net.minecraft.client.model.ModelPartData;
 import net.minecraft.client.model.ModelTransform;
+import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.block.entity.BeaconBlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -38,26 +41,41 @@ public class PearlHubBlockEntityRenderer extends BlockEntityWithNametagRenderer<
 		this.pearl = pearl.createPart(32, 32);
 	}
 
+	public static Identifier getPearlTexture(ItemStack stack) {
+		String shiny = stack.contains(Resonance.PEARL_STATS) && stack.get(Resonance.PEARL_STATS).shiny() ? "_shiny" : "";
+		return Identifier.of(Resonance.MOD_ID, "textures/entity/pearl_hub/" + Registries.ITEM.getId(stack.getItem()).getPath() + shiny + ".png");
+	}
+
 	@Override
 	public void render(PearlHubBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
 		BlockState state = entity.getCachedState();
-		if (state.get(PearlHubBlock.BEACON_POWERED)) {
-			BeaconBlockEntityRenderer.renderBeam(matrices, vertexConsumers, BeaconBlockEntityRenderer.BEAM_TEXTURE, tickDelta, 1.0F, entity.getWorld().getTime(), -1, 1, 16383998, 0.2F, 0.25F);
-			return;
-		}
-		if (!entity.hasStack()) { return; }
+		if (!entity.hasStack() || state.get(PearlHubBlock.BEACON_POWERED)) { return; }
 		super.render(entity, tickDelta, matrices, vertexConsumers, light, overlay);
 		if (state.get(PearlHubBlock.EXPENDED)) { light /= 2; }
-		VertexConsumer consumer = vertexConsumers.getBuffer(RenderLayer.getEntityCutoutNoCull(Identifier.of(Resonance.MOD_ID, "textures/entity/pearl_hub/" + Registries.ITEM.getId(entity.getStack().getItem()).getPath() + ".png")));
+		VertexConsumer consumer = vertexConsumers.getBuffer(RenderLayer.getEntityCutoutNoCull(getPearlTexture(entity.getStack())));
 
 		matrices.push();
 		this.pearl.setAngles(0, 2.356F - state.get(PearlHubBlock.FACING).asRotation() * MathHelper.RADIANS_PER_DEGREE, 0);
 		this.pearl.render(matrices, consumer, light, overlay);
+		
+		if (entity.getStack().hasGlint()) {
+			this.pearl.render(matrices, vertexConsumers.getBuffer(RenderLayer.getDirectEntityGlint()), light * 2, OverlayTexture.DEFAULT_UV);
+		}
 		matrices.pop();
 	}
 
 	@Override
 	protected Vec3d getOffset(BlockState state, BlockPos pos) {
 		return new Vec3d(0.5, 0.75, 0.5);
+	}
+
+	@Override
+	protected boolean hasLabel(PearlHubBlockEntity entity) {
+		return entity.hasStack() && entity.getStack().contains(DataComponentTypes.CUSTOM_NAME) && super.hasLabel(entity);
+	}
+
+	@Override
+	protected Text getText(PearlHubBlockEntity entity) {
+		return entity.getStack().getName();
 	}
 }

@@ -69,18 +69,13 @@ public class VolcanoSnailEntity extends WaterCreatureEntity implements Bucketabl
 	}
 
 	@Override
-	public float getPathfindingFavor(BlockPos pos, WorldView world) {
-		return world.getBlockState(pos.down()).isIn(Resonance.VOLCANO_SNAIL_PREFERED_TAG) || world.getBlockState(pos).isIn(Resonance.VOLCANO_SNAIL_PREFERED_TAG) ? 15.0F : world.getBiome(pos) == Resonance.BATHYAL_ZONE ? 10.0F : world.getPhototaxisFavor(pos);
-	}
-
-	@Override
 	protected void initGoals() {
 		super.initGoals();
 		this.goalSelector.add(1, new MoveIntoWaterGoal(this));
-		this.goalSelector.add(2, new EscapeDangerGoal(this, 0.6f));
-		this.goalSelector.add(3, new EatChemicalsGoal(this, 0.5f, 16));
-		this.goalSelector.add(3, new WanderAroundGoal(this, 0.5f));
-		this.goalSelector.add(4, new LookAroundGoal(this));
+		this.goalSelector.add(2, new EatChemicalsGoal(this, 0.5f, 16));
+		this.goalSelector.add(3, new EscapeDangerGoal(this, 0.6f));
+		this.goalSelector.add(4, new WanderAroundGoal(this, 0.5f));
+		this.goalSelector.add(5, new LookAroundGoal(this));
 	}
 
 	public void setVariant(VolcanoSnailEntity.Type type) { this.dataTracker.set(TYPE, type.name); }
@@ -208,7 +203,7 @@ public class VolcanoSnailEntity extends WaterCreatureEntity implements Bucketabl
 				.add(EntityAttributes.GENERIC_MAX_HEALTH, 2f)
 				.add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.2f)
 				.add(EntityAttributes.GENERIC_WATER_MOVEMENT_EFFICIENCY, 2f)
-				.add(EntityAttributes.GENERIC_FOLLOW_RANGE, 32)
+				.add(EntityAttributes.GENERIC_FOLLOW_RANGE, 4)
 				.add(EntityAttributes.GENERIC_ARMOR, 10.0f)
 				.add(EntityAttributes.GENERIC_STEP_HEIGHT, 1f);
 	}
@@ -229,7 +224,7 @@ public class VolcanoSnailEntity extends WaterCreatureEntity implements Bucketabl
 
 		public ItemStack getMetalState() { return this.metal; }
 		@Override public String asString() { return this.name; }
-		@SuppressWarnings("deprecation") static VolcanoSnailEntity.Type fromName(String name) { return CODEC.byId(name, IRON); }
+		public static VolcanoSnailEntity.Type fromName(String name) { return CODEC.byId(name, IRON); }
 	}
 
 	@SuppressWarnings("deprecation")
@@ -267,22 +262,21 @@ public class VolcanoSnailEntity extends WaterCreatureEntity implements Bucketabl
 		private final VolcanoSnailEntity entity;
 
 		public EatChemicalsGoal(VolcanoSnailEntity entity, double speed, int range) {
-			super(entity, speed, range, 2);
+			super(entity, speed, range, 4);
 			this.entity = entity;
 			this.setControls(EnumSet.of(Goal.Control.JUMP, Goal.Control.MOVE));
 		}
 
 		@Override public double getDesiredDistanceToTarget() { return 4; }
+		@Override public boolean shouldContinue() { return !this.hasReached(); }
 		@Override protected boolean isTargetPos(WorldView world, BlockPos pos) { return VENT_FLUID_PREDICATE.test(world.getBlockState(pos)); }
-		@Override public boolean canStart() { return this.entity.getHungry() && this.mob.getRandom().nextInt(1000) == 0 && super.canStart(); }
+		@Override public boolean canStart() { return this.entity.getHungry() && this.mob.getRandom().nextInt(30) == 0 && super.canStart(); }
 
 		@Override
-		public void tick() {
-			super.tick();
-			if (this.hasReached()) {
-				this.entity.setHungry(false);
-				this.entity.swingHand(preferredHand);
-			}
+		public void stop() {
+			this.entity.setHungry(false);
+			this.entity.swingHand(preferredHand);
+			super.stop();
 		}
 	}
 }

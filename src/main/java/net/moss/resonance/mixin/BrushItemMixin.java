@@ -3,9 +3,9 @@ package net.moss.resonance.mixin;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BrushItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -27,10 +27,9 @@ public class BrushItemMixin {
 		if (i % 10 == 5) {
 			BlockPos blockPos = blockHitResult.getBlockPos();
 			BlockState blockState = world.getBlockState(blockPos);
-			if (!(blockState.isOf(Resonance.BUDDING_PEARL_ICE) && blockState.get(BuddingPearlIce.HAS_PEARL))) { return; }
-			PlayerEntity playerEntity = (PlayerEntity)user;
-			if (!world.isClient() && world.getBlockEntity(blockPos) instanceof BuddingPearlIceBlockEntity blockEntity && blockEntity.brush(world.getTime(), blockHitResult.getSide())) {
-				EquipmentSlot equipmentSlot = stack.equals(playerEntity.getEquippedStack(EquipmentSlot.OFFHAND)) ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;
+			if (!(blockState.isOf(Resonance.BUDDING_PEARL_ICE) && blockState.get(BuddingPearlIce.AGE) == 6)) { return; }
+			if (!world.isClient() && world.getBlockEntity(blockPos) instanceof BuddingPearlIceBlockEntity blockEntity && user instanceof ServerPlayerEntity player && blockEntity.brush(world.getTime(), player, blockHitResult.getSide())) {
+				EquipmentSlot equipmentSlot = stack.equals(player.getEquippedStack(EquipmentSlot.OFFHAND)) ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;
 				stack.damage(4, user, equipmentSlot);
 			}
 		}

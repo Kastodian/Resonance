@@ -37,7 +37,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity.PickupPermission;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsage;
 import net.minecraft.item.Items;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.RecipeEntry;
@@ -57,6 +56,7 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Difficulty;
@@ -77,7 +77,7 @@ import net.moss.resonance.recipe.ReverberationRecipe;
 import net.moss.resonance.util.EnchantUtils;
 import net.moss.resonance.util.Utils;
 import net.moss.resonance.util.Utils.CustomWindChargeBehavior;
-import net.moss.resonance.util.interfaces.CritStoringInterface;
+import net.moss.resonance.util.interfaces.ShieldInterface;
 import net.moss.resonance.world.FixedStructureType;
 import net.moss.resonance.world.UniqueStructureDataSaver;
 import net.moss.resonance.world.UniqueStructurePlacement;
@@ -91,20 +91,6 @@ public final class ResonanceEvents {
 	});
 	public static final Event<StaitcShock> STATIC_SHOCK = EventFactory.createArrayBacked(StaitcShock.class, (listeners) -> (source, amplifier, attacker) -> {
 		for (StaitcShock event : listeners) { event.staticShock(source, amplifier, attacker); }
-	});
-	public static final Event<PlayerCritStreak> CRIT_EVENT = EventFactory.createArrayBacked(PlayerCritStreak.class, (listeners) -> (attacker, victim, critCount, hand, weapon) -> {
-		for (PlayerCritStreak listener : listeners) {
-			ActionResult result = listener.critStreak(attacker, victim, critCount, hand, weapon);
-			if (result != ActionResult.PASS) { return result; }
-		}
-		return ActionResult.PASS;
-	});
-	public static final Event<PlayerCritDeath> CRIT_DEATH_EVENT = EventFactory.createArrayBacked(PlayerCritDeath.class, (listeners) -> (attacker, victim, critCount, hand, weapon) -> {
-		for (PlayerCritDeath listener : listeners) {
-			ActionResult result = listener.critDeath(attacker, victim, critCount, hand, weapon);
-			if (result != ActionResult.PASS) { return result; }
-		}
-		return ActionResult.PASS;
 	});
 	public static final Event<ShieldBlock> SHIELD_BLOCK = EventFactory.createArrayBacked(ShieldBlock.class, (listeners) -> (defender, amount, hand, shield) -> {
 		for (ShieldBlock listener : listeners) {
@@ -148,8 +134,6 @@ public final class ResonanceEvents {
 		REVERBERATE_BLOCK.register((world, blockPos, vec3d, block, state, sourceEntity, strength) -> { onReverberateBlock(world, blockPos, vec3d, block, state, sourceEntity, strength); });
 		SHIELD_PARRY.register((defender, source, amount, hand, shield) -> { return onParry(defender, source, amount, hand, shield); });
 		STATIC_SHOCK.register((source, amplifier, attacker) -> { onStaticShock(source, amplifier, attacker); });
-		CRIT_EVENT.register((attacker, victim, critCount, hand, weapon) -> { return onCrit(attacker, victim, critCount, hand, weapon); });
-		CRIT_DEATH_EVENT.register((attacker, victim, critCount, hand, weapon) -> { return onCritDeath(attacker, victim, critCount, hand, weapon); });
 	}
 
 
@@ -170,12 +154,9 @@ public final class ResonanceEvents {
 				world.playSound(null, player.getBlockPos(), SoundEvents.ITEM_BOTTLE_FILL, SoundCategory.PLAYERS);
 				player.incrementStat(Stats.USED.getOrCreateStat(Resonance.TINTED_BOTTLE));
 				target.remove(RemovalReason.DISCARDED);
-				if (itemstack.getCount() > 1) {
-					ItemUsage.exchangeStack(itemstack, player, bottleType);
-				} else {
-					itemstack.decrement(1);
-					player.setStackInHand(hand, bottleType);
-				}
+				itemstack.decrementUnlessCreative(1, player);
+				if (itemstack.isEmpty()) { player.setStackInHand(hand, bottleType); }
+				else if (!player.getInventory().insertStack(bottleType)) { player.dropItem(bottleType, false); }
 				player.getItemCooldownManager().set(bottleType.getItem(), 20);
 				return ActionResult.SUCCESS;
 			}
@@ -222,7 +203,6 @@ public final class ResonanceEvents {
 		return TypedActionResult.pass(itemstack); 
 	}
 
-	// TODO: upgrade this with iterators
 	public static void onServerStart(MinecraftServer server) {
 		if (!server.getSaveProperties().getGeneratorOptions().shouldGenerateStructures()) { return; }
 		UniqueStructureDataSaver serverState = UniqueStructureDataSaver.getServerState(server);
@@ -305,7 +285,7 @@ public final class ResonanceEvents {
 		world.emitGameEvent(Resonance.REVERBERATE_EVENT, pos, GameEvent.Emitter.of(world.getBlockState(BlockPos.ofFloored(pos))));
 		if (!windCharged) { world.createExplosion(sourceEntity, Utils.damageSource(world, Resonance.REVERBERATION_DAMAGE), new CustomWindChargeBehavior(0f), pos.getX(), pos.getY(), pos.getZ(), strength / 2, false, World.ExplosionSourceType.TRIGGER, ModParticles.AMETHYST_PARTICLE, ModParticles.AMETHYST_PARTICLE, Resonance.REVERBERATION_SOUND); }
 		if (world instanceof ServerWorld serverWorld) {
-			serverWorld.spawnParticles(new SmallRing(angle, strength), pos.getX(), pos.getY(), pos.getZ(), 1, 0, 0, 0, 3);
+			serverWorld.spawnParticles(new SmallRing(angle, strength * 3), pos.getX(), pos.getY(), pos.getZ(), 1, 0, 0, 0, 3);
 			serverWorld.spawnParticles(ModParticles.AMETHYST_PARTICLE, pos.getX(), pos.getY(), pos.getZ(), (int) (10 * strength), 0, 0, 0, 1);
 			if (strength >= 1.5) { serverWorld.spawnParticles(ModParticles.MEDIUM_RING_PARTICLE, pos.getX(), pos.getY(), pos.getZ(), 1, 0, 0, 0, 1); }
 			for (Direction direction : Direction.values()) {
@@ -314,8 +294,7 @@ public final class ResonanceEvents {
 				REVERBERATE_BLOCK.invoker().onResonateBlock(serverWorld, blockPos, blockPos.toCenterPos(), state.getBlock(), state, sourceEntity, strength);
 			}
 
-			List<Entity> list = Utils.entitiesInRadius(world, pos, immuneEntity, 3, 3, Entity::isAlive);
-			for (Entity entity : list) {
+			serverWorld.getOtherEntities(immuneEntity, new Box(pos, pos).expand(3), Entity::isAlive).forEach(entity -> {
 				if (entity instanceof ItemEntity entity1) {
 					entity1.addVelocity(0, 0.1, 0);
 					ItemStack material = entity1.getStack();
@@ -345,7 +324,7 @@ public final class ResonanceEvents {
 					if (sourceEntity != null && sourceEntity instanceof LivingEntity livingEntity) { entity.damage(Utils.damageSource(world, Resonance.REVERBERATION_DAMAGE, livingEntity), damage); }
 					else { entity.damage(Utils.damageSource(world, Resonance.REVERBERATION_DAMAGE, pos), damage); }
 				}
-			}
+			});
 		}
 	}
 
@@ -406,6 +385,9 @@ public final class ResonanceEvents {
 					entity.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 100, 2, false, false, false));
 				}
 			}
+		}	
+		else if (shield.getItem() instanceof ShieldInterface interface1) {
+			interface1.onParry(shield, defender, source, amount, hand);
 		} else {
 			if (source != null && source.isDirect()) {
 				if (source.getAttacker() instanceof LivingEntity entity) {
@@ -429,13 +411,13 @@ public final class ResonanceEvents {
 			int duration = source.getStatusEffect(Resonance.SPARKING).getDuration();
 			if (amplifier > 0) {
 				Utils.decrementStatusEffectAmplifiers(source, Resonance.SPARKING, null);
-				List<Entity> list = Utils.entitiesInRadius(world, source.getPos(), source, 2, 2, Entity::isAlive);
-				for (Entity entity2 : list) {
-					if (entity2 instanceof LivingEntity entity1 && world.random.nextInt(4/Math.min(amplifier + 1, 4)) == 0) {
+				List<LivingEntity> list = world.getEntitiesByClass(LivingEntity.class, new Box(source.getPos(), source.getPos()).expand(2), LivingEntity::isAlive);
+				for (LivingEntity entity2 : list) {
+					if (world.random.nextInt(4/Math.min(amplifier + 1, 4)) == 0) {
 						world.spawnParticles(ModParticles.SPARK_PARTICLE, entity2.getX(), entity2.getY() + entity2.getHeight()/2, entity2.getZ(), 20, 0, 0, 0, 1);
 						entity2.damage(Utils.damageSource(world, Resonance.SPARKING_DAMAGE), damage);
-						entity1.takeKnockback(0.2 * (amplifier + 1), source.getX() - entity1.getX(), source.getZ() - entity1.getZ());
-						Utils.sumStatusEffectAmplifiers(entity1, new StatusEffectInstance(Resonance.SPARKING, duration, amplifier - 1), 4);
+						entity2.takeKnockback(0.2 * (amplifier + 1), source.getX() - entity2.getX(), source.getZ() - entity2.getZ());
+						Utils.sumStatusEffectAmplifiers(entity2, new StatusEffectInstance(Resonance.SPARKING, duration, amplifier - 1), 4);
 					}
 				}
 			} else {
@@ -443,16 +425,5 @@ public final class ResonanceEvents {
 				if (duration > 100) { source.addStatusEffect(new StatusEffectInstance(Resonance.SPARKING, duration - 100, amplifier)); }
 			}
 		}
-	}
-
-	public static ActionResult onCrit(PlayerEntity attacker, Entity victim, int critCount, Hand hand, ItemStack weapon) {
-		if (weapon.getItem() instanceof CritStoringInterface interface1) { interface1.critStreak(weapon, critCount); }
-		Resonance.CRIT_CRITERION.trigger((ServerPlayerEntity) attacker, critCount);
-		return ActionResult.PASS;
-	}
-
-	public static ActionResult onCritDeath(PlayerEntity attacker, Entity victim, int critCount, Hand hand, ItemStack weapon) {
-		if (weapon.getItem() instanceof CritStoringInterface interface1) { interface1.critDeath(weapon, critCount); }
-		return ActionResult.PASS;
 	}
 }

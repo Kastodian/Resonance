@@ -17,6 +17,7 @@ import net.moss.resonance.ResonanceEvents;
 import net.moss.resonance.util.EnchantUtils;
 import net.moss.resonance.util.GroundPoundType;
 import net.moss.resonance.util.Utils;
+import net.moss.resonance.util.interfaces.CritStoringInterface;
 import net.moss.resonance.util.interfaces.PlayerEntityInterface;
 import net.moss.resonance.util.interfaces.ShieldInterface;
 import org.jetbrains.annotations.Nullable;
@@ -81,15 +82,16 @@ public class PlayerEntityMixin implements PlayerEntityInterface {
 	private void attack(Entity target, CallbackInfo callbackInfo) {
 		PlayerEntity player = (PlayerEntity) (Object) this;
 		World world = player.getWorld();
-		if (world.isClient) { return; }
-		EnchantUtils.recoilCheck(player, null, player.getMainHandStack(), 0.5f, 1f, false);
+		if (world.isClient()) { return; }
+		ItemStack weapon = player.getMainHandStack();
+		EnchantUtils.recoilCheck(player, null, weapon, 0.5f, 1f, false);
 		if (Utils.isAttackCritical(player, target) && (critTimer > 0 || critCount == 0) && world instanceof ServerWorld serverWorld) {
 			critCount += 1;
 			critTimer = 60;
-			EnchantUtils.onTargetCritDamaged(serverWorld, target, Utils.damageSource(serverWorld, DamageTypes.PLAYER_ATTACK, player), player.getMainHandStack());
-			ResonanceEvents.CRIT_EVENT.invoker().critStreak(player, target, critCount, player.getActiveHand(), player.getMainHandStack());
+			EnchantUtils.onTargetCritDamaged(serverWorld, target, Utils.damageSource(serverWorld, DamageTypes.PLAYER_ATTACK, player), weapon);
+			if (weapon.getItem() instanceof CritStoringInterface interface1) { interface1.onCrit(player, target, critCount, Hand.MAIN_HAND, weapon); }
 		} else {
-			ResonanceEvents.CRIT_DEATH_EVENT.invoker().critDeath(player, target, critCount, player.getActiveHand(), player.getMainHandStack());
+			if (weapon.getItem() instanceof CritStoringInterface interface1) { interface1.critDeath(player, target, critCount, Hand.MAIN_HAND, weapon); }
 			critCount = 0;
 		}
 	}
@@ -103,6 +105,13 @@ public class PlayerEntityMixin implements PlayerEntityInterface {
 			if (player.isFallFlying() || player.isClimbing() || player.hasVehicle() || player.isTouchingWater() || player.getAbilities().flying) { ((PlayerEntityInterface)player).cancelGroundPound(player); }
 			else { groundPoundType.tick(serverWorld, player); }
 		}
+	}
+	
+	@Inject(at = @At(value = "HEAD"), method = "jump")
+	private void jump(CallbackInfo callbackInfo) {
+		if (isGroundPounding) { return; }
+		PlayerEntity player = (PlayerEntity) (Object) this;
+		((PlayerEntityInterface)player).cancelGroundPound(player);
 	}
 
 	@Inject(at = @At(value = "HEAD"), method = "collideWithEntity", cancellable = true)

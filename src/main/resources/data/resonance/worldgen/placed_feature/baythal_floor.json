@@ -1,19 +1,45 @@
 {
-	"feature": "resonance:baythal_floor",
+	"feature": {
+		"type": "minecraft:disk",
+		"config": {
+			"half_height": 4,
+			"radius": { "type": "minecraft:uniform", "max_inclusive": 8, "min_inclusive": 4 },
+			"state_provider": {
+				"fallback": {
+					"type": "minecraft:simple_state_provider",
+					"state": { "Name": "minecraft:water" }
+				},
+				"rules": [
+					{
+						"if_true": { "type": "minecraft:solid" },
+						"then": {
+							"type": "minecraft:simple_state_provider",
+							"state": { "Name": "minecraft:basalt" }
+						}
+					}
+				]
+			},
+			"target": {
+				"type": "minecraft:matching_block_tag",
+				"tag": "minecraft:overworld_carver_replaceables"
+			}
+		}
+	},
 	"placement": [
+		{ "type": "minecraft:count", "count": 8 },
+		{ "type": "minecraft:in_square" },
+		{ "type": "minecraft:heightmap", "heightmap": "OCEAN_FLOOR" },
+		{ "type": "minecraft:biome" },
+		{ "type": "minecraft:random_offset", "xz_spread": 0, "y_spread": -4 },
 		{
-			"type": "minecraft:count",
-			"count": 8
-		},
-		{
-			"type": "minecraft:in_square"
-		},
-		{
-			"type": "minecraft:heightmap",
-			"heightmap": "OCEAN_FLOOR"
-		},
-		{
-			"type": "minecraft:biome"
+			"type": "minecraft:environment_scan",
+			"direction_of_search": "up",
+			"max_steps": 1,
+			"target_condition": {
+				"type": "minecraft:matching_fluids",
+				"offset": [ 0, 5, 0 ],
+				"fluids": "#minecraft:water"
+			}
 		}
 	]
 }

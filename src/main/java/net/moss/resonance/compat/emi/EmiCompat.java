@@ -1,5 +1,6 @@
 package net.moss.resonance.compat.emi;
 
+import java.util.List;
 import java.util.stream.Collectors;
 import dev.emi.emi.api.EmiPlugin;
 import dev.emi.emi.api.EmiRegistry;
@@ -7,9 +8,9 @@ import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.recipe.VanillaEmiRecipeCategories;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
-import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeManager;
 import net.minecraft.registry.Registries;
@@ -49,27 +50,34 @@ public class EmiCompat implements EmiPlugin {
 		for (Item pearl : Registries.ITEM.stream().filter(i -> i instanceof Pearl).collect(Collectors.toList())) {
 			registry.addRecipe(new PearlDuplicationEmiRecipe(pearl, Identifier.of(Resonance.MOD_ID, "/crafting/" + Item.getRawId(pearl) + "_duplication")));
 		}
-
+		
+		List<Item> potionSources = Registries.ITEM.stream().filter(i -> i.getComponents().contains(DataComponentTypes.POTION_CONTENTS)).toList();
+		
+		// Potions
 		Registries.POTION.streamEntries().forEach((potion) -> {
-			registry.addRecipe(new PearlGestationEmiRecipe(EmiIngredient.of(Ingredient.ofStacks(Items.AMETHYST_SHARD.getDefaultStack(), Resonance.CHARGED_AMETHYST_SHARD.getDefaultStack(), Resonance.PEARL.getDefaultStack())), Resonance.PEARL.getDefaultStack(), potion, Identifier.of(Resonance.MOD_ID, "/pearl_gestation/" + potion.getKey().get().getValue().getPath())));
+			registry.addRecipe(new PearlGestationEmiRecipe(List.of(EmiStack.of(Items.AMETHYST_SHARD), EmiStack.of(Resonance.CHARGED_AMETHYST_SHARD), EmiStack.of(Resonance.PEARL)), potionSources, potion, Resonance.PEARL, false, Identifier.of(Resonance.MOD_ID, "/pearl_gestation/" + potion.getKey().get().getValue().getPath())));
 		});
 		Registries.POTION.streamEntries().forEach((potion) -> {
-			registry.addRecipe(new PearlGestationEmiRecipe(EmiStack.of(Resonance.BIFURCATED_PEARL), Resonance.BIFURCATED_PEARL.getDefaultStack(), potion, Identifier.of(Resonance.MOD_ID, "/pearl_gestation/" + potion.getKey().get().getValue().getPath() + "_bifurcated_pearl")));
+			registry.addRecipe(new PearlGestationEmiRecipe(List.of(EmiStack.of(Resonance.BIFURCATED_PEARL)), potionSources, potion, Resonance.BIFURCATED_PEARL, false, Identifier.of(Resonance.MOD_ID, "/pearl_gestation/" + potion.getKey().get().getValue().getPath() + "_bifurcated_pearl")));
 		});
 
-		registry.addRecipe(new PearlGestationEmiRecipe(EmiIngredient.of(Ingredient.ofStacks(Items.AMETHYST_SHARD.getDefaultStack(), Resonance.CHARGED_AMETHYST_SHARD.getDefaultStack(), Resonance.PEARL.getDefaultStack())), Items.SUSPICIOUS_STEW.getDefaultStack(), Resonance.PEARL.getDefaultStack(), false, Identifier.of(Resonance.MOD_ID, "/pearl_gestation/stew")));
-		registry.addRecipe(new PearlGestationEmiRecipe(EmiStack.of(Resonance.BIFURCATED_PEARL), Items.SUSPICIOUS_STEW.getDefaultStack(), Resonance.BIFURCATED_PEARL.getDefaultStack(), false, Identifier.of(Resonance.MOD_ID, "/pearl_gestation/stew_bifurcated_pearl")));
+		// Stew
+		registry.addRecipe(new PearlGestationEmiRecipe(List.of(EmiStack.of(Items.AMETHYST_SHARD), EmiStack.of(Resonance.CHARGED_AMETHYST_SHARD), EmiStack.of(Resonance.PEARL)), List.of(Items.SUSPICIOUS_STEW), null, Resonance.PEARL, false, Identifier.of(Resonance.MOD_ID, "/pearl_gestation/stew")));
+		registry.addRecipe(new PearlGestationEmiRecipe(List.of(EmiStack.of(Resonance.BIFURCATED_PEARL)), List.of(Items.SUSPICIOUS_STEW), null, Resonance.BIFURCATED_PEARL, false, Identifier.of(Resonance.MOD_ID, "/pearl_gestation/stew_bifurcated_pearl")));
 
+		// Ominous
 		for(int i = 0; i <= 4; ++i) {
-			registry.addRecipe(new PearlGestationEmiRecipe(EmiIngredient.of(Ingredient.ofStacks(Items.AMETHYST_SHARD.getDefaultStack(), Resonance.CHARGED_AMETHYST_SHARD.getDefaultStack(), Resonance.PEARL.getDefaultStack())), Resonance.PEARL.getDefaultStack(), i, Identifier.of(Resonance.MOD_ID, "/pearl_gestation/ominous_" + i)));
+			registry.addRecipe(new PearlGestationEmiRecipe(EmiIngredient.of(List.of(EmiStack.of(Items.AMETHYST_SHARD), EmiStack.of(Resonance.CHARGED_AMETHYST_SHARD), EmiStack.of(Resonance.PEARL))), Resonance.PEARL.getDefaultStack(), i, Identifier.of(Resonance.MOD_ID, "/pearl_gestation/ominous_" + i)));
 		}
 		for(int i = 0; i <= 4; ++i) {
 			registry.addRecipe(new PearlGestationEmiRecipe(EmiStack.of(Resonance.BIFURCATED_PEARL), Resonance.BIFURCATED_PEARL.getDefaultStack(), i, Identifier.of(Resonance.MOD_ID, "/pearl_gestation/ominous_" + i + "_bifurcated_pearl")));
 		}
 
-		registry.addRecipe(new PearlGestationEmiRecipe(EmiIngredient.of(Ingredient.ofStacks(Items.AMETHYST_SHARD.getDefaultStack(), Resonance.CHARGED_AMETHYST_SHARD.getDefaultStack())), Resonance.PEARL.getDefaultStack(), Resonance.PEARL.getDefaultStack(), true, Identifier.of(Resonance.MOD_ID, "/pearl_gestation/pearl_as_potion")));
-		registry.addRecipe(new PearlGestationEmiRecipe(EmiIngredient.of(Ingredient.ofStacks(Items.AMETHYST_SHARD.getDefaultStack(), Resonance.CHARGED_AMETHYST_SHARD.getDefaultStack())), Resonance.BIFURCATED_PEARL.getDefaultStack(), Resonance.BIFURCATED_PEARL.getDefaultStack(), true, Identifier.of(Resonance.MOD_ID, "/pearl_gestation/bifurcated_pearl_as_potion")));
+		// Pearl as potion
+		registry.addRecipe(new PearlGestationEmiRecipe(List.of(EmiStack.of(Items.AMETHYST_SHARD), EmiStack.of(Resonance.CHARGED_AMETHYST_SHARD)), List.of(Resonance.PEARL), null, Resonance.PEARL, true, Identifier.of(Resonance.MOD_ID, "/pearl_gestation/pearl_as_potion")));
+		registry.addRecipe(new PearlGestationEmiRecipe(List.of(EmiStack.of(Items.AMETHYST_SHARD), EmiStack.of(Resonance.CHARGED_AMETHYST_SHARD), EmiStack.of(Resonance.PEARL), EmiStack.of(Resonance.BIFURCATED_PEARL)), List.of(Resonance.BIFURCATED_PEARL), null, Resonance.BIFURCATED_PEARL, true, Identifier.of(Resonance.MOD_ID, "/pearl_gestation/bifurcated_pearl_as_potion")));
 
-		registry.addRecipe(new PearlGestationEmiRecipe(Identifier.of(Resonance.MOD_ID, "/pearl_gestation/bifurcated_pearl")));
+		// Pearl + Pearl
+		registry.addRecipe(new PearlGestationEmiRecipe(List.of(EmiStack.of(Resonance.PEARL)), List.of(Resonance.PEARL), null, Resonance.BIFURCATED_PEARL, true, Identifier.of(Resonance.MOD_ID, "/pearl_gestation/bifurcated_pearl")));
 	}
 }

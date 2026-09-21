@@ -43,9 +43,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
 import net.minecraft.world.GameRules;
-import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeKeys;
 import net.minecraft.world.biome.source.util.MultiNoiseUtil;
 import net.minecraft.world.event.GameEvent;
 import net.minecraft.world.gen.GenerationStep;
@@ -75,8 +73,6 @@ import net.minecraft.enchantment.effect.EnchantmentEntityEffect;
 import net.minecraft.enchantment.effect.EnchantmentValueEffect;
 import net.minecraft.enchantment.effect.TargetedEnchantmentEffect;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnGroup;
-import net.minecraft.entity.SpawnRestriction;
 import net.minecraft.entity.attribute.ClampedEntityAttribute;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
@@ -86,7 +82,6 @@ import net.minecraft.entity.damage.DamageType;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -126,11 +121,11 @@ public class Resonance implements ModInitializer {
 	public static final RegistryKey<Registry<FreezeThawing>> FREEZE_THAWIMG_REGISTRY_KEY = RegistryKey.ofRegistry(Identifier.of(MOD_ID + "/freeze_thawing"));
 	// Tags -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	public static final TagKey<EntityType<?>> SOUND_SENSITIVE_TAG = TagKey.of(RegistryKeys.ENTITY_TYPE, Identifier.of(MOD_ID, "sound_sensitive"));
+	public static final TagKey<Block> VENT_HEAT_SOURCE_TAG = TagKey.of(RegistryKeys.BLOCK, Identifier.of(MOD_ID, "vent_heat_source"));
 	public static final TagKey<Block> BRITTLE_BLACKLIST_TAG = TagKey.of(RegistryKeys.BLOCK, Identifier.of(MOD_ID, "brittle_blacklist"));
 	public static final TagKey<Block> CONDUCTIVE_BLOCKS_TAG = TagKey.of(RegistryKeys.BLOCK, Identifier.of(MOD_ID, "conductive_blocks"));
 	public static final TagKey<Block> REFLECTS_PROJECTILES_TAG = TagKey.of(RegistryKeys.BLOCK, Identifier.of(MOD_ID, "reflects_projectiles"));
-	public static final TagKey<Block> VOLCANO_SNAIL_PREFERED_TAG = TagKey.of(RegistryKeys.BLOCK, Identifier.of(MOD_ID, "volcano_snail_prefered"));
-	public static final TagKey<Block> VENT_HEAT_SOURCE_BLOCKS_TAG = TagKey.of(RegistryKeys.BLOCK, Identifier.of(MOD_ID, "vent_heat_source"));
+	public static final TagKey<Block> WATERLOGGABLE_WATERBREAKABLE_TAG = TagKey.of(RegistryKeys.BLOCK, Identifier.of(MOD_ID, "waterloggable_waterbreakable"));
 	public static final TagKey<Item> DUAL_WIELD_RENDER_TAG = TagKey.of(RegistryKeys.ITEM, Identifier.of(MOD_ID, "dual_wield_render"));
 	public static final TagKey<Item> CONDUCTIVE_ITEMS_TAG = TagKey.of(RegistryKeys.ITEM, Identifier.of(MOD_ID, "conductive_items"));
 	public static final TagKey<Biome> IS_DREAM_SWEET_TAG = TagKey.of(RegistryKeys.BIOME, Identifier.of(MOD_ID, "is_dream_sweet"));
@@ -140,7 +135,6 @@ public class Resonance implements ModInitializer {
 	public static final TagKey<Item> PEARL_ITEMS_TAG = TagKey.of(RegistryKeys.ITEM, Identifier.of(MOD_ID, "alternate_pearl_items"));
 	public static final TagKey<StatusEffect> PEARL_EFFECT_BLACKLIST_TAG = TagKey.of(RegistryKeys.STATUS_EFFECT, Identifier.of(MOD_ID, "pearl_effect_blacklist"));
 	// Advancement Criterion --------------------------------------------------------------------------------------------------------------------------------------------------------
-	public static final CritCriterion CRIT_CRITERION = Criteria.register(MOD_ID + ":" + "crit", new CritCriterion());
 	public static final ParryCriterion PARRY_CRITERION = Criteria.register(MOD_ID + ":" + "shield_parry", new ParryCriterion());
 	public static final PearlHubCriterion PEARL_HUB_CRITERION = Criteria.register(MOD_ID + ":" + "use_pearl_hub", new PearlHubCriterion());
 	public static final DoubleJumpCriterion DOUBLE_JUMP_CRITERION = Criteria.register(MOD_ID + ":" + "double_jump", new DoubleJumpCriterion());
@@ -169,13 +163,13 @@ public class Resonance implements ModInitializer {
 	public static final RegistryEntry.Reference<SoundEvent> BATHYAL_HEART_PULSE_SOUND = Registerizer.sound(MOD_ID, "bathyal_heart_pulse");
 	public static final RegistryEntry.Reference<SoundEvent> BATHYAL_VENT_AMBIENT_SOUND = Registerizer.sound(MOD_ID, "bathyal_vent_ambient");
 	public static final RegistryEntry.Reference<SoundEvent> BATHYAL_VENT_EXTINGUISH_SOUND = Registerizer.sound(MOD_ID, "bathyal_vent_extinguish");
+	public static final RegistryEntry.Reference<SoundEvent> SKELETON_CONVERTS_TO_WITHER_SKELETON_SOUND = Registerizer.sound(MOD_ID, "skeleton_converts_to_wither_skeleton");
 	// Recipe Types -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 	public static final RecipeSerializer<ReverberationRecipe> REVERBERATE_RECIPE_SERIALIZER = Registry.register(Registries.RECIPE_SERIALIZER, Identifier.of(MOD_ID, "reverberation"), ReverberationRecipe.Serializer.INSTANCE);
 	public static final RecipeType<ReverberationRecipe> REVERBERATE_RECIPE_TYPE = Registry.register(Registries.RECIPE_TYPE, Identifier.of(MOD_ID, "reverberation"), ReverberationRecipe.Type.INSTANCE);
 	public static final RecipeSerializer<LightningStrikeRecipe> LIGHTNING_STRIKE_RECIPE_SERIALIZER = Registry.register(Registries.RECIPE_SERIALIZER, Identifier.of(MOD_ID, "lightning_strike"), LightningStrikeRecipe.Serializer.INSTANCE);
 	public static final RecipeType<LightningStrikeRecipe> LIGHTNING_STRIKE_RECIPE_TYPE = Registry.register(Registries.RECIPE_TYPE, Identifier.of(MOD_ID, "lightning_strike"), LightningStrikeRecipe.Type.INSTANCE);
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static final RecipeSerializer<PearlDuplicationRecipe> PEARL_DUPLICATION_RECIPE_SERIALIZER = Registry.register(Registries.RECIPE_SERIALIZER, Identifier.of(MOD_ID, "pearl_duplication"), new SpecialRecipeSerializer(PearlDuplicationRecipe::new));
+	public static final RecipeSerializer<PearlDuplicationRecipe> PEARL_DUPLICATION_RECIPE_SERIALIZER = Registry.register(Registries.RECIPE_SERIALIZER, Identifier.of(MOD_ID, "pearl_duplication"), new SpecialRecipeSerializer<>(PearlDuplicationRecipe::new));
 	public static final RecipeType<PearlDuplicationRecipe> PEARL_DUPLICATION_RECIPE_TYPE = Registry.register(Registries.RECIPE_TYPE, Identifier.of(MOD_ID, "pearl_duplication"), PearlDuplicationRecipe.Type.INSTANCE);
 	// Components -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	public static final ComponentType<PearlStatsComponent> PEARL_STATS = Registry.register(Registries.DATA_COMPONENT_TYPE, Identifier.of(MOD_ID, "pearl_stats"), ComponentType.<PearlStatsComponent>builder().codec(PearlStatsComponent.CODEC).build());
@@ -187,9 +181,8 @@ public class Resonance implements ModInitializer {
 	public static final ComponentType<List<TargetedEnchantmentEffect<EnchantmentEntityEffect>>> POST_CRIT = Registry.register(Registries.ENCHANTMENT_EFFECT_COMPONENT_TYPE, Identifier.of(MOD_ID, "post_crit"), ComponentType.<List<TargetedEnchantmentEffect<EnchantmentEntityEffect>>>builder().codec(TargetedEnchantmentEffect.createPostAttackCodec(EnchantmentEntityEffect.CODEC, LootContextTypes.ENCHANTED_DAMAGE).listOf()).build());
 	public static final ComponentType<List<EnchantmentEffectEntry<EnchantmentEntityEffect>>> POST_USE = Registry.register(Registries.ENCHANTMENT_EFFECT_COMPONENT_TYPE, Identifier.of(MOD_ID, "post_use"), ComponentType.<List<EnchantmentEffectEntry<EnchantmentEntityEffect>>>builder().codec(EnchantmentEffectEntry.createCodec(EnchantmentEntityEffect.CODEC, LootContextTypes.ENCHANTED_ITEM).listOf()).build());
 	// Loot Condition Types ---------------------------------------------------------------------------------------------------------------------------------------------------------
-   	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static final LootFunctionType<SetPearlStatsLootFunction> SET_PEARL_STATS = Registry.register(Registries.LOOT_FUNCTION_TYPE, Identifier.of(MOD_ID, "set_pearl_stats"), new LootFunctionType(SetPearlStatsLootFunction.CODEC));
 	public static final LootConditionType CRIT_COUNT_LOOT_CONDITION = Registerizer.registerLootConditionType(MOD_ID, "crit_count", CritCountLootCondition.CODEC);
+	public static final LootFunctionType<SetPearlStatsLootFunction> SET_PEARL_STATS = Registry.register(Registries.LOOT_FUNCTION_TYPE, Identifier.of(MOD_ID, "set_pearl_stats"), new LootFunctionType<>(SetPearlStatsLootFunction.CODEC));
 	// Enchantment Effects ----------------------------------------------------------------------------------------------------------------------------------------------------------
 	public static final MapCodec<? extends EnchantmentEntityEffect> REVERBERATE_ENCHANTMENT_EFFECT = Registerizer.registerEnchantmentEffect(MOD_ID, "reverberate", ReverberateEnchantmentEffect.CODEC);
 	public static final MapCodec<? extends EnchantmentEntityEffect> SET_STORED_CRITS_ENCHANTMENT_EFFECT = Registerizer.registerEnchantmentEffect(MOD_ID, "set_stored_crits", SetCritCountEnchantmentEffect.CODEC);
@@ -274,7 +267,6 @@ public class Resonance implements ModInitializer {
 	public static final Block LIGHTNING_BOTTLE_BLOCK = Registerizer.block(MOD_ID, "lightning_bottle", new TintedBottleBlock(AbstractBlock.Settings.create().mapColor(MapColor.GRAY).solid().blockVision(Blocks::never).breakInstantly().sounds(BlockSoundGroup.GLASS).nonOpaque().pistonBehavior(PistonBehavior.DESTROY), LIGHTNING_BOTTLE), false);
 	public static final Block SHULKER_BOTTLE_BLOCK = Registerizer.block(MOD_ID, "shulker_bottle", new TintedBottleBlock(AbstractBlock.Settings.create().mapColor(MapColor.GRAY).solid().blockVision(Blocks::never).breakInstantly().sounds(BlockSoundGroup.GLASS).nonOpaque().pistonBehavior(PistonBehavior.DESTROY), SHULKER_BOTTLE), false);
 	public static final Block VENT_FLUID_BOTTLE_BLOCK = Registerizer.block(MOD_ID, "vent_fluid_bottle", new TintedBottleBlock(AbstractBlock.Settings.create().mapColor(MapColor.GRAY).solid().blockVision(Blocks::never).breakInstantly().sounds(BlockSoundGroup.GLASS).nonOpaque().pistonBehavior(PistonBehavior.DESTROY), VENT_FLUID_BOTTLE), false);
-	public static final Block LOST_SOUL_ECHO = Registerizer.block(MOD_ID, "lost_soul_echo", new LostSoulBlock(AbstractBlock.Settings.create().ticksRandomly().dropsNothing()), false);
 	public static final Block JUMP_ORB_NORMAL = Registerizer.block(MOD_ID, "jump_orb_normal", new JumpOrbBlock(NORMAL_DOUBLE_JUMP), true);
 	public static final Block JUMP_ORB_STRONG = Registerizer.block(MOD_ID, "jump_orb_strong", new JumpOrbBlock(STRONG_DOUBLE_JUMP), true);
 	public static final Item PEARL = Registerizer.item(MOD_ID, "pearl", new Pearl(new Settings()));
@@ -291,7 +283,9 @@ public class Resonance implements ModInitializer {
 	public static final Block TUBE_WORMS = Registerizer.block(MOD_ID, "tube_worms", new TubeWormsBlock(AbstractBlock.Settings.create().mapColor(MapColor.DARK_RED).ticksRandomly().noCollision().pistonBehavior(PistonBehavior.DESTROY).offset(OffsetType.XZ).liquid().sounds(BlockSoundGroup.WART_BLOCK)), true);
 	public static final Block WALL_TUBE_WORMS = Registerizer.block(MOD_ID, "wall_tube_worms", new WallTubeWormsBlock(AbstractBlock.Settings.create().mapColor(MapColor.DARK_RED).ticksRandomly().noCollision().pistonBehavior(PistonBehavior.DESTROY).liquid().sounds(BlockSoundGroup.WART_BLOCK)), false);
 	public static final Item VOLCANO_SNAIL_BUCKET = Registerizer.item(MOD_ID, "volcano_snail_bucket", new EntityBucketItem(ModEntities.VOLCANO_SNAIL, Fluids.WATER, SoundEvents.ITEM_BUCKET_EMPTY, new Item.Settings().maxCount(1).component(DataComponentTypes.BUCKET_ENTITY_DATA, NbtComponent.DEFAULT)));
-	public static final Item VOLCANO_SNAIL_SPAWN_EGG = Registerizer.item(MOD_ID, "volcano_snail_spawn_egg", new SpawnEggItem(ModEntities.VOLCANO_SNAIL, 0x181210, 0xc07f8f, new Settings()));
+	public static final Item YETI_CRAB_BUCKET = Registerizer.item(MOD_ID, "yeti_crab_bucket", new EntityBucketItem(ModEntities.YETI_CRAB, Fluids.WATER, SoundEvents.ITEM_BUCKET_EMPTY, new Item.Settings().maxCount(1).component(DataComponentTypes.BUCKET_ENTITY_DATA, NbtComponent.DEFAULT)));
+	public static final Item VOLCANO_SNAIL_SPAWN_EGG = Registerizer.item(MOD_ID, "volcano_snail_spawn_egg", new SpawnEggItem(ModEntities.VOLCANO_SNAIL, 0x181210, 0xC07F8F, new Settings()));
+	public static final Item YETI_CRAB_SPAWN_EGG = Registerizer.item(MOD_ID, "yeti_crab_spawn_egg", new SpawnEggItem(ModEntities.YETI_CRAB, 0xD6D0BA, 0xEBEBDF, new Settings()));
 	public static final Item LOST_SOUL_SPAWN_EGG = Registerizer.item(MOD_ID, "lost_soul_spawn_egg", new SpawnEggItem(ModEntities.LOST_SOUL, 0x76F1E3, 0x60E8D9, new Settings()));
 
 	public static final Block DATAPACK_BLOCK = Registerizer.block(MOD_ID, "datapack_block", new DatapackBlock(AbstractBlock.Settings.copy(Blocks.BARREL).nonOpaque().strength(1.2f, 1f)), true);
@@ -312,7 +306,7 @@ public class Resonance implements ModInitializer {
 	public static final Feature<SpurFeatureConfig> SPUR_FEATURE_TYPE = Registry.register(Registries.FEATURE, Identifier.of(MOD_ID, "spur"), new SpurFeature(SpurFeatureConfig.CODEC));
 	public static final RegistryKey<PlacedFeature> ICICLE_DOWN_FEATURE = RegistryKey.of(RegistryKeys.PLACED_FEATURE, Identifier.of(MOD_ID, "icicle_down"));
 	public static final RegistryKey<PlacedFeature> PEARL_ICE_SPUR_FEATURE = RegistryKey.of(RegistryKeys.PLACED_FEATURE, Identifier.of(MOD_ID, "pearl_ice_spur"));
-	public static final RegistryKey<Biome> BATHYAL_ZONE = RegistryKey.of(RegistryKeys.BIOME, Identifier.of(MOD_ID, "bathyal_zone"));
+	public static final RegistryKey<Biome> BATHYAL_VENTS = RegistryKey.of(RegistryKeys.BIOME, Identifier.of(MOD_ID, "bathyal_vents"));
 	// Attribute --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	public static final RegistryEntry<EntityAttribute> DOUBLE_JUMPS = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID, "double_jump"), new ClampedEntityAttribute("attribute." + MOD_ID + '.' + "double_jumps", 0, 0, 1024).setTracked(true));
 	public static final RegistryEntry<EntityAttribute> WALL_JUMPS = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID, "wall_jump"), new ClampedEntityAttribute("attribute." + MOD_ID + '.' + "wall_jumps", 0, 0, 1024).setTracked(true));
@@ -387,9 +381,11 @@ public class Resonance implements ModInitializer {
 		ItemGroupEvents.modifyEntriesEvent(ItemGroups.SPAWN_EGGS).register(entries -> {
 			entries.addAfter(Items.LLAMA_SPAWN_EGG, LOST_SOUL_SPAWN_EGG);
 			entries.addAfter(Items.VINDICATOR_SPAWN_EGG, VOLCANO_SNAIL_SPAWN_EGG);
+			entries.addAfter(Items.WOLF_SPAWN_EGG, YETI_CRAB_SPAWN_EGG);
 		});
 		ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(entries -> {
 			entries.addAfter(Items.TADPOLE_BUCKET, VOLCANO_SNAIL_BUCKET);
+			entries.addAfter(VOLCANO_SNAIL_BUCKET, YETI_CRAB_BUCKET);
 		});
 
 		Registry.register(Registries.ITEM_SUB_PREDICATE_TYPE, Identifier.of(MOD_ID, "stored_crits"), new ItemSubPredicate.Type(StoredCritsPredicate.CODEC));
@@ -400,15 +396,14 @@ public class Resonance implements ModInitializer {
 		BiomeModifications.addFeature(BiomeSelectors.tag(BiomeTags.POLAR_BEARS_SPAWN_ON_ALTERNATE_BLOCKS), GenerationStep.Feature.UNDERGROUND_DECORATION, PEARL_ICE_SPUR_FEATURE);
 
 		// temperature, humidity, continentalness, erosion, depth, weirdness, offset
-		BiomePlacement.addOverworld(BATHYAL_ZONE,
-				new MultiNoiseUtil.NoiseHypercube(
-						MultiNoiseUtil.ParameterRange.of(-0.15f, 0.55f),
-						MultiNoiseUtil.ParameterRange.of(-1f, 1f),
-						MultiNoiseUtil.ParameterRange.of(-1.1f, -0.55f),
-						MultiNoiseUtil.ParameterRange.of(-1f, 1f),
-						MultiNoiseUtil.ParameterRange.of(0f, 0f),
-						MultiNoiseUtil.ParameterRange.of(-0.2f, 0.7f),
-						0L));
+		BiomePlacement.addOverworld(BATHYAL_VENTS, new MultiNoiseUtil.NoiseHypercube(
+				MultiNoiseUtil.ParameterRange.of(-0.15f, 0.55f),
+				MultiNoiseUtil.ParameterRange.of(-1f, 1f),
+				MultiNoiseUtil.ParameterRange.of(-1.1f, -0.55f),
+				MultiNoiseUtil.ParameterRange.of(-1f, 1f),
+				MultiNoiseUtil.ParameterRange.of(0f, 0f),
+				MultiNoiseUtil.ParameterRange.of(-0.2f, 0.7f),
+				0L));
 
 		SculkSensorFrequencyRegistry.register(SHIELD_PARRY_EVENT.registryKey(), 5);
 		SculkSensorFrequencyRegistry.register(REVERBERATE_EVENT.registryKey(), 15);
@@ -425,9 +420,6 @@ public class Resonance implements ModInitializer {
 		ModParticles.registerModParticles();
 		ModEntities.registerModEntities();
 		ResonanceEvents.registerEvents();
-
-		BiomeModifications.addSpawn(BiomeSelectors.includeByKey(BiomeKeys.SOUL_SAND_VALLEY), SpawnGroup.MONSTER, ModEntities.LOST_SOUL, 5, 1, 2);
-		SpawnRestriction.register(ModEntities.LOST_SOUL, SpawnRestriction.getLocation(ModEntities.LOST_SOUL), Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, HostileEntity::canSpawnInDark);
 
 		PayloadTypeRegistry.playC2S().register(JumpPayload.ID, JumpPayload.PACKET_CODEC);
 		ServerPlayNetworking.registerGlobalReceiver(CustomPayload.id("resonance/jump"), new ServerPlayNetworking.PlayPayloadHandler<JumpPayload>() {

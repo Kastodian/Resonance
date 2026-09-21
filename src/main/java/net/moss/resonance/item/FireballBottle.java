@@ -9,11 +9,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.FireballEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsage;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.stat.Stats;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
@@ -57,23 +55,15 @@ public class FireballBottle extends TintedBottle {
 
 	@Override
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-		ItemStack itemStack = user.getStackInHand(hand);
 		world.playSound(null, user.getX(), user.getEyeY(), user.getZ(), SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.NEUTRAL, 0.5f, 0.4f / (world.getRandom().nextFloat() * 0.4f + 0.8f));
-		world.playSound(null, user.getBlockPos(), SoundEvents.ITEM_BOTTLE_EMPTY, SoundCategory.PLAYERS, 1.0f, world.getRandom().nextFloat() * 0.4f + 0.8f);
-		if (!world.isClient) {
+		if (!world.isClient()) {
 			Vec3d vec3d = user.getRotationVec(1.0f).multiply(4);
 			FireballEntity fireballEntity = new FireballEntity(world, user, vec3d, 1);
 			fireballEntity.setPosition(user.getX(), user.getEyeY(), user.getZ());
 			fireballEntity.setVelocity(user, user.getPitch(), user.getYaw(), 0.0f, 3f, 1.0f);
 			world.spawnEntity(fireballEntity);
 		}
-		user.getItemCooldownManager().set(this, 4);
-		user.incrementStat(Stats.USED.getOrCreateStat(this));
-		if (!user.getAbilities().creativeMode) {
-			ItemStack itemStack2 = ItemUsage.exchangeStack(itemStack, user, Resonance.TINTED_BOTTLE.getDefaultStack());
-			return TypedActionResult.success(itemStack2, world.isClient());
-		}
-		return TypedActionResult.success(itemStack, world.isClient());
+		return emptyBottle(world, user, hand, 4);
 	}
 
 	@Override public Block getBlock() { return Resonance.FIREBALL_BOTTLE_BLOCK; }

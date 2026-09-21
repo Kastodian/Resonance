@@ -3,12 +3,11 @@ package net.moss.resonance.block.entity;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BeaconBlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.component.DataComponentTypes;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.Entity.RemovalReason;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -28,11 +27,11 @@ import net.moss.resonance.block.PearlHubBlock;
 import net.moss.resonance.entity.BeaconedPearlEntity;
 import net.moss.resonance.entity.ModEntities;
 import net.moss.resonance.item.Pearl;
-import net.moss.resonance.mixin.BeaconBlockEntityAccessor;
 import net.moss.resonance.util.PearlStatsComponent;
 import net.moss.resonance.util.abstracts.BlockEntityWithItemIntentory;
 
 public class PearlHubBlockEntity extends BlockEntityWithItemIntentory {
+	protected int charge;
 	protected int level;
 
 	public PearlHubBlockEntity(BlockPos pos, BlockState state) {
@@ -43,40 +42,41 @@ public class PearlHubBlockEntity extends BlockEntityWithItemIntentory {
 		super(type, pos, state);
 	}
 
-	public void setLevel(int level) {
-		this.level = level;
-	}
-
 	public int getLevel() {
 		return level;
 	}
 
-	public static void tick(World world, BlockPos pos, BlockState state, PearlHubBlockEntity entity) {
-		boolean bl1 = world.getBlockState(pos.down()).isOf(Blocks.BEACON);
-		int i = bl1 ? BeaconBlockEntityAccessor.updateLevel(world, pos.getX(), pos.getY() - 1, pos.getZ()) : 0;
-		boolean bl2 = i > 0;
-		boolean bl3 = state.get(PearlHubBlock.BEACON_POWERED);
-		if (bl3 && world.getTime() % 80L == 0L) {
-			world.playSound(null, pos, SoundEvents.BLOCK_BEACON_AMBIENT, SoundCategory.BLOCKS, 0.3F, 1.0F);
-		}
-		if (((!bl1 || !bl2) && bl3) || (bl1 && bl2 && !bl3)) {
+	public void beaconActivate(World world, BlockPos pos, BlockState state, PearlHubBlockEntity entity, BeaconBlockEntity beacon, int level) {
+		if (entity.charge <= -1 || !state.get(PearlHubBlock.BEACON_POWERED)) {
 			BeaconBlockEntity.playSound(world, pos, SoundEvents.BLOCK_BEACON_DEACTIVATE);
 			BeaconBlockEntity.playSound(world, pos, Resonance.REVERBERATION_SOUND.value());
-			world.setBlockState(pos, state.with(PearlHubBlock.BEACON_POWERED, !bl3));
-			if (!bl3 && entity.hasStack()) {
+			world.setBlockState(pos, state.with(PearlHubBlock.BEACON_POWERED, true));
+			if (entity.hasStack()) {
 				BeaconedPearlEntity beaconedPearlEntity = new BeaconedPearlEntity(world, pos.getX() + 0.5, pos.getY() + 2.2, pos.getZ() + 0.5, entity.getStack());
 				world.spawnEntity(beaconedPearlEntity);
 				for (ServerPlayerEntity player : world.getNonSpectatingEntities(ServerPlayerEntity.class, new Box(pos).expand(12))) {
-					Resonance.PEARL_HUB_CRITERION.trigger(player, entity.getStack(), i);
+					Resonance.PEARL_HUB_CRITERION.trigger(player, entity.getStack(), level);
 				}
-			} else {
+			}
+		}
+		entity.level = level;
+		entity.charge = 1;
+	}
+
+	public static void tick(World world, BlockPos pos, BlockState state, PearlHubBlockEntity entity) {
+		if (world.getTime() % 80L == 0L) {
+			world.playSound(null, pos, SoundEvents.BLOCK_BEACON_AMBIENT, SoundCategory.BLOCKS, 0.3F, 1.0F);
+			if (entity.charge <= -1) {
+				BeaconBlockEntity.playSound(world, pos, SoundEvents.BLOCK_BEACON_DEACTIVATE);
+				BeaconBlockEntity.playSound(world, pos, Resonance.REVERBERATION_SOUND.value());
+				world.setBlockState(pos, state.with(PearlHubBlock.BEACON_POWERED, false));
 				for (BeaconedPearlEntity beaconedPearlEntity : world.getEntitiesByType(ModEntities.BEACONED_PEARL, new Box(pos.up(2)), BeaconedPearlEntity::isAttackable)) {
 					beaconedPearlEntity.remove(RemovalReason.DISCARDED);
 				}
+				entity.level = 0;
 			}
-			return;
+			entity.charge--;
 		}
-		entity.setLevel(i);
 	}
 
 	public int usePearl(World world, BlockPos pos, PlayerEntity player) {

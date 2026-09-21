@@ -14,11 +14,13 @@ import org.joml.Vector3f;
 public class SmallRingParticle extends SpriteBillboardParticle {
 	private final SpriteProvider sprites;
 	private final Vector3f rotator;
+	private float maxScale;
 
 	private SmallRingParticle(ClientWorld world, double x, double y, double z, double velX, double velY, double velZ, SmallRing parameters, SpriteProvider sprites) {
 		super(world, x, y, z);
 		this.maxAge = 7;
 		this.scale = 0f;
+		this.maxScale = parameters.getScale();
 		this.velocityX = velX;
 		this.velocityY = velY;
 		this.velocityZ = velZ;
@@ -30,7 +32,7 @@ public class SmallRingParticle extends SpriteBillboardParticle {
 
 	@Override
 	public void tick() {
-		this.scale = (float) MathHelper.lerp(0.1, scale, 2);
+		this.scale = (float) MathHelper.lerp(0.1, scale, this.maxScale);
 		this.setAlpha(1.0F - (float) this.age / (float) this.maxAge);
 		if(this.age++ >= this.maxAge) { this.markDead(); }
 		else { this.setSpriteForAge(sprites); }

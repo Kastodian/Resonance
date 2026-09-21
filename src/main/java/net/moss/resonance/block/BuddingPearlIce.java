@@ -8,7 +8,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.component.DataComponentTypes;
-import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
@@ -23,7 +22,6 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
-import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
 import net.minecraft.world.event.GameEvent;
@@ -53,10 +51,10 @@ public class BuddingPearlIce extends Block implements BlockEntityProvider {
 	@Override
 	public void afterBreak(World world, PlayerEntity player, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, ItemStack tool) {
 		super.afterBreak(world, player, pos, state, blockEntity, tool);
-		if (blockEntity instanceof BuddingPearlIceBlockEntity buddingPearlIce && world.getGameRules().getBoolean(GameRules.DO_TILE_DROPS)) {
-			ItemEntity itemEntity = new ItemEntity(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, buddingPearlIce.getCatalyst().copy().getRecipeRemainder());
-			itemEntity.setToDefaultPickupDelay();
-			world.spawnEntity(itemEntity);
+		if (blockEntity instanceof BuddingPearlIceBlockEntity buddingPearlIce) {
+			dropStack(world, pos, buddingPearlIce.getCatalyst().copy());
+			dropStack(world, pos, buddingPearlIce.getSeed().copy());
+			dropStack(world, pos, buddingPearlIce.getPotion().copy());
 			buddingPearlIce.clear();
 		}
 		if (world.getDimension().ultrawarm()) {

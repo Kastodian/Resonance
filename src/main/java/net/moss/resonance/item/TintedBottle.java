@@ -49,7 +49,6 @@ import net.minecraft.world.event.GameEvent.Emitter;
 import net.moss.resonance.Resonance;
 import net.moss.resonance.block.BathyalVent;
 import net.moss.resonance.entity.LostSoulEntity;
-import net.moss.resonance.util.Utils;
 import net.minecraft.world.RaycastContext;
 
 public class TintedBottle extends Item {
@@ -111,15 +110,14 @@ public class TintedBottle extends Item {
 		if (playerEntity.isSneaking()) { return TypedActionResult.pass(itemStack); }
 		BlockHitResult blockHitResult = TintedBottle.raycast(world, playerEntity, RaycastContext.FluidHandling.NONE);
 		BlockPos blockPos = blockHitResult.getBlockPos();
-		List<Entity> list = Utils.entitiesInRadius(world, blockHitResult.getPos(), playerEntity, 2, 2, Entity::isAlive);
-		for (Entity entity2 : list) {
-			if (entity2 instanceof LightningEntity) {
-				world.playSound(null, blockPos, SoundEvents.ITEM_BOTTLE_FILL, SoundCategory.PLAYERS, 1.0f, world.getRandom().nextFloat() * 0.4f + 0.8f);
-				playerEntity.incrementStat(Stats.USED.getOrCreateStat(this));
-				ItemStack itemStack2 = ItemUsage.exchangeStack(itemStack, playerEntity, Resonance.LIGHTNING_BOTTLE.getDefaultStack());
-				playerEntity.getItemCooldownManager().set(Resonance.LIGHTNING_BOTTLE, 20);
-				return TypedActionResult.success(itemStack2, world.isClient());
-			}
+
+		List<LightningEntity> list = world.getEntitiesByClass(LightningEntity.class, new Box(blockPos).expand(2), LightningEntity::isAlive);
+		if (!list.isEmpty()) {
+			world.playSound(null, blockPos, SoundEvents.ITEM_BOTTLE_FILL, SoundCategory.PLAYERS, 1.0f, world.getRandom().nextFloat() * 0.4f + 0.8f);
+			playerEntity.incrementStat(Stats.USED.getOrCreateStat(this));
+			ItemStack itemStack2 = ItemUsage.exchangeStack(itemStack, playerEntity, Resonance.LIGHTNING_BOTTLE.getDefaultStack());
+			playerEntity.getItemCooldownManager().set(Resonance.LIGHTNING_BOTTLE, 20);
+			return TypedActionResult.success(itemStack2, world.isClient());
 		}
 
 		if (((HitResult)blockHitResult).getType() == HitResult.Type.BLOCK) {
@@ -227,6 +225,19 @@ public class TintedBottle extends Item {
 		PlayerEntity playerEntity = context.getPlayer();
 		ShapeContext shapeContext = playerEntity == null ? ShapeContext.absent() : ShapeContext.of(playerEntity);
 		return (state.canPlaceAt(context.getWorld(), context.getBlockPos())) && context.getWorld().canPlace(state, context.getBlockPos(), shapeContext);
+	}
+
+	public TypedActionResult<ItemStack> emptyBottle(World world, PlayerEntity user, Hand hand, int cooldown) {
+		ItemStack itemStack = user.getStackInHand(hand);
+		world.playSound(null, user.getBlockPos(), SoundEvents.ITEM_BOTTLE_EMPTY, SoundCategory.PLAYERS, 1.0f, world.getRandom().nextFloat() * 0.4f + 0.8f);
+		user.emitGameEvent(GameEvent.CONTAINER_OPEN);
+		user.getItemCooldownManager().set(this, cooldown);
+		user.incrementStat(Stats.USED.getOrCreateStat(this));
+		if (!user.getAbilities().creativeMode) {
+			ItemStack itemStack2 = ItemUsage.exchangeStack(itemStack, user, Resonance.TINTED_BOTTLE.getDefaultStack());
+			return TypedActionResult.success(itemStack2, world.isClient());
+		}
+		return TypedActionResult.success(itemStack, world.isClient());
 	}
 
 	protected boolean place(ItemPlacementContext context, BlockState state) { return context.getWorld().setBlockState(context.getBlockPos(), state, 11); }

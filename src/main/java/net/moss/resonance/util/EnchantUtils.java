@@ -15,6 +15,7 @@ import net.minecraft.enchantment.EnchantmentEffectContext;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.effect.EnchantmentEffectEntry;
 import net.minecraft.enchantment.effect.EnchantmentEffectTarget;
+import net.minecraft.enchantment.effect.EnchantmentEntityEffect;
 import net.minecraft.enchantment.effect.EnchantmentValueEffect;
 import net.minecraft.enchantment.effect.TargetedEnchantmentEffect;
 import net.minecraft.entity.Entity;
@@ -76,22 +77,20 @@ public class EnchantUtils {
 		for (EquipmentSlot equipmentSlot : EquipmentSlot.values()) { forEachEnchantment(entity.getEquippedStack(equipmentSlot), equipmentSlot, entity, contextAwareConsumer); }
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private static void forEachEnchantment(ItemStack stack, EquipmentSlot slot, LivingEntity entity, ContextAwareConsumer contextAwareConsumer) {
 		if (stack.isEmpty()) { return; }
 		ItemEnchantmentsComponent itemEnchantmentsComponent = stack.get(DataComponentTypes.ENCHANTMENTS);
 		if (itemEnchantmentsComponent == null || itemEnchantmentsComponent.isEmpty()) { return; }
 		EnchantmentEffectContext enchantmentEffectContext = new EnchantmentEffectContext(stack, slot, entity);
 		for (Object2IntMap.Entry<RegistryEntry<Enchantment>> entry : itemEnchantmentsComponent.getEnchantmentEntries()) {
-			RegistryEntry registryEntry = entry.getKey();
+			RegistryEntry<Enchantment> registryEntry = entry.getKey();
 			if (!((Enchantment)registryEntry.value()).slotMatches(slot)) continue;
 			contextAwareConsumer.accept(registryEntry, entry.getIntValue(), enchantmentEffectContext);
 		}
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private static void postCrit(Enchantment enchantment, ServerWorld world, int level, EnchantmentEffectContext context, EnchantmentEffectTarget target, Entity user, DamageSource damageSource) {
-		for (TargetedEnchantmentEffect targetedEnchantmentEffect : enchantment.getEffect(Resonance.POST_CRIT)) {
+		for (TargetedEnchantmentEffect<EnchantmentEntityEffect> targetedEnchantmentEffect : enchantment.getEffect(Resonance.POST_CRIT)) {
 			if (target != targetedEnchantmentEffect.enchanted()) continue;
 			Enchantment.applyTargetedEffect(targetedEnchantmentEffect, world, level, context, user, damageSource);
 		}
@@ -103,11 +102,10 @@ public class EnchantUtils {
 		});
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private static <T> void applyEffects(List<EnchantmentEffectEntry<T>> entries, LootContext lootContext, Consumer<T> effectConsumer) {
-		Iterator var3 = entries.iterator();
+		Iterator<EnchantmentEffectEntry<T>> var3 = entries.iterator();
 		while(var3.hasNext()) {
-			EnchantmentEffectEntry<T> enchantmentEffectEntry = (EnchantmentEffectEntry)var3.next();
+			EnchantmentEffectEntry<T> enchantmentEffectEntry = (EnchantmentEffectEntry<T>)var3.next();
 			if (enchantmentEffectEntry.test(lootContext)) {
 				effectConsumer.accept(enchantmentEffectEntry.effect());
 			}

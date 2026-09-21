@@ -94,8 +94,7 @@ public class PearlHubBlock extends BlockWithEntity implements Waterloggable {
 				blockEntity.setStack(stack.split(1));
 				world.setBlockState(pos, state.with(HAS_PEARL, true));
 				if (state.get(BEACON_POWERED)) {
-				BeaconedPearlEntity beaconedPearlEntity = new BeaconedPearlEntity(world, pos.getX() + 0.5, pos.getY() + 2.2, pos.getZ() + 0.5, blockEntity.getStack());
-				world.spawnEntity(beaconedPearlEntity);
+					world.spawnEntity(new BeaconedPearlEntity(world, pos.getX() + 0.5, pos.getY() + 2.2, pos.getZ() + 0.5, blockEntity.getStack()));
 					for (ServerPlayerEntity player : world.getNonSpectatingEntities(ServerPlayerEntity.class, new Box(pos).expand(12))) {
 						Resonance.PEARL_HUB_CRITERION.trigger(player, blockEntity.getStack(), blockEntity.getLevel());
 					}
@@ -165,7 +164,7 @@ public class PearlHubBlock extends BlockWithEntity implements Waterloggable {
 	@Nullable
 	@Override
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-		return !world.isClient() ? validateTicker(type, Resonance.PEARL_HUB_BLOCK_ENTITY, PearlHubBlockEntity::tick) : null;
+		return !world.isClient() && state.get(BEACON_POWERED) ? validateTicker(type, Resonance.PEARL_HUB_BLOCK_ENTITY, PearlHubBlockEntity::tick) : null;
 	}
 
 	@Override

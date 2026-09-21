@@ -22,6 +22,8 @@ import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ColorHelper;
@@ -32,7 +34,6 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.world.World;
 import net.moss.resonance.Resonance;
 import net.moss.resonance.particle.VentSmoke;
-import net.moss.resonance.util.Utils;
 
 public class VentFluidProjectileEntity extends ProjectileEntity {
 	protected static final TrackedData<Vector3f> COLOR = DataTracker.registerData(VentFluidProjectileEntity.class, TrackedDataHandlerRegistry.VECTOR3F);
@@ -51,11 +52,13 @@ public class VentFluidProjectileEntity extends ProjectileEntity {
 	protected void onCollision(HitResult hitResult) {
 		super.onCollision(hitResult);
 		if (this.getWorld() instanceof ServerWorld serverWorld) {
-			Utils.entitiesInRadius(serverWorld, this.getPos(), this, 2, 2, Entity::isAlive).forEach(entity -> {
-				if (entity instanceof LivingEntity livingEntity) { livingEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 5 * 20)); }
+			serverWorld.getEntitiesByClass(LivingEntity.class, this.getBoundingBox().expand(2), LivingEntity::isAlive).forEach(entity -> {
+				entity.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 5 * 20));
 			});
-			serverWorld.spawnParticles(new VentSmoke(getColor(), 1.0F + random.nextFloat() * 2, true), this.getX(), this.getY(), this.getZ(), 200, 0.7, 0.7, 0.7, 0.05);
-			if (serverWorld.getGameRules().getBoolean(Resonance.VENT_FLUID_BOTTLES_PLACES_WATER)) {
+			serverWorld.spawnParticles(new VentSmoke(getColor(), 1.0F + random.nextFloat() * 2, false, true), this.getX(), this.getY(), this.getZ(), 200, 0.7, 0.7, 0.7, 0.05);
+			if (serverWorld.getDimension().ultrawarm()) {
+				serverWorld.playSound(this, this.getBlockPos(), SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 1.0f, serverWorld.getRandom().nextFloat() * 0.4f + 0.8f);
+			} else if (serverWorld.getGameRules().getBoolean(Resonance.VENT_FLUID_BOTTLES_PLACES_WATER)) {
 				if (getBlockStateAtPos().isReplaceable()) { serverWorld.setBlockState(getBlockPos(), Blocks.WATER.getDefaultState().with(FluidBlock.LEVEL, 5), Block.NOTIFY_ALL); }
 				for (Direction direction : new Direction[]{Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST}) {
 					if (serverWorld.getBlockState(getBlockPos().offset(direction)).isReplaceable()) { serverWorld.setBlockState(getBlockPos().offset(direction), Blocks.WATER.getDefaultState().with(FluidBlock.LEVEL, 2), Block.NOTIFY_ALL); }
@@ -108,7 +111,7 @@ public class VentFluidProjectileEntity extends ProjectileEntity {
 
 	public void addParticle(World world, Random random) {
 		world.addParticle(
-				new VentSmoke(getColor(), 1.0F + random.nextFloat() * 2, true), true,
+				new VentSmoke(getColor(), 1.0F + random.nextFloat() * 2, false, true), true,
 				this.getX() + (random.nextDouble() - 0.5) / 5.0, this.getY() + (random.nextDouble() - 0.5) / 5.0, this.getZ() + (random.nextDouble() - 0.5) / 5.0,
 				0.04 * (random.nextDouble() - 0.5), 0.04 * (random.nextDouble() - 0.5), 0.04 * (random.nextDouble() - 0.5));
 	}

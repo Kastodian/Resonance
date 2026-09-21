@@ -58,6 +58,7 @@ public class LightningBottle extends TintedBottle {
 		super.finishUsing(stack, world, user);
 		if (user instanceof ServerPlayerEntity serverPlayerEntity) {
 			Criteria.CONSUME_ITEM.trigger(serverPlayerEntity, stack);
+			user.emitGameEvent(GameEvent.CONTAINER_OPEN);
 			if (world instanceof ServerWorld world2) {
 				world.playSound(null, user.getBlockPos(), SoundEvents.ITEM_BOTTLE_EMPTY, SoundCategory.PLAYERS, 1.0f, world.getRandom().nextFloat() * 0.4f + 0.8f);
 				LightningEntity lightningEntity = EntityType.LIGHTNING_BOLT.create(world2);

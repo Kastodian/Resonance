@@ -25,9 +25,9 @@ import net.minecraft.util.math.Position;
 import net.minecraft.world.World;
 import net.moss.resonance.Resonance;
 import net.moss.resonance.entity.PearlProjectileEntity;
+import net.moss.resonance.util.EnchantUtils;
 import net.moss.resonance.util.PearlStatsComponent;
 
-// TODO: replace damage component with something unrepairable
 public class Pearl extends Item implements ProjectileItem {
 	public Pearl(Item.Settings settings) {
 		super(settings.maxCount(1).rarity(Rarity.UNCOMMON).component(DataComponentTypes.MAX_DAMAGE, 16));
@@ -68,14 +68,17 @@ public class Pearl extends Item implements ProjectileItem {
 		ItemStack itemStack = user.getStackInHand(hand);
 		world.playSound(null, user.getX(), user.getY(), user.getZ(), SoundEvents.ENTITY_SNOWBALL_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (world.getRandom().nextFloat() * 0.4F + 0.8F) );
 		if (!world.isClient()) {
-			PearlProjectileEntity snowballEntity = new PearlProjectileEntity(world, user);
-			snowballEntity.setItem(itemStack);
-			snowballEntity.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, 0.75F, 1.0F);
-			world.spawnEntity(snowballEntity);
+			PearlProjectileEntity pearlProjectileEntity = new PearlProjectileEntity(world, user);
+			pearlProjectileEntity.setItem(itemStack);
+			pearlProjectileEntity.setSlot(hand == Hand.OFF_HAND ? -1 : user.getInventory().selectedSlot);
+			pearlProjectileEntity.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, 0.75F, 1.0F);
+			if (user.isCreative()) { pearlProjectileEntity.noDrop(); }
+			world.spawnEntity(pearlProjectileEntity);
 		}
-
+		EnchantUtils.recoilCheck(user, null, itemStack, 0.6f, 1.4f, true);
 		user.incrementStat(Stats.USED.getOrCreateStat(this));
 		itemStack.decrementUnlessCreative(1, user);
+		user.getItemCooldownManager().set(this, 6);
 		return TypedActionResult.success(itemStack, world.isClient());
 	}
 

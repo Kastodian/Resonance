@@ -15,6 +15,8 @@ import net.minecraft.entity.mob.VexEntity;
 import net.minecraft.entity.mob.WitherSkeletonEntity;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.tag.EntityTypeTags;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.Box;
 import net.minecraft.world.World;
 import net.moss.resonance.Resonance;
@@ -45,7 +47,9 @@ public class LostSoulEntity extends VexEntity {
 
 	@Override
 	protected void onKilledBy(LivingEntity adversary) {
-		this.getVehicle().damage(Utils.damageSource(this.getWorld(), DamageTypes.INDIRECT_MAGIC, adversary), 10);
+		if (this.getVehicle() != null) {
+			this.getVehicle().damage(Utils.damageSource(this.getWorld(), DamageTypes.INDIRECT_MAGIC, adversary), 10);
+		}
 		super.onKilledBy(adversary);
 	}
 
@@ -53,8 +57,8 @@ public class LostSoulEntity extends VexEntity {
 	public void tickMovement() {
 		World world = this.getWorld();
 		if (world.isClient()) {
-			world.addParticle(ParticleTypes.SOUL, this.getX(), this.getY() + 0.25, this.getZ(), random.nextFloat()/10, random.nextFloat()/10, random.nextFloat()/10);
-			world.addParticle(ParticleTypes.SOUL_FIRE_FLAME, this.getX(), this.getY() + 0.25, this.getZ(), random.nextFloat()/10, random.nextFloat()/10, random.nextFloat()/10);
+			world.addParticle(ParticleTypes.SOUL, this.getX(), this.getEyeY(), this.getZ(), random.nextFloat()/10, random.nextFloat()/10, random.nextFloat()/10);
+			world.addParticle(ParticleTypes.SOUL_FIRE_FLAME, this.getX(), this.getEyeY(), this.getZ(), random.nextFloat()/10, random.nextFloat()/10, random.nextFloat()/10);
 		}
 		super.tickMovement();
 	}
@@ -101,8 +105,10 @@ public class LostSoulEntity extends VexEntity {
 					this.mob.discard();
 				} else if (this.target.getType().isIn(EntityTypeTags.SKELETONS) && !(this.target instanceof WitherSkeletonEntity) && this.target instanceof MobEntity mobEntity) {
 					this.target = mobEntity.convertTo(EntityType.WITHER_SKELETON, true);
+					((ServerWorld)this.mob.getWorld()).spawnParticles(ParticleTypes.SOUL_FIRE_FLAME, this.target.getX(), this.target.getEyeY(), this.target.getZ(), 20, 0, 0, 0, 0.1);
+					((ServerWorld)this.mob.getWorld()).spawnParticles(ParticleTypes.SMOKE, this.target.getX(), this.target.getEyeY(), this.target.getZ(), 40, 0, 0, 0, 0.3);
 					if (!this.target.isSilent()) {
-						// TODO : Sound Effects... this.mob.getWorld().syncWorldEvent(null, WorldEvents.SKELETON_CONVERTS_TO_STRAY, this.target.getBlockPos(), 0);
+						this.mob.getWorld().playSound(null, getBlockPos(), Resonance.SKELETON_CONVERTS_TO_WITHER_SKELETON_SOUND.value(), SoundCategory.HOSTILE, 3.0F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
 					}
 				} else {
 					this.mob.startRiding(this.target, true);

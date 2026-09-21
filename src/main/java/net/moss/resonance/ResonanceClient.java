@@ -8,6 +8,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.DimensionRenderingRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.minecraft.client.color.world.BiomeColors;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
@@ -28,10 +29,13 @@ import net.moss.resonance.entity.client.LostSoulRenderer;
 import net.moss.resonance.entity.client.SculkProjectileRenderer;
 import net.moss.resonance.entity.client.VentFluidProjectileRenderer;
 import net.moss.resonance.entity.client.VolcanoSnailModel;
+import net.moss.resonance.entity.client.YetiCrabModel;
+import net.moss.resonance.entity.client.YetiCrabRenderer;
 import net.moss.resonance.entity.client.VolcanoSnailRenderer;
 import net.moss.resonance.entity.client.WhistlingArrowRenderer;
 import net.moss.resonance.particle.ModParticles;
 import net.moss.resonance.particle.SmallRingParticle;
+import net.moss.resonance.particle.SoulDarknessParticle;
 import net.moss.resonance.particle.VentSmokeParticle;
 import net.moss.resonance.world.DreamSweetSkyRenderer;
 import net.moss.resonance.particle.CustomGlowParticle;
@@ -40,6 +44,7 @@ import net.moss.resonance.particle.MediumRingParticle;
 public class ResonanceClient implements ClientModInitializer {
 	public static final EntityModelLayer LOST_SOUL_LAYER = new EntityModelLayer(Identifier.of(Resonance.MOD_ID, "lost_soul"), "main");
 	public static final EntityModelLayer VOCANO_SNAIL_LAYER = new EntityModelLayer(Identifier.of(Resonance.MOD_ID, "volcano_snail"), "main");
+	public static final EntityModelLayer YETI_CRAB_LAYER = new EntityModelLayer(Identifier.of(Resonance.MOD_ID, "yeti_crab"), "main");
 	public static final EntityModelLayer BEACONED_PEARL_LAYER = new EntityModelLayer(Identifier.of(Resonance.MOD_ID, "beaconed_pearl"), "main");
 
 	@Override
@@ -77,6 +82,7 @@ public class ResonanceClient implements ClientModInitializer {
 		ParticleFactoryRegistry.getInstance().register(ModParticles.AMETHYST_PARTICLE, CustomGlowParticle.AmethystFactory::new);
 		ParticleFactoryRegistry.getInstance().register(ModParticles.GOLDEN_GLITTER, CustomGlowParticle.GoldenGlitter::new);
 		ParticleFactoryRegistry.getInstance().register(ModParticles.VENT_SMOKE, VentSmokeParticle.Factory::new);
+		ParticleFactoryRegistry.getInstance().register(ModParticles.SOUL_DARKNESS, SoulDarknessParticle.Factory::new);
 
 		EntityRendererRegistry.register(ModEntities.WHISTLING_ARROW, WhistlingArrowRenderer::new);
 		EntityRendererRegistry.register(ModEntities.SCULK_PROJECTILE, SculkProjectileRenderer::new);
@@ -84,10 +90,12 @@ public class ResonanceClient implements ClientModInitializer {
 		EntityRendererRegistry.register(ModEntities.PEARL_PROJECTILE, FlyingItemEntityRenderer::new);
 		EntityRendererRegistry.register(ModEntities.VENT_FLUID_PROJECTILE, VentFluidProjectileRenderer::new);
 		EntityRendererRegistry.register(ModEntities.VOLCANO_SNAIL, VolcanoSnailRenderer::new);
+		EntityRendererRegistry.register(ModEntities.YETI_CRAB, YetiCrabRenderer::new);
 		EntityRendererRegistry.register(ModEntities.BEACONED_PEARL, BeaconedPearlRenderer::new);
 
 		EntityModelLayerRegistry.registerModelLayer(LOST_SOUL_LAYER, LostSoulModel::getTexturedModelData);
 		EntityModelLayerRegistry.registerModelLayer(VOCANO_SNAIL_LAYER, VolcanoSnailModel::getTexturedModelData);
+		EntityModelLayerRegistry.registerModelLayer(YETI_CRAB_LAYER, YetiCrabModel::getTexturedModelData);
 		EntityModelLayerRegistry.registerModelLayer(BEACONED_PEARL_LAYER, BeaconedPearlModel::getTexturedModelData);
 
 		BlockEntityRendererFactories.register(Resonance.RAIN_CHIME_BLOCK_ENTITY, RainChimeBlockRenderer::new);
@@ -96,6 +104,7 @@ public class ResonanceClient implements ClientModInitializer {
 		BlockEntityRendererFactories.register(Resonance.BRITTLE_BLOCK_ENTITY, BrittleBlockEntityRenderer::new);
 
 		ColorProviderRegistry.ITEM.register((stack, tintIndex) -> tintIndex > 0 ? -1 : (stack.contains(DataComponentTypes.DYED_COLOR) ? DyedColorComponent.getColor(stack, 16777215) : -1), Resonance.SCARF, Resonance.VENT_FLUID_BOTTLE);
+		ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> tintIndex == 0 ? BiomeColors.getGrassColor(world, pos) : -1, Resonance.COMPOST_HEAP);
 		ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> {
 			Optional<TintedBottleBlockEntity> blockEntity = world.getBlockEntity(pos, Resonance.TINTED_BOTTLE_BLOCK_ENTITY);
 			return blockEntity.isPresent() && tintIndex == 0 ? blockEntity.get().getColor() : -1;

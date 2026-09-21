@@ -3,13 +3,13 @@ package net.moss.resonance.mixin;
 import net.minecraft.block.AmethystClusterBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.LightningEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
 import net.minecraft.util.math.random.Random;
@@ -27,7 +27,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import com.google.common.collect.Sets;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -45,19 +44,16 @@ public class LightningEntityMixin {
 			for (BlockPos blockPos2 : conductedBlocks) { electrify(blockPos2); }
 			LightningEntity Lightning = (LightningEntity)(Object) this;
 			if (Lightning.getWorld() instanceof ServerWorld world) {
-				List<Entity> list = Utils.entitiesInRadius(world, Lightning.getPos(), Lightning, 2, 2, Entity::isAlive);
-				for (Entity entity2 : list) {
-					if (entity2 instanceof LivingEntity entity1) {
-						for (ItemStack itemStack : Utils.getAllEquipped(entity1, true)) {
-							if (itemStack.isIn(Resonance.CONDUCTIVE_ITEMS_TAG) || entity1.getSteppingBlockState().isIn(Resonance.CONDUCTIVE_BLOCKS_TAG)) {
-								world.spawnParticles(ModParticles.SPARK_PARTICLE, entity2.getX(), entity2.getY() + entity2.getHeight()/2, entity2.getZ(), 20, 0, 0, 0, 1);
-								entity1.takeKnockback(0.5, Lightning.getX() - entity1.getX(), Lightning.getZ() - entity1.getZ());
-								entity1.addStatusEffect(new StatusEffectInstance(Resonance.SPARKING, 15 * 20, 2));
-								break;
-							}
+				world.getEntitiesByClass(LivingEntity.class, new Box(Lightning.getBlockPos()).expand(2), LivingEntity::isAttackable).forEach(entity -> {
+					for (ItemStack itemStack : Utils.getAllEquipped(entity, true)) {
+						if (itemStack.isIn(Resonance.CONDUCTIVE_ITEMS_TAG) || entity.getSteppingBlockState().isIn(Resonance.CONDUCTIVE_BLOCKS_TAG)) {
+							world.spawnParticles(ModParticles.SPARK_PARTICLE, entity.getX(), entity.getY() + entity.getHeight()/2, entity.getZ(), 20, 0, 0, 0, 1);
+							entity.takeKnockback(0.5, Lightning.getX() - entity.getX(), Lightning.getZ() - entity.getZ());
+							entity.addStatusEffect(new StatusEffectInstance(Resonance.SPARKING, 15 * 20, 2));
+							break;
 						}
 					}
-				}
+				});
 			}
 			
 		}

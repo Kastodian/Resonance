@@ -47,9 +47,9 @@ public class ModifyLootAndTradeTables {
 						new ItemStack(Resonance.BATHYAL_VENT, 1),
 						6, 12, 0.075f));
 				factories.add((entity, random) -> new TradeOffer(
-					new TradedItem(Items.EMERALD, 3),
-					new ItemStack(Resonance.BOOK_PILE, 1),
-					2, 12, 0.075f));
+						new TradedItem(Items.EMERALD, 3),
+						new ItemStack(Resonance.BOOK_PILE, 1),
+						2, 12, 0.075f));
 		});
 	}
 }

@@ -5,6 +5,8 @@
 		"#minecraft:enchantable/crossbow",
 		"#minecraft:enchantable/bow",
 		"#minecraft:enchantable/trident",
-		"#resonance:scarfs"
+		"#resonance:scarfs",
+		"resonance:pearl",
+		"resonance:bifurcated_pearl"
 	]
 }

@@ -35,8 +35,8 @@ public class SpurFeature extends Feature<SpurFeatureConfig> {
 		BlockStateProvider innerState = innerPresent ? spurFeatureConfig.innerStateProvider.get() : state;
 
 		BlockPos.stream(-length, -length, -length, length, length, length).map(BlockPos::toImmutable).forEach(blockPos -> {
-			blockPos = blockPos.add(origin);
-			if (structureWorldAccess.isOutOfHeightLimit(blockPos) || !target.test(structureWorldAccess, blockPos)) { return; }
+			BlockPos realBlockPos = blockPos.add(origin);
+			if (structureWorldAccess.isOutOfHeightLimit(realBlockPos) || !target.test(structureWorldAccess, realBlockPos)) { return; }
 
 			Vec3d vec2 = new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ()).rotateX(-pitch).rotateZ(-yaw);
 			if (Math.abs(vec2.y) >= length) { return; }
@@ -47,9 +47,9 @@ public class SpurFeature extends Feature<SpurFeatureConfig> {
 			if (squaredHypot >= radiusMinus || squaredHypot >= radiusPlus) { return; }
 
 			if (innerPresent && squaredHypot + radius < radiusMinus && squaredHypot + radius < radiusPlus) {
-				structureWorldAccess.setBlockState(blockPos, innerState.get(random, blockPos), Block.NOTIFY_LISTENERS);
+				structureWorldAccess.setBlockState(realBlockPos, innerState.get(random, realBlockPos), Block.NOTIFY_LISTENERS);
 			} else {
-				structureWorldAccess.setBlockState(blockPos, state.get(random, blockPos), Block.NOTIFY_LISTENERS);
+				structureWorldAccess.setBlockState(realBlockPos, state.get(random, realBlockPos), Block.NOTIFY_LISTENERS);
 			}
 		});
 

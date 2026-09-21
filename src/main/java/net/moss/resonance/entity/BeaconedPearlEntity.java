@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import org.joml.Vector3f;
-
 import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.Entity;
@@ -50,6 +49,9 @@ public class BeaconedPearlEntity extends MobEntity {
 	public BeaconedPearlEntity(World world, double x, double y, double z, ItemStack stack) {
 		this(world, x, y, z);
 		this.setStackInHand(Hand.MAIN_HAND, stack);
+		if (stack.contains(DataComponentTypes.CUSTOM_NAME)) {
+			this.setCustomName(stack.get(DataComponentTypes.CUSTOM_NAME));
+		}
 	}
 
 	@Override public PistonBehavior getPistonBehavior() { return PistonBehavior.IGNORE; }
@@ -66,7 +68,7 @@ public class BeaconedPearlEntity extends MobEntity {
 	@Override
 	public boolean damage(DamageSource source, float amount) {
 		if (this.hurtTime <= 0 && !isInvulnerableTo(source)) {
-			ResonanceEvents.REVERBERATE.invoker().onResonate(this.getWorld(), this.getEyePos(), new Vector3f(MathHelper.HALF_PI, 0, 0), this, source.getAttacker(), 2.5F, false);
+			ResonanceEvents.REVERBERATE.invoker().onResonate(this.getWorld(), this.getEyePos(), new Vector3f(MathHelper.HALF_PI, 0, 0), this, source.getAttacker(), 2F, false);
 		}
 		return super.damage(source, 1);
 	}

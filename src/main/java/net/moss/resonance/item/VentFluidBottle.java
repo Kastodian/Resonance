@@ -8,11 +8,9 @@ import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsage;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.stat.Stats;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPointer;
@@ -52,21 +50,13 @@ public class VentFluidBottle extends TintedBottle {
 	@Override
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
 		ItemStack itemStack = user.getStackInHand(hand);
-		world.playSound(null, user.getBlockPos(), SoundEvents.ITEM_BOTTLE_EMPTY, SoundCategory.PLAYERS, 1.0f, world.getRandom().nextFloat() * 0.4f + 0.8f);
-
 		if (!world.isClient()) {
 			VentFluidProjectileEntity ventFluidProjectileEntity = new VentFluidProjectileEntity(world, user, 0, 0, 0, Vec3d.unpackRgb(itemStack.contains(DataComponentTypes.DYED_COLOR) ? itemStack.get(DataComponentTypes.DYED_COLOR).rgb() : 16777215).toVector3f());
 			ventFluidProjectileEntity.setPosition(user.getEyePos());
 			ventFluidProjectileEntity.setVelocity(user, user.getPitch(), user.getYaw(), 0.0f, 0.8f, 1.0f);
 			world.spawnEntity(ventFluidProjectileEntity);
 		}
-		user.getItemCooldownManager().set(this, 4);
-		user.incrementStat(Stats.USED.getOrCreateStat(this));
-		if (!user.getAbilities().creativeMode) {
-			ItemStack itemStack2 = ItemUsage.exchangeStack(itemStack, user, Resonance.TINTED_BOTTLE.getDefaultStack());
-			return TypedActionResult.success(itemStack2, world.isClient());
-		}
-		return TypedActionResult.success(itemStack, world.isClient());
+		return emptyBottle(world, user, hand, 4);
 	}
 
 	@Override public Block getBlock() { return Resonance.VENT_FLUID_BOTTLE_BLOCK; }

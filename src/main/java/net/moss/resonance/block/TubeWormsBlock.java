@@ -54,7 +54,7 @@ public class TubeWormsBlock extends Block implements FluidFillable {
 		World world = ctx.getWorld();
 		BlockPos pos = ctx.getBlockPos();
 		if (!isWater(world, pos)) { return null; }
-		else if (canPlaceAt(this.getDefaultState(), world, pos)) { return super.getPlacementState(ctx); }
+		else if (canGrowOn(world, Direction.DOWN, pos)) { return super.getPlacementState(ctx); }
 		else { return Resonance.WALL_TUBE_WORMS.getPlacementState(ctx); }
 	}
 
@@ -92,6 +92,6 @@ public class TubeWormsBlock extends Block implements FluidFillable {
 	@Override public boolean canFillWithFluid(@Nullable PlayerEntity player, BlockView world, BlockPos pos, BlockState state, Fluid fluid) { return false; }
 	@Override public boolean tryFillWithFluid(WorldAccess world, BlockPos pos, BlockState state, FluidState fluidState) { return false; }
 	@Override protected FluidState getFluidState(BlockState state) { return Fluids.WATER.getStill(false); }
-	@Override protected void appendProperties(StateManager.Builder<Block, BlockState> builder) { builder.add(AGE); }
+	@Override protected void appendProperties(StateManager.Builder<Block, BlockState> builder) { super.appendProperties(builder.add(AGE)); }
 	@Override protected boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) { return canGrowOn(world, Direction.DOWN, pos); }
 }

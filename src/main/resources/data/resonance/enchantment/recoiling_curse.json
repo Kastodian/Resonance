@@ -25,6 +25,18 @@
 				"base": 1.01,
 				"per_level_above_first": 0.01
 			}
-		}
+		},
+		"minecraft:trident_return_acceleration": [
+			{
+				"effect": {
+					"type": "minecraft:add",
+					"value": {
+						"type": "minecraft:linear",
+						"base": 2,
+						"per_level_above_first": 1
+					}
+				}
+			}
+		]
 	}
 }

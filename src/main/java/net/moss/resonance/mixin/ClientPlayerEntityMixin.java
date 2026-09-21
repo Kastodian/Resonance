@@ -11,7 +11,6 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
@@ -75,10 +74,10 @@ public class ClientPlayerEntityMixin implements ClientPlayerEntityInterface {
 
 		this.prevCrushingWeightIntensity = this.crushingWeightIntensity;
 		float f = 0;
-		float air = (float) (player.getAttributeValue(EntityAttributes.GENERIC_OXYGEN_BONUS) + (player.hasStatusEffect(StatusEffects.WATER_BREATHING) || player.hasStatusEffect(StatusEffects.CONDUIT_POWER) ? 3 : 1));
+		float air = (float) (player.getAttributeValue(EntityAttributes.GENERIC_OXYGEN_BONUS) + (player.canBreatheInWater() ? 3 : 1));
 		if (player.hasStatusEffect(Resonance.CRUSHING_WEIGHT)) { f = 0.006666667f * (player.getStatusEffect(Resonance.CRUSHING_WEIGHT).getAmplifier() + 1) / air; }
 		else if (this.crushingWeightIntensity > 0.0f) { f = -0.025f * air; }
-		this.crushingWeightIntensity = MathHelper.clamp(this.crushingWeightIntensity + f, 0.0f, 1.0f);
+		this.crushingWeightIntensity = MathHelper.clamp(this.crushingWeightIntensity + f, 0.0f, 1.0f / air);
 	}
 
 	@Override public float getCrushingWeightIntensity() { return crushingWeightIntensity; }
