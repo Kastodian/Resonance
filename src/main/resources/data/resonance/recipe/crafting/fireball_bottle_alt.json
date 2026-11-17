@@ -3,26 +3,15 @@
 	"category": "misc",
 	"group": "fireball_bottle",
 	"ingredients": [
-		{
-			"item": "resonance:tinted_bottle"
-		},
-		{
-			"item": "minecraft:gunpowder"
-		},
-		{
-			"item": "minecraft:blaze_powder"
-		},
+		{ "item": "resonance:tinted_bottle" },
+		{ "item": "minecraft:gunpowder" },
+		{ "item": "minecraft:blaze_powder" },
 		[
-			{
-				"item": "minecraft:coal"
-			},
-			{
-				"item": "minecraft:charcoal"
-			}
+			{ "item": "minecraft:coal" },
+			{ "item": "minecraft:charcoal" }
 		]
 	],
 	"result": {
-		"id": "resonance:fireball_bottle",
-		"count": 1
+		"id": "resonance:fireball_bottle"
 	}
 }

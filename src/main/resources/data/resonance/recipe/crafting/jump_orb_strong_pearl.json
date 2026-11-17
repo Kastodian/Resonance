@@ -7,15 +7,9 @@
 		" c "
 	],
 	"key": {
-		"j": {
-			"item": "minecraft:phantom_membrane"
-		},
-		"w": {
-			"item": "resonance:bifurcated_pearl"
-		},
-		"c": {
-			"tag": "resonance:charged_amethyst_clusters"
-		}
+		"j": { "item": "minecraft:phantom_membrane" },
+		"w": { "item": "resonance:bifurcated_pearl" },
+		"c": { "tag": "resonance:charged_amethyst_clusters" }
 	},
 	"result": {
 		"id": "resonance:jump_orb_strong"

@@ -2,6 +2,6 @@
 	"parent": "item/generated",
 	"textures": {
 		"layer0": "resonance:item/vent_fluid_bottle",
-		"layer1": "resonance:item/vent_fluid_bottle_overlay"
+		"layer1": "resonance:item/tinted_bottle"
 	}
 }

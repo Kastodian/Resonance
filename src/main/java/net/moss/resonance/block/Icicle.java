@@ -190,27 +190,26 @@ public class Icicle extends Block implements LandingBlock, Waterloggable {
 
 	@VisibleForTesting
 	public static void dripTick(BlockState state, ServerWorld world, BlockPos pos, float dripChance) {
-		if (!(dripChance > 0.2F)) {
+		if (dripChance > 0.2F) return;
 		Optional<BlockPos> optional = getSupportingPos(world, pos, state, 11);
 		if (optional.isPresent()) {
 			BlockPos pos2 = optional.get().up();
-				BlockState state2 = world.getBlockState(pos2);
-				if (state2.isOf(Blocks.MUD)) {
-					BlockState blockState = Blocks.COARSE_DIRT.getDefaultState();
-					world.setBlockState(pos2, blockState);
-					Block.pushEntitiesUpBeforeBlockChange(state2, blockState, world, pos2);
-					world.emitGameEvent(GameEvent.BLOCK_CHANGE, pos2, Emitter.of(blockState));
-					world.syncWorldEvent(1504, pos, 0);
-				}
+			BlockState state2 = world.getBlockState(pos2);
+			if (state2.isOf(Blocks.MUD)) {
+				BlockState blockState = Blocks.COARSE_DIRT.getDefaultState();
+				world.setBlockState(pos2, blockState);
+				Block.pushEntitiesUpBeforeBlockChange(state2, blockState, world, pos2);
+				world.emitGameEvent(GameEvent.BLOCK_CHANGE, pos2, Emitter.of(blockState));
+				world.syncWorldEvent(1504, pos, 0);
 			}
-			BlockPos blockPos2 = getCauldronPos(world, pos);
-			if (blockPos2 != null) {
-				BlockState blockState2 = world.getBlockState(blockPos2);
-				if (blockState2.isOf(Blocks.CAULDRON)) { world.setBlockState(blockPos2, Blocks.WATER_CAULDRON.getDefaultState().with(LeveledCauldronBlock.LEVEL, 1), Block.NOTIFY_LISTENERS); }
-				if (blockState2.isOf(Blocks.WATER_CAULDRON)) {
-					int level = blockState2.get(LeveledCauldronBlock.LEVEL);
-					if (level < 3) { world.setBlockState(blockPos2, blockState2.with(LeveledCauldronBlock.LEVEL, level + 1), Block.NOTIFY_LISTENERS); }
-				}
+		}
+		BlockPos blockPos2 = getCauldronPos(world, pos);
+		if (blockPos2 != null) {
+			BlockState blockState2 = world.getBlockState(blockPos2);
+			if (blockState2.isOf(Blocks.CAULDRON)) { world.setBlockState(blockPos2, Blocks.WATER_CAULDRON.getDefaultState().with(LeveledCauldronBlock.LEVEL, 1), Block.NOTIFY_LISTENERS); }
+			if (blockState2.isOf(Blocks.WATER_CAULDRON)) {
+				int level = blockState2.get(LeveledCauldronBlock.LEVEL);
+				if (level < 3) { world.setBlockState(blockPos2, blockState2.with(LeveledCauldronBlock.LEVEL, level + 1), Block.NOTIFY_LISTENERS); }
 			}
 		}
 	}

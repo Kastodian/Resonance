@@ -64,7 +64,7 @@ public class ReverberationRecipe implements Recipe<SingleStackRecipeInput> {
 				Ingredient.DISALLOW_EMPTY_CODEC.fieldOf("ingredient").forGetter((recipe) -> { return recipe.ingredient; }),
 				ItemStack.VALIDATED_CODEC.listOf().fieldOf("results").flatXmap((itemstacks) -> {
 					ItemStack[] itemstacks2 = (ItemStack[])itemstacks.stream().filter((itemstack) -> {
-					   return !itemstack.isEmpty();
+						return !itemstack.isEmpty();
 					}).toArray((i) -> { return new ItemStack[i]; });
 					return itemstacks2.length > 3 ? DataResult.error(() -> {
 						return "Too many results for reverberation recipe";

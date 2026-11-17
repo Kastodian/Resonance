@@ -5,6 +5,9 @@ import java.util.Optional;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BeaconBlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.Entity.RemovalReason;
 import net.minecraft.entity.LivingEntity;
@@ -16,6 +19,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
@@ -29,8 +33,9 @@ import net.moss.resonance.entity.ModEntities;
 import net.moss.resonance.item.Pearl;
 import net.moss.resonance.util.PearlStatsComponent;
 import net.moss.resonance.util.abstracts.BlockEntityWithItemIntentory;
+import net.moss.resonance.util.interfaces.MouseOverHudInterface;
 
-public class PearlHubBlockEntity extends BlockEntityWithItemIntentory {
+public class PearlHubBlockEntity extends BlockEntityWithItemIntentory implements MouseOverHudInterface {
 	protected int charge;
 	protected int level;
 
@@ -80,23 +85,19 @@ public class PearlHubBlockEntity extends BlockEntityWithItemIntentory {
 	}
 
 	public int usePearl(World world, BlockPos pos, PlayerEntity player) {
-		if (this.hasStack() && world instanceof ServerWorld serverWorld) {
-			world.emitGameEvent(null, GameEvent.BLOCK_ACTIVATE, pos);
-			Resonance.PEARL_HUB_CRITERION.trigger((ServerPlayerEntity) player, this.getStack(), 0);
-			return affectEntities(serverWorld, pos, List.of(player));
-		}
-		return 3;
+		if (!this.hasStack() || !(world instanceof ServerWorld serverWorld)) return 3;
+		world.emitGameEvent(null, GameEvent.BLOCK_ACTIVATE, pos);
+		Resonance.PEARL_HUB_CRITERION.trigger((ServerPlayerEntity) player, this.getStack(), 0);
+		return affectEntities(serverWorld, pos, List.of(player));
 	}
 
 	public int pulsePearl(World world, BlockPos pos) {
-		if (this.hasStack() && world instanceof ServerWorld serverWorld) {
-			world.emitGameEvent(null, GameEvent.BLOCK_ACTIVATE, pos);
-			if (!this.getCachedState().get(PearlHubBlock.WATERLOGGED)) {
-				world.playSound(null, pos, SoundEvents.BLOCK_SCULK_SHRIEKER_SHRIEK, SoundCategory.BLOCKS, 0.5f, 0.6f + world.random.nextFloat() * 0.4f);
-			}
-			return affectEntities(serverWorld, pos, world.getNonSpectatingEntities(LivingEntity.class, new Box(pos).expand(3)));
+		if (!this.hasStack() || !(world instanceof ServerWorld serverWorld)) return 3;
+		world.emitGameEvent(null, GameEvent.BLOCK_ACTIVATE, pos);
+		if (!this.getCachedState().get(PearlHubBlock.WATERLOGGED)) {
+			world.playSound(null, pos, SoundEvents.BLOCK_SCULK_SHRIEKER_SHRIEK, SoundCategory.BLOCKS, 0.5f, 0.6f + world.random.nextFloat() * 0.4f);
 		}
-		return 3;
+		return affectEntities(serverWorld, pos, world.getNonSpectatingEntities(LivingEntity.class, new Box(pos).expand(3)));
 	}
 
 	public int affectEntities(ServerWorld world, BlockPos pos, List<LivingEntity> entities) {
@@ -176,5 +177,13 @@ public class PearlHubBlockEntity extends BlockEntityWithItemIntentory {
 	@Override
 	public boolean isValid(int slot, ItemStack stack) {
 		return super.isValid(slot, stack) && (stack.isIn(Resonance.PEARL_ITEMS_TAG) || stack.isOf(Resonance.PEARL) || stack.isOf(Resonance.BIFURCATED_PEARL));
+	}
+
+	@Override
+	public void drawTooltip(DrawContext ctx, MinecraftClient instance, BlockHitResult result, int x, int y) {
+		if (this.hasStack()) {
+			x += 15;
+			ctx.drawTooltip(instance.textRenderer, Screen.getTooltipFromItem(instance, this.getStack()), x, y);
+		}
 	}
 }

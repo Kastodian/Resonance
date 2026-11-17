@@ -13,10 +13,9 @@ import org.spongepowered.asm.mixin.Mixin;
 @Mixin(AbstractFurnaceBlock.class)
 public class AbstractFurnaceBlockMixin {
 	protected void onProjectileHit(World world, BlockState state, BlockHitResult hit, ProjectileEntity projectile) {
-		if (projectile.getType() == EntityType.SMALL_FIREBALL && world.getBlockEntity(hit.getBlockPos()) instanceof AbstractFurnaceBlockEntity blockEntity) {
-			AbstractFurnaceBlockEntityAccessor accessor = (AbstractFurnaceBlockEntityAccessor) blockEntity;
-			accessor.setBurnTime(Math.max(accessor.getBurnTime(), 2400));
-		 	world.setBlockState(hit.getBlockPos(), state.with(AbstractFurnaceBlock.LIT, true), Block.NOTIFY_ALL);
-		}
+		if (projectile.getType() != EntityType.SMALL_FIREBALL || !(world.getBlockEntity(hit.getBlockPos()) instanceof AbstractFurnaceBlockEntity blockEntity)) return;
+		AbstractFurnaceBlockEntityAccessor accessor = (AbstractFurnaceBlockEntityAccessor) blockEntity;
+		accessor.setBurnTime(Math.max(accessor.getBurnTime(), 2400));
+		world.setBlockState(hit.getBlockPos(), state.with(AbstractFurnaceBlock.LIT, true), Block.NOTIFY_ALL);
 	}
 }

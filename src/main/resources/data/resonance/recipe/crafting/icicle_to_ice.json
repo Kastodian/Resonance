@@ -6,9 +6,7 @@
 		"ss"
 	],
 	"key": {
-		"s": {
-			"item": "resonance:icicle"
-		}
+		"s": { "item": "resonance:icicle" }
 	},
 	"result": {
 		"id": "minecraft:ice"

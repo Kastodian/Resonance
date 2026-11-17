@@ -2,33 +2,15 @@
 	"type": "minecraft:crafting_shapeless",
 	"category": "building",
 	"ingredients": [
-		{
-			"item": "resonance:soul_bottle"
-		},
-		{
-			"tag": "minecraft:sand"
-		},
-		{
-			"tag": "minecraft:sand"
-		},
-		{
-			"tag": "minecraft:sand"
-		},
-		{
-			"tag": "minecraft:sand"
-		},
-		{
-			"tag": "minecraft:sand"
-		},
-		{
-			"tag": "minecraft:sand"
-		},
-		{
-			"tag": "minecraft:sand"
-		},
-		{
-			"tag": "minecraft:sand"
-		}
+		{ "item": "resonance:soul_bottle" },
+		{ "tag": "minecraft:sand" },
+		{ "tag": "minecraft:sand" },
+		{ "tag": "minecraft:sand" },
+		{ "tag": "minecraft:sand" },
+		{ "tag": "minecraft:sand" },
+		{ "tag": "minecraft:sand" },
+		{ "tag": "minecraft:sand" },
+		{ "tag": "minecraft:sand" }
 	],
 	"result": {
 		"id": "minecraft:soul_sand",

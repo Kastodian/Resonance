@@ -4,27 +4,16 @@
 		{
 			"rolls": 1,
 			"entries": [
-				{
-					"type": "minecraft:item",
-					"name": "resonance:bathyal_vent"
-				}
+				{ "type": "minecraft:item", "name": "resonance:bathyal_vent" }
 			],
 			"conditions": [
-				{
-					"condition": "minecraft:match_tool",
-					"predicate": {
-						"predicates": {
-							"minecraft:enchantments": [
-								{
-									"enchantment": "minecraft:silk_touch",
-									"levels": {
-										"min": 1
-									}
-								}
-							]
-						}
+				{ "condition": "minecraft:match_tool", "predicate": {
+					"predicates": {
+						"minecraft:enchantments": [
+							{ "enchantment": "minecraft:silk_touch", "levels": { "min": 1 }}
+						]
 					}
-				}
+				}}
 			]
 		}
 	]

@@ -17,9 +17,8 @@ import net.minecraft.util.math.Position;
 import net.minecraft.world.World;
 import net.moss.resonance.entity.WhistlingArrowEntity;
 
-public class WhistlingArrow
-extends ArrowItem {
-	public static final DispenserBehavior WHISTLING_ARROW_BEHAVIOR = new ItemDispenserBehavior(){
+public class WhistlingArrow extends ArrowItem {
+	public static final DispenserBehavior WHISTLING_ARROW_BEHAVIOR = new ItemDispenserBehavior() {
 		@Override
 		public ItemStack dispenseSilently(BlockPointer pointer, ItemStack stack) {
 			if (stack.getItem() instanceof WhistlingArrow item) {

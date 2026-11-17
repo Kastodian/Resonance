@@ -48,8 +48,6 @@ import net.moss.resonance.particle.VentSmoke;
 import net.moss.resonance.util.Utils;
 import net.moss.resonance.util.VentThickness;
 import java.util.Optional;
-import java.util.function.BiPredicate;
-import java.util.function.Predicate;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
@@ -70,11 +68,6 @@ public class BathyalVent extends Block implements Waterloggable {
 	}
 
 	@Override
-	protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-		builder.add(new Property[]{THICKNESS, WATERLOGGED, AGE, LIT, COLOR});
-	}
-
-	@Override
 	protected BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
 		if ((Boolean)state.get(WATERLOGGED)) { world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world)); }
 		world.scheduleBlockTick(pos, this, 1);
@@ -82,9 +75,7 @@ public class BathyalVent extends Block implements Waterloggable {
 			BlockState blockState = world.getBlockState(pos.up());
 			VentThickness thickness = getThickness(world, pos);
 			DyeColor color = state.get(COLOR);
-			if (blockState.isOf(Resonance.BATHYAL_VENT)) {
-				color = blockState.get(COLOR);
-			}
+			if (blockState.isOf(Resonance.BATHYAL_VENT)) { color = blockState.get(COLOR); }
 			return state.with(THICKNESS, thickness).with(LIT, state.get(LIT) && thickness == VentThickness.TIP).with(COLOR, color);
 		}
 		return state;
@@ -121,6 +112,7 @@ public class BathyalVent extends Block implements Waterloggable {
 	@Override protected boolean hasRandomTicks(BlockState state) { return state.get(THICKNESS) == VentThickness.TIP; }
 	@Override protected FluidState getFluidState(BlockState state) { return (Boolean)state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state); }
 	@Override protected VoxelShape getCullingShape(BlockState state, BlockView world, BlockPos pos) { return VoxelShapes.empty(); }
+	@Override protected void appendProperties(StateManager.Builder<Block, BlockState> builder) { builder.add(new Property[]{THICKNESS, WATERLOGGED, AGE, LIT, COLOR}); }
 
 	protected VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
 		VentThickness thickness = state.get(THICKNESS);
@@ -145,7 +137,7 @@ public class BathyalVent extends Block implements Waterloggable {
 				world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ITEM_DYE_USE, SoundCategory.NEUTRAL, 0.2f, 0.4f / (world.getRandom().nextFloat() * 0.4f + 0.8f));
 				return ItemActionResult.success(world.isClient);
 			} else if (stack.isIn(Resonance.VENT_IGNITERS_TAG)) {
-				Optional<BlockPos> supportingPos = getSupportingPos(world, pos, state, 11);
+				Optional<BlockPos> supportingPos = getSupportingPos(world, pos);
 				if (supportingPos.isPresent()) {
 					BlockPos blockPos = supportingPos.get();
 					boolean heatSource = false;
@@ -198,7 +190,7 @@ public class BathyalVent extends Block implements Waterloggable {
 			if (upState.getBlock() instanceof Oxidizable oxidizable) { oxidizable.tryDegrade(upState, world, pos.up(), random).ifPresent(degraded -> world.setBlockState(pos.up(), degraded)); }
 		}
 		if (!(light || grow)) { return; }
-		Optional<BlockPos> supportingPos = getSupportingPos(world, pos, state, 11);
+		Optional<BlockPos> supportingPos = getSupportingPos(world, pos);
 		if (supportingPos.isPresent()) {
 			BlockPos blockPos = supportingPos.get();
 			boolean heatSource = false;
@@ -255,19 +247,13 @@ public class BathyalVent extends Block implements Waterloggable {
 		return VentThickness.TIP;
 	}
 
-	private static Optional<BlockPos> getSupportingPos(World world, BlockPos pos, BlockState state, int range) {
-		BiPredicate<BlockPos, BlockState> biPredicate = (posx, statex) -> { return statex.isOf(Resonance.BATHYAL_VENT); };
-		return searchInDirection(world, pos, Direction.DOWN.getDirection(), biPredicate, (statex) -> { return !statex.isOf(Resonance.BATHYAL_VENT); }, range);
-	}
-
-	private static Optional<BlockPos> searchInDirection(WorldAccess world, BlockPos pos, Direction.AxisDirection direction, BiPredicate<BlockPos, BlockState> continuePredicate, Predicate<BlockState> stopPredicate, int range) {
-		Direction direction2 = Direction.get(direction, Direction.Axis.Y);
+	private static Optional<BlockPos> getSupportingPos(World world, BlockPos pos) {
 		BlockPos.Mutable mutable = pos.mutableCopy();
-		for(int i = 1; i < range; ++i) {
-			mutable.move(direction2);
+		for(int i = 0; i < 10; ++i) {
+			mutable.move(Direction.DOWN);
 			BlockState blockState = world.getBlockState(mutable);
-			if (stopPredicate.test(blockState)) { return Optional.of(mutable.toImmutable()); }
-			if (world.isOutOfHeightLimit(mutable.getY()) || !continuePredicate.test(mutable, blockState)) { return Optional.empty(); }
+			if (!blockState.isOf(Resonance.BATHYAL_VENT)) return Optional.of(mutable.toImmutable());
+			if (world.isOutOfHeightLimit(mutable.getY())) return Optional.empty();
 		}
 		return Optional.empty();
 	}

@@ -49,11 +49,6 @@ public class BrittleBlock extends BlockWithEntity {
 	}
 
 	@Override
-	protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-		super.appendProperties(builder.add(CRACKED));
-	}
-
-	@Override
 	protected void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
 		if (!newState.isOf(Resonance.BRITTLE_BLOCK) && world.getBlockEntity(pos) instanceof BrittleBlockEntity brittleBlockEntity && world.getGameRules().getBoolean(GameRules.DO_TILE_DROPS)) {
 			Block.dropStacks(brittleBlockEntity.getStoredState(), world, pos, brittleBlockEntity);
@@ -64,11 +59,9 @@ public class BrittleBlock extends BlockWithEntity {
 
 	@Override
 	public ItemStack getPickStack(WorldView world, BlockPos pos, BlockState state) {
-		if (world.getBlockEntity(pos) instanceof BrittleBlockEntity brittleBlockEntity) {
-			BlockState storedState = brittleBlockEntity.getStoredState();
-			return storedState.getBlock().getPickStack(world, pos, storedState);
-		}
-		return ItemStack.EMPTY;
+		if (!(world.getBlockEntity(pos) instanceof BrittleBlockEntity brittleBlockEntity)) return ItemStack.EMPTY;
+		BlockState storedState = brittleBlockEntity.getStoredState();
+		return storedState.getBlock().getPickStack(world, pos, storedState);
 	}
 
 	@Override
@@ -150,5 +143,6 @@ public class BrittleBlock extends BlockWithEntity {
 	@Override public BlockEntity createBlockEntity(BlockPos blockPos, BlockState blockState) { return new BrittleBlockEntity(blockPos, blockState); }
 	@Override protected MapCodec<? extends BlockWithEntity> getCodec() { return CODEC; }
 	@Override public BlockRenderType getRenderType(BlockState state) { return BlockRenderType.MODEL; }
+	@Override protected void appendProperties(StateManager.Builder<Block, BlockState> builder) { super.appendProperties(builder.add(CRACKED)); }
 	@Override protected boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) { return stateFrom.isOf(this) ? true : super.isSideInvisible(state, stateFrom, direction); }
 }

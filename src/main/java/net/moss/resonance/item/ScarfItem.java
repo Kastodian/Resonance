@@ -12,7 +12,7 @@ import net.moss.resonance.util.Utils;
 import net.moss.resonance.util.interfaces.ScarfInterface;
 
 public class ScarfItem extends Item implements Equipment, ScarfInterface {
-	public String TEXTURE;
+	public final String TEXTURE;
 
 	public ScarfItem(Settings settings, String modId, String texture) {
 		super(settings.maxCount(1));

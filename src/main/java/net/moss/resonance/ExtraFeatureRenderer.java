@@ -13,7 +13,6 @@ import net.minecraft.client.render.item.HeldItemRenderer;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Arm;
 import net.minecraft.util.math.RotationAxis;
@@ -30,8 +29,7 @@ public class ExtraFeatureRenderer extends HeldItemFeatureRenderer<AbstractClient
 
 	@Override
 	public void render(MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, AbstractClientPlayerEntity livingEntity, float f, float g, float h, float j, float k, float l) {
-		if (!(livingEntity instanceof AbstractClientPlayerEntity)) { return; }
-		PlayerEntity player = (PlayerEntity) livingEntity;
+		if (!(livingEntity instanceof AbstractClientPlayerEntity player)) return;
 		ItemStack offHandStack = player.getEquippedStack(EquipmentSlot.OFFHAND);
 		ItemStack mainHandStack = player.getEquippedStack(EquipmentSlot.MAINHAND);
 		List<ItemStack> equipped = Utils.getAllEquipped(livingEntity, false);

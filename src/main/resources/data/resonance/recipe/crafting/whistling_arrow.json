@@ -7,17 +7,11 @@
 		" s "
 	],
 	"key": {
+		"a": { "item": "minecraft:arrow" },
 		"s": [
-			{
-				"item": "resonance:charged_amethyst_shard"
-			},
-			{
-				"item": "minecraft:amethyst_shard"
-			}
-		],
-		"a": {
-			"item": "minecraft:arrow"
-		}
+			{ "item": "resonance:charged_amethyst_shard" },
+			{ "item": "minecraft:amethyst_shard" }
+		]
 	},
 	"result": {
 		"id": "resonance:whistling_arrow",

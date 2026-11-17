@@ -70,7 +70,7 @@ public class LivingEntityMixin {
 	}
 
 	@Inject(at = @At("HEAD"), method = "damage")
-    private void damage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+	private void damage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
 		LivingEntity entity = (LivingEntity)(Object) this;
 		if (entity.hurtTime > 0) { return; }
 		Random random = entity.getRandom();

@@ -2,15 +2,9 @@
 	"type": "minecraft:crafting_shapeless",
 	"category": "misc",
 	"ingredients": [
-		{
-			"item": "resonance:soul_bottle"
-		},
-		{
-			"item": "minecraft:blaze_powder"
-		},
-		{
-			"item": "minecraft:gunpowder"
-		}
+		{ "item": "resonance:soul_bottle" },
+		{ "item": "minecraft:blaze_powder" },
+		{ "item": "minecraft:gunpowder" }
 	],
 	"result": {
 		"id": "minecraft:experience_bottle",

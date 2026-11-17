@@ -6,9 +6,7 @@
 		"ss"
 	],
 	"key": {
-		"s": {
-			"item": "resonance:bathyal_vent"
-		}
+		"s": { "item": "resonance:bathyal_vent" }
 	},
 	"result": {
 		"id": "minecraft:basalt"

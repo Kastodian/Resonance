@@ -4,10 +4,7 @@
 		{
 			"rolls": 1,
 			"entries": [
-				{
-					"type": "minecraft:item",
-					"name": "resonance:sculk_bottle"
-				}
+				{ "type": "minecraft:item", "name": "resonance:sculk_bottle" }
 			]
 		}
 	]

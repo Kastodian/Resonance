@@ -2,79 +2,27 @@
 	"type": "minecraft:chest",
 	"pools": [
 		{
-			"rolls": {
-				"type": "minecraft:uniform",
-				"min": 4,
-				"max": 6
-			},
+			"rolls": 6,
 			"bonus_rolls": 2,
 			"entries": [
-				{
-					"type": "minecraft:item",
-					"name": "minecraft:snowball",
-					"functions": [
-						{
-							"function": "minecraft:set_count",
-							"count": 4
-						}
-					]
-				},
-				{
-					"type": "minecraft:item",
-					"name": "minecraft:brush"
-				},
-				{
-					"type": "minecraft:item",
-					"name": "minecraft:paper",
-					"functions": [
-						{
-							"function": "minecraft:set_count",
-							"count": 5
-						}
-					]
-				},
-				{
-					"type": "minecraft:item",
-					"name": "minecraft:book",
-					"functions": [
-						{
-							"function": "minecraft:set_count",
-							"count": 2
-						}
-					]
-				},
-				{
-					"type": "minecraft:item",
-					"name": "minecraft:phantom_membrane",
-					"functions": [
-						{
-							"function": "minecraft:set_count",
-							"count": 3
-						}
-					]
-				}
+				{ "type": "minecraft:item", "name": "minecraft:snowball" },
+				{ "type": "minecraft:item", "name": "minecraft:paper" },
+				{ "type": "minecraft:item", "name": "minecraft:book" },
+				{ "type": "minecraft:item", "name": "minecraft:phantom_membrane" }
+			],
+			"functions": [
+				{ "function": "minecraft:set_count", "count": 3 }
 			]
-		},
-		{
+		},{
 			"rolls": 2,
 			"bonus_rolls": 1,
 			"entries": [
-				{
-					"type": "minecraft:item",
-					"name": "minecraft:packed_ice"
-				},
-				{
-					"type": "minecraft:item",
-					"name": "minecraft:ice",
-					"functions": [
-						{
-							"function": "minecraft:set_count",
-							"count": 3
-						}
-					]
-				}
+				{ "type": "minecraft:item", "name": "minecraft:brush" },
+				{ "type": "minecraft:item", "name": "minecraft:packed_ice" },
+				{ "type": "minecraft:item", "name": "minecraft:ice", "functions": [
+					{ "function": "minecraft:set_count", "count": 3 }
+				]}
 			]
 		}
-	],
-	"random_sequence": "minecraft:chests/village/village_butcher"
+	]
 }

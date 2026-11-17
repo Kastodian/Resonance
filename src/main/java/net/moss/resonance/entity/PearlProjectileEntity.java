@@ -67,11 +67,8 @@ public class PearlProjectileEntity extends ThrownItemEntity {
 	}
 
 	private byte getLoyalty(ItemStack stack) {
-		if (this.getWorld() instanceof ServerWorld serverWorld) {
-			return (byte)MathHelper.clamp(EnchantmentHelper.getTridentReturnAcceleration(serverWorld, stack, this), 0, 127);
-		} else {
-			return 0;
-		}
+		if (!(this.getWorld() instanceof ServerWorld serverWorld)) return 0;
+		return (byte)MathHelper.clamp(EnchantmentHelper.getTridentReturnAcceleration(serverWorld, stack, this), 0, 127);
 	}
 
 	public int getLoyalty() {
@@ -180,6 +177,7 @@ public class PearlProjectileEntity extends ThrownItemEntity {
 	}
 
 	public boolean tryInsert(ItemStack stack, PlayerEntity player) {
+		if (this.getDataTracker().get(NO_DROP)) { return true; }
 		int preferredSlot = this.getSlot();
 		if (preferredSlot == -1) {
 			if (player.getOffHandStack().isEmpty()) {

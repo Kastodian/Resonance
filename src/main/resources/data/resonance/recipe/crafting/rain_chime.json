@@ -8,30 +8,16 @@
 	],
 	"key": {
 		"b": [
-			{
-				"item": "minecraft:smooth_stone_slab"
-			},
-			{
-				"item": "minecraft:smooth_stone"
-			},
-			{
-				"item": "minecraft:stone_slab"
-			},
-			{
-				"item": "minecraft:stone"
-			}
+			{ "item": "minecraft:smooth_stone_slab" },
+			{ "item": "minecraft:smooth_stone" },
+			{ "item": "minecraft:stone_slab" },
+			{ "item": "minecraft:stone" }
 		],
 		"c": [
-			{
-				"item": "resonance:charged_amethyst_shard"
-			},
-			{
-				"item": "minecraft:amethyst_shard"
-			}
+			{ "item": "resonance:charged_amethyst_shard" },
+			{ "item": "minecraft:amethyst_shard" }
 		],
-		"s": {
-			"item": "minecraft:string"
-		}
+		"s": { "item": "minecraft:string" }
 	},
 	"result": {
 		"id": "resonance:rain_chime"

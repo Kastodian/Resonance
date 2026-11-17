@@ -8,12 +8,13 @@ import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.DimensionRenderingRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.color.world.BiomeColors;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
-import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.DyedColorComponent;
 import net.minecraft.util.Identifier;
 import net.moss.resonance.block.renderer.RainChimeBlockRenderer;
@@ -37,6 +38,7 @@ import net.moss.resonance.particle.ModParticles;
 import net.moss.resonance.particle.SmallRingParticle;
 import net.moss.resonance.particle.SoulDarknessParticle;
 import net.moss.resonance.particle.VentSmokeParticle;
+import net.moss.resonance.rendering.HudRendering;
 import net.moss.resonance.world.DreamSweetSkyRenderer;
 import net.moss.resonance.particle.CustomGlowParticle;
 import net.moss.resonance.particle.MediumRingParticle;
@@ -103,7 +105,7 @@ public class ResonanceClient implements ClientModInitializer {
 		BlockEntityRendererFactories.register(Resonance.BUDDING_PEARL_ICE_BLOCK_ENTITY, BuddingPearlIceBlockEntityRenderer::new);
 		BlockEntityRendererFactories.register(Resonance.BRITTLE_BLOCK_ENTITY, BrittleBlockEntityRenderer::new);
 
-		ColorProviderRegistry.ITEM.register((stack, tintIndex) -> tintIndex > 0 ? -1 : (stack.contains(DataComponentTypes.DYED_COLOR) ? DyedColorComponent.getColor(stack, 16777215) : -1), Resonance.SCARF, Resonance.VENT_FLUID_BOTTLE);
+		ColorProviderRegistry.ITEM.register((stack, tintIndex) -> tintIndex > 0 ? -1 : DyedColorComponent.getColor(stack, -1), Resonance.SCARF, Resonance.VENT_FLUID_BOTTLE);
 		ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> tintIndex == 0 ? BiomeColors.getGrassColor(world, pos) : -1, Resonance.COMPOST_HEAP);
 		ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> {
 			Optional<TintedBottleBlockEntity> blockEntity = world.getBlockEntity(pos, Resonance.TINTED_BOTTLE_BLOCK_ENTITY);
@@ -111,5 +113,7 @@ public class ResonanceClient implements ClientModInitializer {
 		}, Resonance.VENT_FLUID_BOTTLE_BLOCK);
 
 		DimensionRenderingRegistry.registerSkyRenderer(Resonance.DREAM_SWEET, new DreamSweetSkyRenderer());
+
+		HudRenderCallback.EVENT.register((ctx, dt) -> HudRendering.hudRender(ctx, MinecraftClient.getInstance()));
 	}
 }

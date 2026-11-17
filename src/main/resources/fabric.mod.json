@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"id": "resonance",
-	"version": "${version}",
+	"version": "1.4.3-1.21.1",
 
 	"name": "Resonance",
 	"description": "A core mod to add features common to all the Resonance Mods.",

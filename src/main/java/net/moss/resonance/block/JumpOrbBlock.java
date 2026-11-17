@@ -50,17 +50,15 @@ public class JumpOrbBlock extends Block implements Waterloggable {
 
 	@Override
 	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-		if (state.get(WATERLOGGED)) {
-			world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
-		}
+		if (state.get(WATERLOGGED)) { world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world)); }
 		return state;
 	}
 
 	@Override
 	public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-		if (entity.isOnGround() || state.get(EXPENDED)) { return; }
+		if (entity.isOnGround() || state.get(EXPENDED)) return;
 		LivingEntity livingEntity = entity instanceof LivingEntity living ? living : (entity instanceof ProjectileEntity projectileEntity && projectileEntity.getOwner() instanceof LivingEntity living ? living : null);
-		if (livingEntity == null) { return; }
+		if (livingEntity == null) return;
 		world.emitGameEvent(entity, GameEvent.BLOCK_ACTIVATE, pos);
 		world.playSound(null, pos, SoundEvents.BLOCK_AMETHYST_BLOCK_RESONATE, SoundCategory.BLOCKS, 2f, 0.5f + world.random.nextFloat() * 1.2f);
 		world.setBlockState(pos, state.with(EXPENDED, true), Block.NOTIFY_LISTENERS);

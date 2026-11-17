@@ -57,7 +57,7 @@ public class PearlHubBlockEntityRenderer extends BlockEntityWithNametagRenderer<
 		matrices.push();
 		this.pearl.setAngles(0, 2.356F - state.get(PearlHubBlock.FACING).asRotation() * MathHelper.RADIANS_PER_DEGREE, 0);
 		this.pearl.render(matrices, consumer, light, overlay);
-		
+
 		if (entity.getStack().hasGlint()) {
 			this.pearl.render(matrices, vertexConsumers.getBuffer(RenderLayer.getDirectEntityGlint()), light * 2, OverlayTexture.DEFAULT_UV);
 		}

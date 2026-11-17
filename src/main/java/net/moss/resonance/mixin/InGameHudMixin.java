@@ -5,7 +5,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.gui.hud.InGameHud.HeartType;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
@@ -34,22 +33,21 @@ public abstract class InGameHudMixin {
 			if (player.hasStatusEffect(Resonance.SOUL_FATIGUE)) { offset = 0; }
 			else if (player.hasStatusEffect(Resonance.SPARKING)) { offset = 13; }
 			else { return; }
-			context.drawTexture(CUSTOM_HEARTS, x-2, y-2, (half ? 13 : 0) + (hardcore ? 26 : 0), offset, 13, 13);
+			context.drawTexture(CUSTOM_HEARTS, x-2, y-2, (half ? 13 : 0) + (hardcore ? 26 : 0), offset, 13, 13, 52, 26);
 			ci.cancel();
 		}
 	}
 
 	@Inject(method = "renderMiscOverlays", at = @At("HEAD"), cancellable = true)
 	private void renderMiscOverlays(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
-		int i = context.getScaledWindowWidth();
-		int j = context.getScaledWindowHeight();
-		MinecraftClient client = MinecraftClient.getInstance();
-		ClientPlayerEntity player = client.player;
-		if (((ClientPlayerEntityInterface)player).getPrevCrushingWeightIntensity() > 0) {
+		ClientPlayerEntityInterface player = (ClientPlayerEntityInterface) MinecraftClient.getInstance().player;
+		if (player.getPrevCrushingWeightIntensity() > 0) {
+			int i = context.getScaledWindowWidth();
+			int j = context.getScaledWindowHeight();
 			RenderSystem.disableDepthTest();
 			RenderSystem.depthMask(false);
 			RenderSystem.enableBlend();
-			context.setShaderColor(1.0f, 1.0f, 1.0f, MathHelper.lerp(tickCounter.getTickDelta(false), ((ClientPlayerEntityInterface)player).getPrevCrushingWeightIntensity(), ((ClientPlayerEntityInterface)player).getCrushingWeightIntensity()));
+			context.setShaderColor(1.0f, 1.0f, 1.0f, MathHelper.lerp(tickCounter.getTickDelta(false), player.getPrevCrushingWeightIntensity(), player.getCrushingWeightIntensity()));
 			context.drawTexture(NARROW_VISION, 0, 0, -90, 0.0f, 0.0f, i, j, i, j);
 			RenderSystem.disableBlend();
 			RenderSystem.depthMask(true);

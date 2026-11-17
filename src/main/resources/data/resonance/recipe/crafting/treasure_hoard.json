@@ -2,22 +2,12 @@
 	"type": "minecraft:crafting_shapeless",
 	"category": "building",
 	"ingredients": [
-		{
-			"item": "minecraft:gold_block"
-		},
-		{
-			"item": "minecraft:diamond"
-		},
-		{
-			"item": "minecraft:emerald"
-		},
+		{ "item": "minecraft:gold_block" },
+		{ "item": "minecraft:diamond" },
+		{ "item": "minecraft:emerald" },
 		[
-			{
-				"item": "resonance:charged_amethyst_shard"
-			},
-			{
-				"item": "minecraft:amethyst_shard"
-			}
+			{ "item": "resonance:charged_amethyst_shard" },
+			{ "item": "minecraft:amethyst_shard" }
 		]
 	],
 	"result": {

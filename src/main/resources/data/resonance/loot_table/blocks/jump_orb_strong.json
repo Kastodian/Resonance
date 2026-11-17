@@ -1,12 +1,10 @@
 {
+	"type": "minecraft:block",
 	"pools": [
 		{
 			"rolls": 1,
 			"entries": [
-				{
-					"type": "minecraft:item",
-					"name": "resonance:jump_orb_strong"
-				}
+				{ "type": "minecraft:item", "name": "resonance:jump_orb_strong" }
 			]
 		}
 	]

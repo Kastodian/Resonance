@@ -40,15 +40,12 @@ public class ChargedAmethystBlock extends AmethystClusterBlock implements Discha
 		this.chargeLevel = chargeLevel;
 	}
 
-	@Override
-	protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-		super.appendProperties(builder);
-		builder.add(POWERED);
-	}
-
+	@Override protected void appendProperties(StateManager.Builder<Block, BlockState> builder) { super.appendProperties(builder.add(POWERED)); }
 	@Override public boolean hasComparatorOutput(BlockState state) { return true; }
 	@Override public int getComparatorOutput(BlockState state, World world, BlockPos pos) { return Math.clamp(1, 15, (3 - chargeLevel.getNumber()) * 5); }
 	@Override public boolean hasRandomTicks(BlockState state) { return true; }
+	@Override public ChargeLevel getDegradationLevel() { return chargeLevel; }
+	@Override public void tickDegradation(BlockState state, ServerWorld world, BlockPos pos, Random random) { this.tryDegrade(state, world, pos, random).ifPresent(degraded -> world.setBlockState(pos, degraded)); }
 
 	@Override
 	public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
@@ -56,11 +53,6 @@ public class ChargedAmethystBlock extends AmethystClusterBlock implements Discha
 		BlockState holdingBlock = world.getBlockState(pos.offset(state.get(FACING).getOpposite()));
 		if (holdingBlock.isOf(Blocks.BUDDING_AMETHYST) || holdingBlock.isOf(Blocks.AMETHYST_BLOCK)) { return; }
 		tickDegradation(state, world, pos, random);
-	}
-
-	@Override
-	public void tickDegradation(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-		this.tryDegrade(state, world, pos, random).ifPresent(degraded -> world.setBlockState(pos, degraded));
 	}
 
 	@Override
@@ -73,7 +65,7 @@ public class ChargedAmethystBlock extends AmethystClusterBlock implements Discha
 
 	@Override
 	public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
-		if (world.isClient) { return; }
+		if (world.isClient()) { return; }
 		if (world.isReceivingRedstonePower(pos) && !state.get(POWERED)) {
 			world.setBlockState(pos, state.cycle(POWERED), Block.NOTIFY_LISTENERS);
 			world.scheduleBlockTick(pos, this, 1);
@@ -118,10 +110,5 @@ public class ChargedAmethystBlock extends AmethystClusterBlock implements Discha
 	protected void onExploded(BlockState state, World world, BlockPos pos, Explosion explosion, BiConsumer<ItemStack, BlockPos> stackMerger) {
 		if (world instanceof ServerWorld serverWorld && explosion.getPower() > 0.5f) { resonateBlock(serverWorld, world.getBlockState(pos), pos, 1.5f, true); }
 		super.onExploded(state, world, pos, explosion, stackMerger);
-	}
-
-	@Override
-	public ChargeLevel getDegradationLevel() {
-		return chargeLevel;
 	}
 }

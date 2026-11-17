@@ -1,6 +1,5 @@
 package net.moss.resonance.recipe;
 
-import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.RecipeSerializer;
@@ -34,15 +33,7 @@ public class PearlDuplicationRecipe extends SpecialCraftingRecipe {
 	}
 
 	public ItemStack craft(CraftingRecipeInput craftingRecipeInput, RegistryWrapper.WrapperLookup wrapperLookup) {
-		ItemStack itemStack = craftingRecipeInput.getStackInSlot(1, 1);
-		if (!(itemStack.getItem() instanceof Pearl)) {
-			return ItemStack.EMPTY;
-		} else {
-			ItemStack itemStack2 = new ItemStack(itemStack.getItem(), 2);
-			itemStack2.set(DataComponentTypes.POTION_CONTENTS, itemStack.get(DataComponentTypes.POTION_CONTENTS));
-			itemStack2.set(Resonance.PEARL_STATS, itemStack.get(Resonance.PEARL_STATS));
-			return itemStack2;
-		}
+		return craftingRecipeInput.getStackInSlot(1, 1).copyWithCount(2);
 	}
 
 	public boolean fits(int width, int height) {

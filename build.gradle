@@ -3,6 +3,13 @@ plugins {
 	id 'maven-publish'
 }
 
+version = project.mod_version
+group = project.maven_group
+
+base {
+	archivesName = project.archives_base_name
+}
+
 loom {
 	accessWidenerPath = file("src/main/resources/resonance.accesswidener")
 }
@@ -27,16 +34,10 @@ dependencies {
 
 	modCompileOnly "dev.emi:emi-fabric:${project.emi_version}:api"
 	modLocalRuntime "dev.emi:emi-fabric:${project.emi_version}"
-	//modApi "dev.emi:emi-fabric:${project.emi_version}:api"
-	//modCompileOnly "dev.emi:emi-fabric:${project.emi_version}:api"
-	//modLocalRuntime "dev.emi:emi-fabric:${project.emi_version}"
-
-
 	modCompileOnly "dev.emi:trinkets:${project.trinkets_version}"
 	modLocalRuntime "dev.emi:trinkets:${project.trinkets_version}"
 	modApi "dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cardinal_components_version}"
 	modApi "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${project.cardinal_components_version}"
-
 	modApi "com.terraformersmc:biolith-fabric:${project.biolith_version}"
 	include "com.terraformersmc:biolith-fabric:${project.biolith_version}"
 }
@@ -45,7 +46,7 @@ processResources {
 	inputs.property "version", project.version
 
 	filesMatching("fabric.mod.json") {
-		expand "version": project.version
+		expand "version": inputs.properties.version
 	}
 }
 
@@ -63,8 +64,10 @@ java {
 }
 
 jar {
+	inputs.property "archivesName", project.base.archivesName
+
 	from("LICENSE") {
-		rename { "${it}_${project.archivesBaseName}"}
+		rename { "${it}_${inputs.properties.archivesName}"}
 	}
 }
 

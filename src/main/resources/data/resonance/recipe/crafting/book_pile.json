@@ -2,15 +2,9 @@
 	"type": "minecraft:crafting_shapeless",
 	"category": "building",
 	"ingredients": [
-		{
-			"item": "minecraft:bookshelf"
-		},
-		{
-			"item": "minecraft:book"
-		},
-		{
-			"item": "minecraft:paper"
-		}
+		{ "item": "minecraft:bookshelf" },
+		{ "item": "minecraft:book" },
+		{ "item": "minecraft:paper" }
 	],
 	"result": {
 		"id": "resonance:book_pile",

@@ -3,31 +3,18 @@
 	"pools": [
 		{
 			"rolls": 1,
-			"bonus_rolls": 0,
 			"entries": [
-				{
-					"type": "minecraft:item",
-					"name": "resonance:medium_charged_amethyst_bud"
-				}
+				{ "type": "minecraft:item", "name": "resonance:medium_charged_amethyst_bud" }
 			],
 			"conditions": [
-				{
-					"condition": "minecraft:match_tool",
-					"predicate": {
-						"predicates": {
-							"minecraft:enchantments": [
-								{
-									"enchantments": "minecraft:silk_touch",
-									"levels": {
-										"min": 1
-									}
-								}
-							]
-						}
+				{ "condition": "minecraft:match_tool", "predicate": {
+					"predicates": {
+						"minecraft:enchantments": [
+							{ "enchantment": "minecraft:silk_touch", "levels": { "min": 1 }}
+						]
 					}
-				}
+				}}
 			]
 		}
-	],
-	"random_sequence": "minecraft:blocks/medium_amethyst_bud"
+	]
 }

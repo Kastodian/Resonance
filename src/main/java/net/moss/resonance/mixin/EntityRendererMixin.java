@@ -20,8 +20,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class EntityRendererMixin {
 	@Inject(method = "renderLabelIfPresent", at = @At("HEAD"), cancellable = true)
 	protected void renderLabelIfPresent(Entity entity, Text text, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, float tickDelta, CallbackInfo ci) {
-		if (entity instanceof LivingEntity livingEntity && Utils.isItemEquipped(livingEntity, Resonance.PHANTOM_SCARF, false)) {
-			ci.cancel();
-		}
+		if (entity instanceof LivingEntity livingEntity && Utils.isItemEquipped(livingEntity, Resonance.PHANTOM_SCARF, false)) ci.cancel();
 	}
 }

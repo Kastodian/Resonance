@@ -23,15 +23,11 @@ import com.llamalad7.mixinextras.sugar.Local;
 public class BrushItemMixin {
 	@Inject(method = "usageTick", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILHARD)
 	public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks, CallbackInfo ci, @Local BlockHitResult blockHitResult) {
-		int i = ((BrushItem)(Object) this).getMaxUseTime(stack, user) - remainingUseTicks + 1;
-		if (i % 10 == 5) {
-			BlockPos blockPos = blockHitResult.getBlockPos();
-			BlockState blockState = world.getBlockState(blockPos);
-			if (!(blockState.isOf(Resonance.BUDDING_PEARL_ICE) && blockState.get(BuddingPearlIce.AGE) == 6)) { return; }
-			if (!world.isClient() && world.getBlockEntity(blockPos) instanceof BuddingPearlIceBlockEntity blockEntity && user instanceof ServerPlayerEntity player && blockEntity.brush(world.getTime(), player, blockHitResult.getSide())) {
-				EquipmentSlot equipmentSlot = stack.equals(player.getEquippedStack(EquipmentSlot.OFFHAND)) ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;
-				stack.damage(4, user, equipmentSlot);
-			}
-		}
+		if (world.isClient() || (((BrushItem)(Object) this).getMaxUseTime(stack, user) - remainingUseTicks + 1) % 10 != 5) return;
+		BlockPos blockPos = blockHitResult.getBlockPos();
+		BlockState blockState = world.getBlockState(blockPos);
+		if (!blockState.isOf(Resonance.BUDDING_PEARL_ICE) || blockState.get(BuddingPearlIce.AGE) != 6 || !(world.getBlockEntity(blockPos) instanceof BuddingPearlIceBlockEntity blockEntity) || !(user instanceof ServerPlayerEntity player) || !blockEntity.brush(world.getTime(), player, blockHitResult.getSide())) return;
+		EquipmentSlot equipmentSlot = stack.equals(player.getEquippedStack(EquipmentSlot.OFFHAND)) ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;
+		stack.damage(4, user, equipmentSlot);
 	}
 }

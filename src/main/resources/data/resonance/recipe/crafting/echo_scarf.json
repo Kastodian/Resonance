@@ -7,12 +7,8 @@
 		" p "
 	],
 	"key": {
-		"w": {
-			"item": "resonance:scarf"
-		},
-		"p": {
-			"item": "minecraft:echo_shard"
-		}
+		"w": { "item": "resonance:scarf" },
+		"p": { "item": "minecraft:echo_shard" }
 	},
 	"result": {
 		"id": "resonance:echo_scarf"

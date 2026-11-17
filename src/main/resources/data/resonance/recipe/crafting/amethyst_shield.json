@@ -8,16 +8,10 @@
 	],
 	"key": {
 		"a": [
-			{
-				"item": "resonance:charged_amethyst_shard"
-			},
-			{
-				"item": "minecraft:amethyst_shard"
-			}
+			{ "item": "resonance:charged_amethyst_shard" },
+			{ "item": "minecraft:amethyst_shard" }
 		],
-		"s": {
-			"item": "minecraft:shield"
-		}
+		"s": { "item": "minecraft:shield" }
 	},
 	"result": {
 		"id": "resonance:amethyst_shield"

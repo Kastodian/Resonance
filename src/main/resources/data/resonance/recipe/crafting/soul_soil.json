@@ -2,72 +2,31 @@
 	"type": "minecraft:crafting_shapeless",
 	"category": "building",
 	"ingredients": [
-		{
-				"item": "resonance:soul_bottle"
-		},
+		{ "item": "resonance:soul_bottle" },
 		[
-			{
-				"tag": "minecraft:dirt"
-			},
-			{
-				"item": "minecraft:moss_block"
-			}
-		],
-		[
-			{
-				"tag": "minecraft:dirt"
-			},
-			{
-				"item": "minecraft:moss_block"
-			}
-		],
-		[
-			{
-				"tag": "minecraft:dirt"
-			},
-			{
-				"item": "minecraft:moss_block"
-			}
-		],
-		[
-			{
-				"tag": "minecraft:dirt"
-			},
-			{
-				"item": "minecraft:moss_block"
-			}
-		],
-		[
-			{
-				"tag": "minecraft:dirt"
-			},
-			{
-				"item": "minecraft:moss_block"
-			}
-		],
-		[
-			{
-				"tag": "minecraft:dirt"
-			},
-			{
-				"item": "minecraft:moss_block"
-			}
-		],
-		[
-			{
-				"tag": "minecraft:dirt"
-			},
-			{
-				"item": "minecraft:moss_block"
-			}
-		],
-		[
-			{
-				"tag": "minecraft:dirt"
-			},
-			{
-				"item": "minecraft:moss_block"
-			}
+			{ "tag": "minecraft:dirt" },
+			{ "item": "minecraft:moss_block" }
+		],[
+			{ "tag": "minecraft:dirt" },
+			{ "item": "minecraft:moss_block" }
+		],[
+			{ "tag": "minecraft:dirt" },
+			{ "item": "minecraft:moss_block" }
+		],[
+			{ "tag": "minecraft:dirt" },
+			{ "item": "minecraft:moss_block" }
+		],[
+			{ "tag": "minecraft:dirt" },
+			{ "item": "minecraft:moss_block" }
+		],[
+			{ "tag": "minecraft:dirt" },
+			{ "item": "minecraft:moss_block" }
+		],[
+			{ "tag": "minecraft:dirt" },
+			{ "item": "minecraft:moss_block" }
+		],[
+			{ "tag": "minecraft:dirt" },
+			{ "item": "minecraft:moss_block" }
 		]
 	],
 	"result": {

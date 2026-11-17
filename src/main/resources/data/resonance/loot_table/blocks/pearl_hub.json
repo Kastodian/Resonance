@@ -1,12 +1,10 @@
 {
+	"type": "minecraft:block",
 	"pools": [
 		{
 			"rolls": 1,
 			"entries": [
-				{
-					"type": "minecraft:item",
-					"name": "resonance:pearl_hub"
-				}
+				{ "type": "minecraft:item", "name": "resonance:pearl_hub" }
 			]
 		}
 	]

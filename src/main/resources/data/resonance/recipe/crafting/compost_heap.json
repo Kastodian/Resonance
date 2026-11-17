@@ -3,52 +3,23 @@
 	"category": "building",
 	"ingredients": [
 		[
-			{
-				"tag": "minecraft:dirt"
-			},
-			{
-				"item": "minecraft:moss_block"
-			}
+			{ "tag": "minecraft:dirt" },
+			{ "item": "minecraft:moss_block" }
 		],
-		{
-			"tag": "minecraft:leaves"
-		},
+		{ "tag": "minecraft:leaves" },
 		[
-			{
-				"tag": "minecraft:saplings"
-			},
-			{
-				"tag": "minecraft:flowers"
-			}
-		],
-		[
-			{
-				"item": "minecraft:apple"
-			},
-			{
-				"item": "minecraft:melon_slice"
-			},
-			{
-				"item": "minecraft:carrot"
-			},
-			{
-				"item": "minecraft:potato"
-			},
-			{
-				"item": "minecraft:sweet_berries"
-			},
-			{
-				"item": "minecraft:glow_berries"
-			},
-			{
-				"item": "minecraft:beetroot"
-			},
-			{
-				"item": "minecraft:dried_kelp"
-			},
-			{
-				"item": "minecraft:chorus_fruit"
-			}
+			{ "tag": "minecraft:saplings" },
+			{ "tag": "minecraft:flowers" }
+		],[
+			{ "item": "minecraft:apple" },
+			{ "item": "minecraft:melon_slice" },
+			{ "item": "minecraft:carrot" },
+			{ "item": "minecraft:potato" },
+			{ "item": "minecraft:sweet_berries" },
+			{ "item": "minecraft:glow_berries" },
+			{ "item": "minecraft:beetroot" },
+			{ "item": "minecraft:dried_kelp" },
+			{ "item": "minecraft:chorus_fruit" }
 		]
 	],
 	"result": {

@@ -62,12 +62,6 @@ public class RainChimeBlock extends BlockWithEntity implements Waterloggable {
 		this.setDefaultState(this.getDefaultState().with(AGITATED, false).with(WATERLOGGED, false).with(WEATHER_WARPING, false).with(IS_RAINING, false).with(IS_THUNDERING, false));
 	}
 
-	@Override
-	protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-		super.appendProperties(builder);
-		builder.add(AGITATED, WATERLOGGED, WEATHER_WARPING, IS_RAINING, IS_THUNDERING);
-	}
-
 	@Nullable
 	@Override
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
@@ -81,6 +75,7 @@ public class RainChimeBlock extends BlockWithEntity implements Waterloggable {
 		else { world.setBlockState(pos, state.with(IS_THUNDERING, false).with(IS_RAINING, false)); }
 	}
 
+	@Override protected void appendProperties(StateManager.Builder<Block, BlockState> builder) { super.appendProperties(builder.add(AGITATED, WATERLOGGED, WEATHER_WARPING, IS_RAINING, IS_THUNDERING)); }
 	@Override public boolean hasComparatorOutput(BlockState state) { return true; }
 	@Override public int getComparatorOutput(BlockState state, World world, BlockPos pos) { return state.get(IS_THUNDERING) ? 15 : (state.get(IS_RAINING) ? 7 : 0); }
 	@Override protected MapCodec<? extends BlockWithEntity> getCodec() { return CODEC; }
@@ -88,6 +83,7 @@ public class RainChimeBlock extends BlockWithEntity implements Waterloggable {
 	@Override public BlockRenderType getRenderType(BlockState state) { return BlockRenderType.INVISIBLE; }
 	@Override public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) { return Block.createCuboidShape(5, 8, 5, 11, 16, 11); }
 	@Override public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) { return Block.createCuboidShape(6, 14, 6, 10, 16, 10); }
+	@Override public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) { return Block.sideCoversSmallSquare(world, pos.offset(Direction.UP), Direction.DOWN); }
 
 	@Override
 	@Nullable
@@ -98,11 +94,6 @@ public class RainChimeBlock extends BlockWithEntity implements Waterloggable {
 			return blockState.with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
 		}
 		return null;
-	}
-
-	@Override
-	public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-		return Block.sideCoversSmallSquare(world, pos.offset(Direction.UP), Direction.DOWN);
 	}
 
 	@Override
@@ -128,7 +119,7 @@ public class RainChimeBlock extends BlockWithEntity implements Waterloggable {
 	public void onProjectileHit(World world, BlockState state, BlockHitResult hit, ProjectileEntity projectile) {
 		super.onProjectileHit(world, state, hit, projectile);
 		ResonanceEvents.REVERBERATE.invoker().onResonate(world, projectile.getPos(), new Vector3f(projectile.prevPitch * MathHelper.DEGREES_PER_RADIAN, projectile.prevYaw * MathHelper.DEGREES_PER_RADIAN, 0f), null, projectile.getOwner(), 1, false);
-		if (world.isClient) { return; }
+		if (world.isClient()) return;
 		BlockPos blockPos = hit.getBlockPos();
 		world.playSound((PlayerEntity)null, blockPos, SoundEvents.BLOCK_AMETHYST_BLOCK_HIT, SoundCategory.BLOCKS, 1.0F, 0.5F + world.random.nextFloat() * 1.2F);
 		world.playSound((PlayerEntity)null, blockPos, SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.BLOCKS, 1.0F, 0.5F + world.random.nextFloat() * 1.2F);
@@ -137,12 +128,11 @@ public class RainChimeBlock extends BlockWithEntity implements Waterloggable {
 
 	@Override
 	public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-		if (world.isClient) { return; }
-		agitate(pos, state, world, false);
+		if (!world.isClient()) agitate(pos, state, world, false);
 	}
 
 	public boolean agitate(BlockPos pos, BlockState state, World world, boolean weatherManipulation) {
-		if (!state.get(AGITATED) && !world.isClient) {
+		if (!state.get(AGITATED) && !world.isClient()) {
 			world.setBlockState(pos, state.with(AGITATED, true).with(WEATHER_WARPING, weatherManipulation), Block.NOTIFY_LISTENERS);
 			world.emitGameEvent(GameEvent.BLOCK_ACTIVATE, pos, Emitter.of(state));
 			world.scheduleBlockTick(pos, this, 2*20);
@@ -155,7 +145,7 @@ public class RainChimeBlock extends BlockWithEntity implements Waterloggable {
 	@Override
 	public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
 		world.playSound(null, pos, SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.BLOCKS, 1f, 0.5f + world.random.nextFloat() * 1.2f);
-		if (!state.isOf(this)) { return; }
+		if (!state.isOf(this)) return;
 		if (!world.isThundering() && !world.isRaining() && state.get(WEATHER_WARPING)) {
 			int clearWeatherTime = ((ServerWorldAccessor) world).getWorldProperties().getClearWeatherTime();
 			if (clearWeatherTime == 0) { clearWeatherTime = random.nextBetween(3000, 80000); }

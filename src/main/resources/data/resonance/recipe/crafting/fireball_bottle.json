@@ -3,18 +3,11 @@
 	"category": "misc",
 	"group": "fireball_bottle",
 	"ingredients": [
-		{
-			"item": "resonance:tinted_bottle"
-		},
-		{
-			"item": "minecraft:gunpowder"
-		},
-		{
-			"item": "minecraft:fire_charge"
-		}
+		{ "item": "resonance:tinted_bottle" },
+		{ "item": "minecraft:gunpowder" },
+		{ "item": "minecraft:fire_charge" }
 	],
 	"result": {
-		"id": "resonance:fireball_bottle",
-		"count": 1
+		"id": "resonance:fireball_bottle"
 	}
 }

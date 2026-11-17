@@ -42,17 +42,14 @@ public class PlayerEntityMixin implements PlayerEntityInterface {
 		Hand hand = player.getActiveHand();
 		ItemStack activeItem = player.getActiveItem();
 		ResonanceEvents.SHIELD_BLOCK.invoker().block(player, amount, player.getActiveHand(), activeItem);
-		if (activeItem.getItem() instanceof ShieldInterface) {
-			if (amount >= 3.0F) {
-				int i = 1 + MathHelper.floor(amount);
-				activeItem.damage(i, (LivingEntity) player, PlayerEntity.getSlotForHand(player.getActiveHand()));
-				if (activeItem.isEmpty()) {
-					if (hand == Hand.MAIN_HAND) { player.equipStack(EquipmentSlot.MAINHAND, ItemStack.EMPTY); }
-					else { player.equipStack(EquipmentSlot.OFFHAND, ItemStack.EMPTY); }
-					activeItem = ItemStack.EMPTY;
-					player.playSound(SoundEvents.ITEM_SHIELD_BREAK, 0.8F, 0.8F + player.getRandom().nextFloat() * 0.4F);
-				}
-			}
+		if (!(activeItem.getItem() instanceof ShieldInterface) || amount < 3.0F) return;
+		int i = 1 + MathHelper.floor(amount);
+		activeItem.damage(i, (LivingEntity) player, PlayerEntity.getSlotForHand(player.getActiveHand()));
+		if (activeItem.isEmpty()) {
+			if (hand == Hand.MAIN_HAND) { player.equipStack(EquipmentSlot.MAINHAND, ItemStack.EMPTY); }
+			else { player.equipStack(EquipmentSlot.OFFHAND, ItemStack.EMPTY); }
+			activeItem = ItemStack.EMPTY;
+			player.playSound(SoundEvents.ITEM_SHIELD_BREAK, 0.8F, 0.8F + player.getRandom().nextFloat() * 0.4F);
 		}
 	}
 
@@ -61,15 +58,14 @@ public class PlayerEntityMixin implements PlayerEntityInterface {
 		PlayerEntity player = (PlayerEntity) (Object) this;
 		ItemStack activeItemStack = player.getActiveItem();
 		ResonanceEvents.SHIELD_DISABLE.invoker().disable(player, player.getActiveHand(), activeItemStack);
-		if (activeItemStack.getItem() instanceof ShieldInterface shield) {
-			float f = 0.25F;
-			if (player.isSprinting()) { f += 0.75F; }
-			if (player.getRandom().nextFloat() < f) {
-				EnchantUtils.setCooldownTime(activeItemStack, player, shield.getCoolDownTicks());
-				player.clearActiveItem();
-				player.getWorld().sendEntityStatus(player, (byte) 30);
-				callbackInfo.cancel();
-			}
+		if (!(activeItemStack.getItem() instanceof ShieldInterface shield)) return;
+		float f = 0.25F;
+		if (player.isSprinting()) { f += 0.75F; }
+		if (player.getRandom().nextFloat() < f) {
+			EnchantUtils.setCooldownTime(activeItemStack, player, shield.getCoolDownTicks());
+			player.clearActiveItem();
+			player.getWorld().sendEntityStatus(player, (byte) 30);
+			callbackInfo.cancel();
 		}
 	}
 

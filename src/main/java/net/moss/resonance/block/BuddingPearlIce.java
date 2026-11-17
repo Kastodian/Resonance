@@ -42,11 +42,6 @@ public class BuddingPearlIce extends Block implements BlockEntityProvider {
 		this.setDefaultState(this.getDefaultState().with(DUSTED, 0).with(AGE, 0).with(HAS_PEARL, false).with(HAS_POTION, false).with(HAS_CATALYST, false).with(HAS_SEED, false));
 	}
 
-	@Override
-	protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-		super.appendProperties(builder.add(HAS_SEED, HAS_POTION, HAS_PEARL, HAS_CATALYST, AGE, DUSTED));
-	}
-
 	@SuppressWarnings("deprecation")
 	@Override
 	public void afterBreak(World world, PlayerEntity player, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, ItemStack tool) {
@@ -81,11 +76,6 @@ public class BuddingPearlIce extends Block implements BlockEntityProvider {
 			if (state.get(AGE) == 5 && blockEntity.canCraftPearl()) { blockEntity.craftPearl(state, random); }
 			else { world.setBlockState(pos, state.with(AGE, state.get(AGE) + 1), Block.NOTIFY_LISTENERS); }
 		}
-	}
-
-	@Override
-	public ItemStack getPickStack(WorldView world, BlockPos pos, BlockState state) {
-		return new ItemStack(state.get(AGE) > 2 ? Resonance.PEARL_ICE : Blocks.ICE);
 	}
 
 	@Override
@@ -129,8 +119,10 @@ public class BuddingPearlIce extends Block implements BlockEntityProvider {
 		world.updateNeighborsAlways(pos, state.getBlock());
 	}
 
+	@Override public ItemStack getPickStack(WorldView world, BlockPos pos, BlockState state) { return new ItemStack(state.get(AGE) > 2 ? Resonance.PEARL_ICE : Blocks.ICE); }
 	@Override protected boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) { return stateFrom.isOf(this) ? stateFrom.get(AGE) == state.get(AGE) : state.get(AGE) == 0 && stateFrom.isOf(Blocks.ICE) || super.isSideInvisible(state, stateFrom, direction); }
 	@Override public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) { world.getBlockEntity(pos, Resonance.BUDDING_PEARL_ICE_BLOCK_ENTITY).get().scheduledTick(); }
 	@Override public BlockEntity createBlockEntity(BlockPos pos, BlockState state) { return new BuddingPearlIceBlockEntity(pos, state); }
 	@Override protected boolean hasRandomTicks(BlockState state) { return state.get(AGE) < 6 && state.get(HAS_POTION); }
+	@Override protected void appendProperties(StateManager.Builder<Block, BlockState> builder) { super.appendProperties(builder.add(HAS_SEED, HAS_POTION, HAS_PEARL, HAS_CATALYST, AGE, DUSTED)); }
 }
